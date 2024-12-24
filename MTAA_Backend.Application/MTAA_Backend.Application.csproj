@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MTAA_Backend.Domain\MTAA_Backend.Domain.csproj" />
+    <ProjectReference Include="..\MTAA_Backend.Infrastructure\MTAA_Backend.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
