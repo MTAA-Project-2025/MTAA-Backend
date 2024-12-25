@@ -29,6 +29,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.ConfigureLocalization();
+
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
