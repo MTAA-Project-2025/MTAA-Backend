@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MTAA_Backend.Domain.Resources.Localization {
+namespace MTAA_Backend.Domain.Resources.Localization.Errors {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MTAA_Backend.Domain.Resources.Localization {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MTAA_Backend.Domain.Resources.Localization.ErrorMessages", typeof(ErrorMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MTAA_Backend.Domain.Resources.Localization.Errors.ErrorMessages", typeof(ErrorMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
