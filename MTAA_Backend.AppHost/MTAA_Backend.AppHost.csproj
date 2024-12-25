@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MTAA_Backend\MTAA_Backend.csproj" />
+    <ProjectReference Include="..\MTAA_Backend\MTAA_Backend.Api.csproj" />
   </ItemGroup>
 
 </Project>
