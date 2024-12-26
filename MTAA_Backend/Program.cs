@@ -14,6 +14,9 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.ConfigureSwagger();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddLocalization();
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -28,6 +31,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.ConfigureLocalization();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
