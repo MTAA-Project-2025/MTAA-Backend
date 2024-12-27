@@ -1,3 +1,4 @@
+using MTAA_Backend.Domain.Entities.Chats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,8 @@ namespace MTAA_Backend.Domain.Entities.Users
 
         public DateTime LastSeen { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public List<User> Contacts { get; set; } = new List<User>();
+        public List<Chat> Chats { get; set; } = new List<Chat>();
     }
 }
