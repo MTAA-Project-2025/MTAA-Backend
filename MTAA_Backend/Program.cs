@@ -17,6 +17,18 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddLocalization();
 
+
+var connectionString = builder.Configuration.GetConnectionString("LocalDbContextConnection") ?? throw new InvalidOperationException("Connection string 'LocalDbContextConnection' not found.");
+
+
+ConfigurationManager configuration = builder.Configuration;
+
+builder.Services.AddDbContext<MTAA_BackendDbContext>(x => x.UseSqlServer(connectionString, builder =>
+{
+    builder.EnableRetryOnFailure(1, TimeSpan.FromSeconds(5), null);
+}));
+
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
