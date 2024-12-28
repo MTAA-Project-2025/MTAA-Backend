@@ -1,4 +1,5 @@
 using MTAA_Backend.Domain.Entities.Chats;
+using MTAA_Backend.Domain.Entities.shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,23 +8,23 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Domain.Entities.Users
 {
-    public class User
+    public class User : IdentityUser, IAuditable
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-
-        public string Username { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-
-        public string? Email { get; set; }
-        public string? PhoneNumber { get; set; }
 
         public string Status { get; set; }
 
         public DateTime LastSeen { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public List<User> Contacts { get; set; } = new List<User>();
-        public List<Chat> Chats { get; set; } = new List<Chat>();
+        public DateTime DataCreationTime { get; set; } = DateTime.UtcNow;
+        public DateTime? DataLastDeleteTime { get; set; }
+        public DateTime? DataLastEditTime { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public bool IsEdited { get; set; }
+
+        public ICollection<User> Contacts { get; set; } = new HashSet<User>();
+        public ICollection<Chat> Chats { get; set; } = new HashSet<Chat>();
     }
 }
