@@ -23,7 +23,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
 
             builder.HasOne(e => e.Avatar)
                    .WithOne(e => e.User)
-                   .HasForeignKey<User>(e => e.AvatarId);
+                   .HasForeignKey<User>(e => e.AvatarId)
+                   .IsRequired(false);
 
             builder.HasMany(e => e.Contacts)
                    .WithOne(e => e.User)

@@ -33,7 +33,7 @@ namespace MTAA_Backend.Domain.Entities.Users
         public ICollection<Chat> Chats { get; set; } = new HashSet<Chat>();
         public ICollection<BaseMessage> Messages { get; set; } = new HashSet<BaseMessage>();
 
-        public MyImageGroup Avatar { get; set; }
-        public Guid AvatarId { get; set; }
+        public MyImageGroup? Avatar { get; set; }
+        public Guid? AvatarId { get; set; }
     }
 }

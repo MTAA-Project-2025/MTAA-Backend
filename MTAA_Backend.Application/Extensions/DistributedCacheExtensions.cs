@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using MTAA_Backend.Domain.Resources.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace MTAA_Backend.Application.Extensions
         {
             var options = new DistributedCacheEntryOptions();
 
-            options.AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeSpan.FromHours(1);
+            options.AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeConstants.DefaultCacheExpirationTime;
             options.SlidingExpiration = unusedExpireTime;
 
             var jsonData = JsonSerializer.Serialize(data);

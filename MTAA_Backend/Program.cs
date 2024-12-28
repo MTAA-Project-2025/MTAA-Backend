@@ -1,8 +1,15 @@
 using Asp.Versioning;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Api.Extensions;
 using MTAA_Backend.Api.Middlewares;
+using MTAA_Backend.Application.Identity.Queries;
+using MTAA_Backend.Application.Services;
+using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Infrastructure;
+using MTAA_Backend.Application.Validators.Identity;
+using MTAA_Backend.Application.MaperProfiles.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,17 +22,21 @@ builder.Services.AddDbContext<MTAA_BackendDbContext>(x => x.UseSqlServer(connect
     builder.EnableRetryOnFailure(1, TimeSpan.FromSeconds(5), null);
 }));
 
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "MTAA_Backend_";
-});
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 builder.AddServiceDefaults();
 
+builder.AddRedisDistributedCache("cache");
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(LogIn).Assembly));
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(typeof(LogInRequestValidator).Assembly);
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -41,14 +52,21 @@ builder.Services.AddApiVersioning(options =>
     options.SubstituteApiVersionInUrl = true;
 });
 
+builder.Services.AddScoped<ICodeGeneratorService, CodeGeneratorService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ILanguageService, LanguageService>();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.ConfigureSwagger();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddLocalization();
+builder.Services.ConfigureJWT(configuration);
 
 var app = builder.Build();
+
+
 
 app.MapDefaultEndpoints();
 
@@ -67,6 +85,7 @@ app.ConfigureLocalization();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

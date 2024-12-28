@@ -117,4 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>Tento e-mail už existuje.</value>
+  </data>
+  <data name="EmailIsNotVerified" xml:space="preserve">
+    <value>E-mail nie je overený</value>
+  </data>
+  <data name="SignUpSessionExpired" xml:space="preserve">
+    <value>Registrácia relácie vypršala</value>
+  </data>
+  <data name="UserCreationError" xml:space="preserve">
+    <value>Chyba pri vytváraní používateľa</value>
+  </data>
+  <data name="VerificationCodeAlreadySent" xml:space="preserve">
+    <value>Potvrdzovací kód už bol odoslaný</value>
+  </data>
 </root>
