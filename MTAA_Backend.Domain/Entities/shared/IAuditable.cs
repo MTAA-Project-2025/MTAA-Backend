@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Domain.Entities.shared
 {
-    internal interface IAuditable
+    public interface IAuditable
     {
+        public DateTime DataCreationTime { get; set; }
+        public DateTime? DataDeleteTime { get; set; }
+        public DateTime? DataLastEditTime { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public bool IsEdited { get; set; }
     }
 }
