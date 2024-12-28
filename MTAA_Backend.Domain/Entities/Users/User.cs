@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using MTAA_Backend.Domain.Entities.Chats;
-using MTAA_Backend.Domain.Entities.shared;
+using MTAA_Backend.Domain.Entities.Images;
+using MTAA_Backend.Domain.Entities.Messages;
+using MTAA_Backend.Domain.Entities.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +18,7 @@ namespace MTAA_Backend.Domain.Entities.Users
 
         public string Status { get; set; }
 
-        public DateTime LastSeen { get; set; }
+        public DateTime LastSeen { get; set; } = DateTime.UtcNow;
 
         public DateTime DataCreationTime { get; set; } = DateTime.UtcNow;
         public DateTime? DataLastDeleteTime { get; set; }
@@ -24,7 +27,13 @@ namespace MTAA_Backend.Domain.Entities.Users
         public bool IsDeleted { get; set; }
         public bool IsEdited { get; set; }
 
-        public ICollection<User> Contacts { get; set; } = new HashSet<User>();
+        public ICollection<UserContact> Contacts { get; set; } = new HashSet<UserContact>();
+        public ICollection<UserContact> ContactOf { get; set; } = new HashSet<UserContact>();
+
         public ICollection<Chat> Chats { get; set; } = new HashSet<Chat>();
+        public ICollection<BaseMessage> Messages { get; set; } = new HashSet<BaseMessage>();
+
+        public MyImageGroup Avatar { get; set; }
+        public Guid AvatarId { get; set; }
     }
 }

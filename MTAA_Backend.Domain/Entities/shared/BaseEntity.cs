@@ -9,7 +9,7 @@ namespace MTAA_Backend.Domain.Entities.Shared
     public class BaseEntity : IAuditable
     {
         public DateTime DataCreationTime { get; set; } = DateTime.UtcNow;
-        public DateTime? DataDeleteTime { get; set; }
+        public DateTime? DataLastDeleteTime { get; set; }
         public DateTime? DataLastEditTime { get; set; }
 
         public bool IsDeleted { get; set; }

@@ -23,4 +23,8 @@
     <ProjectReference Include="..\MTAA_Backend.Domain\MTAA_Backend.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\Shared\" />
+  </ItemGroup>
+
 </Project>
