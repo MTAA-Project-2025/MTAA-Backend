@@ -6,10 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MTAA_Backend.Infrastructure
 {
-    public class MTAA_BackendDbContext : DbContext
+    public class MTAA_BackendDbContext : IdentityDbContext<User>
     {
-        public DbSet<User> Users { get; set; }
-
         public DbSet<Chat> Chats { get; set; }
 
         public DbSet<Message> Messages { get; set; }
