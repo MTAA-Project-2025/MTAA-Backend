@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTAA_Backend.Domain.Entities.shared
+namespace MTAA_Backend.Domain.Entities.Shared
 {
     public class BaseEntity : IAuditable
     {

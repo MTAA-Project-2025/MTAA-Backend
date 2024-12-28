@@ -1,4 +1,4 @@
-﻿using MTAA_Backend.Domain.Entities.shared;
+﻿using MTAA_Backend.Domain.Entities.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
