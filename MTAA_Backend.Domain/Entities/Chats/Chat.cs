@@ -1,11 +1,6 @@
 using MTAA_Backend.Domain.Entities.Users;
+using MTAA_Backend.Domain.Entities.Shared;
 using MTAA_Backend.Domain.Entities.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MTAA_Backend.Domain.Entities.shared;
 
 namespace MTAA_Backend.Domain.Entities.Chats
 {
@@ -18,6 +13,6 @@ namespace MTAA_Backend.Domain.Entities.Chats
         public string Theme { get; set; }
 
         public ICollection<User> Participants { get; set; } = new HashSet<User>();
-        public ICollection<Message> Messages { get; set; } = new HashSet<Message>();
+        public ICollection<BaseMessage> Messages { get; set; } = new HashSet<BaseMessage>();
     }
 }

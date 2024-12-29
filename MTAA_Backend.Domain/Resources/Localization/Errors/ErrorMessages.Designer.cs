@@ -22,7 +22,7 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ErrorMessages {
+    public class ErrorMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MTAA_Backend.Domain.Resources.Localization.Errors.ErrorMessages", typeof(ErrorMessages).Assembly);
@@ -51,12 +51,57 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This email already exists.
+        /// </summary>
+        public static string EmailAlreadyExists {
+            get {
+                return ResourceManager.GetString("EmailAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email is not verified.
+        /// </summary>
+        public static string EmailIsNotVerified {
+            get {
+                return ResourceManager.GetString("EmailIsNotVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session registration has expired.
+        /// </summary>
+        public static string SignUpSessionExpired {
+            get {
+                return ResourceManager.GetString("SignUpSessionExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while creating user.
+        /// </summary>
+        public static string UserCreationError {
+            get {
+                return ResourceManager.GetString("UserCreationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmation code has already been sent.
+        /// </summary>
+        public static string VerificationCodeAlreadySent {
+            get {
+                return ResourceManager.GetString("VerificationCodeAlreadySent", resourceCulture);
             }
         }
     }

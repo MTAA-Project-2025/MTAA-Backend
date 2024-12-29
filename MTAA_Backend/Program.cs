@@ -1,25 +1,19 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using Asp.Versioning;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Api.Extensions;
 using MTAA_Backend.Api.Middlewares;
+using MTAA_Backend.Application.Identity.Queries;
+using MTAA_Backend.Application.Services;
+using MTAA_Backend.Domain.Interfaces;
+using MTAA_Backend.Infrastructure;
+using MTAA_Backend.Application.Validators.Identity;
+using MTAA_Backend.Application.MaperProfiles.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.ConfigureSwagger();
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddLocalization();
-
-
-var connectionString = builder.Configuration.GetConnectionString("LocalDbContextConnection") ?? throw new InvalidOperationException("Connection string 'LocalDbContextConnection' not found.");
-
+var connectionString = builder.Configuration.GetConnectionString("DbContextConnection") ?? throw new InvalidOperationException("Connection string 'LocalDbContextConnection' not found.");
 
 ConfigurationManager configuration = builder.Configuration;
 
@@ -28,8 +22,51 @@ builder.Services.AddDbContext<MTAA_BackendDbContext>(x => x.UseSqlServer(connect
     builder.EnableRetryOnFailure(1, TimeSpan.FromSeconds(5), null);
 }));
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+builder.AddServiceDefaults();
+
+builder.AddRedisDistributedCache("cache");
+// Add services to the container.
+
+builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(LogIn).Assembly));
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(typeof(LogInRequestValidator).Assembly);
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ApiVersionReader = ApiVersionReader.Combine(
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("X-Api-Version"));
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddScoped<ICodeGeneratorService, CodeGeneratorService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ILanguageService, LanguageService>();
+
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+builder.Services.ConfigureSwagger();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddLocalization();
+builder.Services.ConfigureJWT(configuration);
 
 var app = builder.Build();
+
+
 
 app.MapDefaultEndpoints();
 
@@ -48,6 +85,7 @@ app.ConfigureLocalization();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

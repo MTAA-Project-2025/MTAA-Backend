@@ -117,4 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>This email already exists</value>
+  </data>
+  <data name="EmailIsNotVerified" xml:space="preserve">
+    <value>Email is not verified</value>
+  </data>
+  <data name="SignUpSessionExpired" xml:space="preserve">
+    <value>Session registration has expired</value>
+  </data>
+  <data name="UserCreationError" xml:space="preserve">
+    <value>Error while creating user</value>
+  </data>
+  <data name="VerificationCodeAlreadySent" xml:space="preserve">
+    <value>Confirmation code has already been sent</value>
+  </data>
 </root>
