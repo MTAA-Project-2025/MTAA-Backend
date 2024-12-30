@@ -34,5 +34,46 @@ namespace MTAA_Backend.Application.Identity.QueryHandlers
                 Token = await CreateTokenAsync(user)
             };
         }
+
+        private async Task<string> CreateTokenAsync(Customer user)
+        {
+            var signingCredentials = GetSigningCredentials();
+            var claims = await GetClaims(user);
+            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        }
+        private SigningCredentials GetSigningCredentials()
+        {
+            var jwtConfig = _configuration.GetSection("JwtOptions");
+            var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]);
+            var secret = new SymmetricSecurityKey(key);
+            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+        private async Task<List<Claim>> GetClaims(Customer user)
+        {
+            var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.UserName)
+                };
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            return claims;
+        }
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        {
+            var jwtSettings = _configuration.GetSection("JwtOptions");
+            var tokenOptions = new JwtSecurityToken
+            (
+            issuer: jwtSettings["Issuer"],
+            audience: jwtSettings["Audience"],
+            claims: claims,
+            expires: DateTime.Now.AddHours(Convert.ToDouble(jwtSettings["Lifetime"])),
+            signingCredentials: signingCredentials
+            );
+            return tokenOptions;
+        }
     }
 }
