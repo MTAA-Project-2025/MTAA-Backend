@@ -11,10 +11,16 @@ namespace MTAA_Backend.Application.Identity.QueryHandlers
 {
     public class LogInHandler : IRequestHandler<LogIn, TokenDTO>
     {
-        public Task<TokenDTO> Handle(LogIn request, CancellationToken cancellationToken)
+        private readonly IStringLocalizer _localizer;
+        private readonly UserManager<Customer> _userManager;
+        private readonly IConfiguration _configuration;
+        public LogInHandler(IStringLocalizer<ErrorMessages> localizer,
+            UserManager<Customer> userManager,
+            IConfiguration configuration)
         {
-            //TODO
-            throw new NotImplementedException();
+            _localizer = localizer;
+            _userManager = userManager;
+            _configuration = configuration;
         }
     }
 }
