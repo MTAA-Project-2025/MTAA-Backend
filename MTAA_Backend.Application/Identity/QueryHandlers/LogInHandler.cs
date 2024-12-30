@@ -22,5 +22,17 @@ namespace MTAA_Backend.Application.Identity.QueryHandlers
             _userManager = userManager;
             _configuration = configuration;
         }
+        public async Task<TokenDTO> Handle(LogIn request, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null) throw new HttpException(_localizer[ErrorMessagesPatterns.UserBadEmail], HttpStatusCode.NotFound);
+
+            if (!await _userManager.CheckPasswordAsync(user, request.Password)) throw new HttpException(_localizer[ErrorMessagesPatterns.UserBadPassword], HttpStatusCode.BadRequest);
+
+            return new TokenDTO()
+            {
+                Token = await CreateTokenAsync(user)
+            };
+        }
     }
 }
