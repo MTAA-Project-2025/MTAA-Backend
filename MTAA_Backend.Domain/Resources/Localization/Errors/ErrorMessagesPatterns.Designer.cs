@@ -70,6 +70,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EmailAndPhoneNumberNull.
+        /// </summary>
+        public static string EmailAndPhoneNumberNull {
+            get {
+                return ResourceManager.GetString("EmailAndPhoneNumberNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EmailIsNotVerified.
         /// </summary>
         public static string EmailIsNotVerified {
@@ -84,6 +93,33 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string SignUpSessionExpired {
             get {
                 return ResourceManager.GetString("SignUpSessionExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserBadEmail.
+        /// </summary>
+        public static string UserBadEmail {
+            get {
+                return ResourceManager.GetString("UserBadEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserBadPassword.
+        /// </summary>
+        public static string UserBadPassword {
+            get {
+                return ResourceManager.GetString("UserBadPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserBadPhoneNumber.
+        /// </summary>
+        public static string UserBadPhoneNumber {
+            get {
+                return ResourceManager.GetString("UserBadPhoneNumber", resourceCulture);
             }
         }
         
