@@ -120,11 +120,23 @@
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>This email already exists</value>
   </data>
+  <data name="EmailAndPhoneNumberNull" xml:space="preserve">
+    <value>Email and Phone number are null</value>
+  </data>
   <data name="EmailIsNotVerified" xml:space="preserve">
     <value>Email is not verified</value>
   </data>
   <data name="SignUpSessionExpired" xml:space="preserve">
     <value>Session registration has expired</value>
+  </data>
+  <data name="UserBadEmail" xml:space="preserve">
+    <value>You are not registered or the email is incorrect</value>
+  </data>
+  <data name="UserBadPassword" xml:space="preserve">
+    <value>Wrong password</value>
+  </data>
+  <data name="UserBadPhoneNumber" xml:space="preserve">
+    <value>You are not registered or the phone number is incorrect</value>
   </data>
   <data name="UserCreationError" xml:space="preserve">
     <value>Error while creating user</value>

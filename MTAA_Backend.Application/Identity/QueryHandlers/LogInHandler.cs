@@ -1,31 +1,58 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using MTAA_Backend.Application.Identity.Queries;
 using MTAA_Backend.Domain.DTOs.Users.Responses;
+using MTAA_Backend.Domain.Entities.Users;
+using MTAA_Backend.Domain.Exceptions;
+using MTAA_Backend.Domain.Resources.Localization.Errors;
+using MTAA_Backend.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.Identity.QueryHandlers
 {
-    public class LogInHandler : IRequestHandler<LogIn, TokenDTO>
+    public class LogInHandler(IStringLocalizer<ErrorMessages> localizer,
+            UserManager<User> userManager,
+            IConfiguration configuration,
+            MTAA_BackendDbContext dbContext,
+            ILogger<LogInHandler> logger) : IRequestHandler<LogIn, TokenDTO>
     {
-        private readonly IStringLocalizer _localizer;
-        private readonly UserManager<Customer> _userManager;
-        private readonly IConfiguration _configuration;
-        public LogInHandler(IStringLocalizer<ErrorMessages> localizer,
-            UserManager<Customer> userManager,
-            IConfiguration configuration)
-        {
-            _localizer = localizer;
-            _userManager = userManager;
-            _configuration = configuration;
-        }
+        private readonly IStringLocalizer _localizer = localizer;
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly IConfiguration _configuration = configuration;
+        private readonly MTAA_BackendDbContext _dbContext = dbContext;
+        private readonly ILogger _logger = logger;
+
         public async Task<TokenDTO> Handle(LogIn request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null) throw new HttpException(_localizer[ErrorMessagesPatterns.UserBadEmail], HttpStatusCode.NotFound);
+            if (request.PhoneNumber == null && request.Email == null)
+            {
+                _logger.LogError("While loading, Email and Phone Number are null");
+                throw new HttpException(_localizer[ErrorMessagesPatterns.EmailAndPhoneNumberNull], HttpStatusCode.BadRequest);
+            }
+
+            User? user;
+            if (request.Email != null)
+            {
+                user = await _userManager.FindByEmailAsync(request.Email);
+                if (user == null) throw new HttpException(_localizer[ErrorMessagesPatterns.UserBadEmail], HttpStatusCode.NotFound);
+            }
+            else
+            {
+                user = await _dbContext.Users.Where(e => e.PhoneNumber == request.PhoneNumber).FirstOrDefaultAsync(cancellationToken);
+                if (user == null) throw new HttpException(_localizer[ErrorMessagesPatterns.UserBadPhoneNumber], HttpStatusCode.NotFound);
+            }
 
             if (!await _userManager.CheckPasswordAsync(user, request.Password)) throw new HttpException(_localizer[ErrorMessagesPatterns.UserBadPassword], HttpStatusCode.BadRequest);
 
@@ -35,7 +62,7 @@ namespace MTAA_Backend.Application.Identity.QueryHandlers
             };
         }
 
-        private async Task<string> CreateTokenAsync(Customer user)
+        private async Task<string> CreateTokenAsync(User user)
         {
             var signingCredentials = GetSigningCredentials();
             var claims = await GetClaims(user);
@@ -49,12 +76,12 @@ namespace MTAA_Backend.Application.Identity.QueryHandlers
             var secret = new SymmetricSecurityKey(key);
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
-        private async Task<List<Claim>> GetClaims(Customer user)
+        private async Task<List<Claim>> GetClaims(User user)
         {
             var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName)
-                };
+            {
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
             var roles = await _userManager.GetRolesAsync(user);
             foreach (var role in roles)
             {

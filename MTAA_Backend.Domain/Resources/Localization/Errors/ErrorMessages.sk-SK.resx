@@ -120,11 +120,23 @@
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>Tento e-mail už existuje.</value>
   </data>
+  <data name="EmailAndPhoneNumberNull" xml:space="preserve">
+    <value>E-mail a telefónne číslo sú nulové</value>
+  </data>
   <data name="EmailIsNotVerified" xml:space="preserve">
     <value>E-mail nie je overený</value>
   </data>
   <data name="SignUpSessionExpired" xml:space="preserve">
     <value>Registrácia relácie vypršala</value>
+  </data>
+  <data name="UserBadEmail" xml:space="preserve">
+    <value>Nie ste zaregistrovaný alebo je e-mail nesprávny</value>
+  </data>
+  <data name="UserBadPassword" xml:space="preserve">
+    <value>Nesprávne heslo</value>
+  </data>
+  <data name="UserBadPhoneNumber" xml:space="preserve">
+    <value>Nie ste zaregistrovaný alebo je telefónne číslo nesprávne</value>
   </data>
   <data name="UserCreationError" xml:space="preserve">
     <value>Chyba pri vytváraní používateľa</value>
