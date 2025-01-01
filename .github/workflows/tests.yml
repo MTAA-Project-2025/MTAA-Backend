@@ -27,9 +27,11 @@ jobs:
       with:
         dotnet-version: '9.x'
 
-    # Install Aspire workload for .NET 9 (if necessary)
-    - name: Install Aspire workload
-      run: dotnet workload install aspire
+    - name: Install azd
+      uses: Azure/setup-azd@v1.0.0
+
+    - name: Install .NET Aspire workload
+      run: dotnet workload update && dotnet workload install aspire
 
     # Restore dependencies for MTAA_Backend.API and IntegrationTests
     - name: Restore dependencies
