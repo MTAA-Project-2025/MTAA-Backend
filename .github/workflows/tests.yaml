@@ -31,6 +31,16 @@ jobs:
     - name: Install Aspire workload
       run: dotnet workload install aspire
 
+    - name: Restore Aspire orchestration component
+      run: dotnet restore
+
+    - name: Install Aspire Orchestration Component
+      run: dotnet workload install aspire.hosting.orchestration.win-x64
+
+    - name: Check Orchestration Component Path
+      run: ls -la /home/runner/.nuget/packages/aspire.hosting.orchestration.win-x64/9.0.0/tools/
+
+
     # Restore dependencies for MTAA_Backend.API and IntegrationTests
     - name: Restore dependencies
       run: |
