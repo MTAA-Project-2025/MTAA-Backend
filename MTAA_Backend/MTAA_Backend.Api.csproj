@@ -7,10 +7,12 @@
     <UserSecretsId>81503895-a32d-45cf-b4e9-ef9067be098d</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-
+	
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
+    <PackageReference Include="Aspire.Microsoft.Data.SqlClient" Version="9.0.0" />
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageReference Include="Aspire.StackExchange.Redis" Version="9.0.0" />
     <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="9.0.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
@@ -43,5 +45,5 @@
     <ProjectReference Include="..\MTAA_Backend.Infrastructure\MTAA_Backend.Infrastructure.csproj" />
     <ProjectReference Include="..\MTAA_Backend.ServiceDefaults\MTAA_Backend.ServiceDefaults.csproj" />
   </ItemGroup>
-
+	
 </Project>

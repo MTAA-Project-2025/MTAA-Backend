@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTAA_Backend.Api", "MTAA_Backend\MTAA_Backend.Api.csproj", "{DADBFA4F-EF22-42D1-A9FB-98447EC320D8}"
 EndProject
@@ -16,6 +16,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTAA_Backend.Infrastructure", "MTAA_Backend.Infrastructure\MTAA_Backend.Infrastructure.csproj", "{DE808801-8E4E-4CB5-AB64-139B91426CA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{63AB08AF-CE85-4857-AAE0-22C5CD81FC71}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{61F220D5-6444-4F81-8865-3D7D6E15A6ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{57A06B55-6C3A-48EC-B497-BF6C25C330A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +51,10 @@ Global
 		{DE808801-8E4E-4CB5-AB64-139B91426CA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE808801-8E4E-4CB5-AB64-139B91426CA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE808801-8E4E-4CB5-AB64-139B91426CA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57A06B55-6C3A-48EC-B497-BF6C25C330A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57A06B55-6C3A-48EC-B497-BF6C25C330A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57A06B55-6C3A-48EC-B497-BF6C25C330A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57A06B55-6C3A-48EC-B497-BF6C25C330A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +64,7 @@ Global
 		{A29DCF38-31E9-468F-AEC6-E2F0DC0FF7AC} = {63AB08AF-CE85-4857-AAE0-22C5CD81FC71}
 		{01E2FFE8-B021-4207-B47D-36B6D91A9730} = {63AB08AF-CE85-4857-AAE0-22C5CD81FC71}
 		{DE808801-8E4E-4CB5-AB64-139B91426CA7} = {63AB08AF-CE85-4857-AAE0-22C5CD81FC71}
+		{61F220D5-6444-4F81-8865-3D7D6E15A6ED} = {63AB08AF-CE85-4857-AAE0-22C5CD81FC71}
+		{57A06B55-6C3A-48EC-B497-BF6C25C330A0} = {61F220D5-6444-4F81-8865-3D7D6E15A6ED}
 	EndGlobalSection
 EndGlobal
