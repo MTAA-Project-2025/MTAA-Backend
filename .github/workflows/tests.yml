@@ -4,6 +4,7 @@ on:
     - master
     - develop
     - feature/*
+  workflow_dispatch:
 env:
   BUILDCONFIGURATION: Release
   RestoreBuildProjects: '**/*.csproj'
@@ -24,3 +25,4 @@ jobs:
       run: dotnet ${{ env.RestoreBuildProjects }} -c ${{ env.BuildConfiguration }}
     - name: Test with coverage filtering
       run: dotnet test ${{ env.TestProjects }} --configuration ${{ env.BuildConfiguration }} --settings coverage.runsettings --collect "XPlat Code Coverage"
+                    
