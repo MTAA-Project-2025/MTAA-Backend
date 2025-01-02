@@ -1,37 +1,26 @@
-name: Tests
-
 on:
-  pull_request:
+  push:
     branches:
-      - develop
-      - master
-      - release/*
-
+    - master
+    - develop
+    - feature/*
+env:
+  BUILDCONFIGURATION: Release
+  RestoreBuildProjects: '**/*.csproj'
+  TestProjects: '**/*[Tt]ests/*.csproj'
+  vmImageName: ubuntu-latest
 jobs:
-  build-and-test:
-    runs-on: windows-latest
-
+  Build_Stage_Build:
+    name: Build
+    runs-on: ${{ env.vmImageName }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v3
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '9.x'
-
-    - name: Install dependencies
-      run: dotnet restore
-
-    - name: Build the solution
-      run: dotnet build --no-restore
-
-    - name: Run integration tests
-      run: dotnet test IntegrationTests --no-build --logger trx
-
-    - name: Upload test results (optional)
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-results
-        path: '**/*.trx'
+        dotnet-version: 9.x
+    - run: dotnet workload install aspire
+      shell: bash
+    - name: Build
+      run: dotnet ${{ env.RestoreBuildProjects }} -c ${{ env.BuildConfiguration }}
+    - name: Test with coverage filtering
+      run: dotnet test ${{ env.TestProjects }} --configuration ${{ env.BuildConfiguration }} --settings coverage.runsettings --collect "XPlat Code Coverage"
