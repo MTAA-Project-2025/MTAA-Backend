@@ -1,56 +1,37 @@
-trigger:
-  - master
-  - develop
-  - release/*
+name: Tests
 
-resources:
-  - repo: self
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+      - release/*
 
-variables:
-  BUILDCONFIGURATION: Release
-  RestoreBuildProjects: "**/*.csproj"
-  TestProjects: "**/*[Tt]ests/*.csproj"
+jobs:
+  build-and-test:
+    runs-on: windows-latest
 
-  # Agent VM image name
-  vmImageName: "ubuntu-latest"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-stages:
-  - stage: Build
-    displayName: Build and push stage
-    jobs:
-      - job: Build
-        displayName: Build
-        pool:
-          vmImage: $(vmImageName)
-        steps:
-          # Use the correct .NET SDK version
-          - task: UseDotNet@2
-            inputs:
-              packageType: 'sdk'
-              version: '8.x'
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.x'
 
-          # Install the necessary .NET workload
-          - task: Bash@3
-            inputs:
-              targetType: "inline"
-              script: "dotnet workload install aspire"
+    - name: Install dependencies
+      run: dotnet restore
 
-          # Build the project
-          - task: DotNetCoreCLI@2
-            displayName: Build
-            inputs:
-              projects: $(RestoreBuildProjects)
-              arguments: -c $(BuildConfiguration)
+    - name: Build the solution
+      run: dotnet build --no-restore
 
-          # Run tests and collect code coverage
-          - task: DotNetCoreCLI@2
-            displayName: Test with coverage filtering
-            inputs:
-              command: "test"
-              projects: "$(TestProjects)"
-              arguments: '--configuration $(BuildConfiguration) --settings coverage.runsettings --collect "XPlat Code Coverage"'
+    - name: Run integration tests
+      run: dotnet test IntegrationTests --no-build --logger trx
 
-          # Publish code coverage results
-          - task: PublishCodeCoverageResults@2
-            inputs:
-              summaryFileLocation: "$(Agent.TempDirectory)/**/coverage.cobertura.xml"
+    - name: Upload test results (optional)
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: '**/*.trx'
