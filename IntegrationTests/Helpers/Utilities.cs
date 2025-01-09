@@ -26,6 +26,8 @@ namespace IntegrationTests.Helpers
                 Email = UserSettings.Email,
                 EmailConfirmed = true,
                 Status = "",
+                PhoneNumber = UserSettings.PhoneNumber,
+                PhoneNumberConfirmed = true
             };
             var result = await userManager.CreateAsync(testUser, UserSettings.Password);
 
