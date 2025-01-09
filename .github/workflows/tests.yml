@@ -1,28 +1,54 @@
+name: Tests CI Pipeline
+
 on:
   push:
     branches:
-    - master
-    - develop
-    - feature/*
-  workflow_dispatch:
-env:
-  BUILDCONFIGURATION: Release
-  RestoreBuildProjects: '**/*.csproj'
-  TestProjects: '**/*[Tt]ests/*.csproj'
-  vmImageName: ubuntu-latest
+      - master
+      - release/*
+      - develop
+  pull_request:
+    branches:
+      - master
+      - release/*
+      - develop
+
 jobs:
-  Build_Stage_Build:
-    name: Build
-    runs-on: ${{ env.vmImageName }}
+  build_and_test:
+    runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-dotnet@v1
+    # Checkout the code from the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up .NET SDK 9.x
+    - name: Set up .NET SDK 9.x
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 9.x
-    - run: dotnet workload install aspire
-      shell: bash
-    - name: Build
-      run: dotnet ${{ env.RestoreBuildProjects }} -c ${{ env.BuildConfiguration }}
-    - name: Test with coverage filtering
-      run: dotnet test ${{ env.TestProjects }} --configuration ${{ env.BuildConfiguration }} --settings coverage.runsettings --collect "XPlat Code Coverage"
-                    
+        dotnet-version: '9.x'
+
+    # Install Aspire workload for .NET 9 (if necessary)
+    - name: Install Aspire workload
+      run: dotnet workload install aspire
+
+    # Restore dependencies for MTAA_Backend.API and IntegrationTests
+    - name: Restore dependencies
+      run: |
+        dotnet restore MTAA_Backend/MTAA_Backend.API.csproj
+        dotnet restore MTAA_Backend/MTAA_Backend.Api.csproj
+        dotnet restore IntegrationTests/IntegrationTests.csproj
+    # Build the MTAA_Backend.API project
+    - name: Build API project
+      run: |
+        dotnet build MTAA_Backend/MTAA_Backend.API.csproj -c Release
+        dotnet build MTAA_Backend/MTAA_Backend.Api.csproj -c Release
+    # Run integration tests with code coverage
+    - name: Run Integration Tests
+      run: |
+        dotnet test IntegrationTests/IntegrationTests.csproj -c Release --collect "XPlat Code Coverage" --results-directory ./TestResults
+    # Publish test results (optional, for CI insights)
+    - name: Publish Test Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: TestResults
+        path: ./TestResults/
