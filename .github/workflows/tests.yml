@@ -1,37 +1,54 @@
-name: Tests
+name: Tests CI Pipeline
 
 on:
-  pull_request:
+  push:
     branches:
-      - develop
       - master
       - release/*
+      - develop
+  pull_request:
+    branches:
+      - master
+      - release/*
+      - develop
 
 jobs:
-  build-and-test:
-    runs-on: windows-latest
+  build_and_test:
+    runs-on: ubuntu-latest
 
     steps:
+    # Checkout the code from the repository
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up .NET
+    # Set up .NET SDK 9.x
+    - name: Set up .NET SDK 9.x
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '9.x'
 
-    - name: Install dependencies
-      run: dotnet restore
+    # Install Aspire workload for .NET 9 (if necessary)
+    - name: Install Aspire workload
+      run: dotnet workload install aspire
 
-    - name: Build the solution
-      run: dotnet build --no-restore
-
-    - name: Run integration tests
-      run: dotnet test IntegrationTests --no-build --logger trx
-
-    - name: Upload test results (optional)
-      if: always()
+    # Restore dependencies for MTAA_Backend.API and IntegrationTests
+    - name: Restore dependencies
+      run: |
+        dotnet restore MTAA_Backend.AppHost/MTAA_Backend.AppHost.csproj
+        dotnet restore MTAA_Backend.AppHost/MTAA_Backend.AppHost.csproj
+        dotnet restore IntegrationTests/IntegrationTests.csproj
+    # Build the MTAA_Backend.API project
+    - name: Build API project
+      run: |
+        dotnet build MTAA_Backend.AppHost/MTAA_Backend.AppHost.csproj -c Release
+        dotnet build MTAA_Backend.AppHost/MTAA_Backend.AppHost.csproj-c Release
+    # Run integration tests with code coverage
+    - name: Run Integration Tests
+      run: |
+        dotnet test IntegrationTests/IntegrationTests.csproj -c Release --collect "XPlat Code Coverage" --results-directory ./TestResults
+    # Publish test results (optional, for CI insights)
+    - name: Publish Test Results
       uses: actions/upload-artifact@v3
       with:
-        name: test-results
-        path: '**/*.trx'
+        name: TestResults
+        path: ./TestResults/
