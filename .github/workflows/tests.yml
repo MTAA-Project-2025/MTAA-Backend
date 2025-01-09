@@ -34,14 +34,14 @@ jobs:
     # Restore dependencies for MTAA_Backend.API and IntegrationTests
     - name: Restore dependencies
       run: |
-        dotnet restore MTAA_Backend/MTAA_Backend.API.csproj
-        dotnet restore MTAA_Backend/MTAA_Backend.Api.csproj
+        dotnet restore MTAA_Backend.AppHost/MTAA_Backend.AppHost.csproj
+        dotnet restore MTAA_Backend.AppHost/MTAA_Backend.AppHost.csproj
         dotnet restore IntegrationTests/IntegrationTests.csproj
     # Build the MTAA_Backend.API project
     - name: Build API project
       run: |
-        dotnet build MTAA_Backend/MTAA_Backend.API.csproj -c Release
-        dotnet build MTAA_Backend/MTAA_Backend.Api.csproj -c Release
+        dotnet build MTAA_Backend.AppHost/MTAA_Backend.AppHost.csproj -c Release
+        dotnet build MTAA_Backend.AppHost/MTAA_Backend.AppHost.csproj-c Release
     # Run integration tests with code coverage
     - name: Run Integration Tests
       run: |
