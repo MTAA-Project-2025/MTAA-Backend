@@ -158,5 +158,104 @@ namespace IntegrationTests.Tests
             Assert.False(verifyEmailresult);
         }
         #endregion
+
+        #region log-in
+        [Fact]
+        public async Task Log_In_Correct_Email_Correct_Password()
+        {
+            // Arrange
+            LogInRequest logInRequest = new LogInRequest()
+            {
+                Email = UserSettings.Email,
+                Password = UserSettings.Password
+            };
+
+            var logInResponse = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", logInRequest);
+
+            // Assert
+            logInResponse.EnsureSuccessStatusCode();
+            var tokenResponse = await logInResponse.Content.ReadFromJsonAsync<TokenDTO>();
+            Assert.NotNull(tokenResponse);
+            Assert.NotEmpty(tokenResponse.Token);
+        }
+        [Fact]
+        public async Task Log_In_Correct_Email_Incorrect_Password()
+        {
+            // Arrange
+            LogInRequest logInRequest = new LogInRequest()
+            {
+                Email = UserSettings.Email,
+                Password = "125214123"
+            };
+
+            var logInResponse = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", logInRequest);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, logInResponse.StatusCode);
+        }
+        [Fact]
+        public async Task Log_In_Incorrect_Email_Incorrect_Password()
+        {
+            // Arrange
+            LogInRequest logInRequest = new LogInRequest()
+            {
+                Email = "test@test.com",
+                Password = "125214123"
+            };
+
+            var logInResponse = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", logInRequest);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, logInResponse.StatusCode);
+        }
+        [Fact]
+        public async Task Log_In_Correct_PhoneNumber_Correct_Password()
+        {
+            // Arrange
+            LogInRequest logInRequest = new LogInRequest()
+            {
+                PhoneNumber = UserSettings.PhoneNumber,
+                Password = UserSettings.Password
+            };
+
+            var logInResponse = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", logInRequest);
+
+            // Assert
+            logInResponse.EnsureSuccessStatusCode();
+            var tokenResponse = await logInResponse.Content.ReadFromJsonAsync<TokenDTO>();
+            Assert.NotNull(tokenResponse);
+            Assert.NotEmpty(tokenResponse.Token);
+        }
+        [Fact]
+        public async Task Log_In_Correct_PhoneNumber_Incorrect_Password()
+        {
+            // Arrange
+            LogInRequest logInRequest = new LogInRequest()
+            {
+                PhoneNumber = UserSettings.PhoneNumber,
+                Password = "125214123"
+            };
+
+            var logInResponse = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", logInRequest);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, logInResponse.StatusCode);
+        }
+        [Fact]
+        public async Task Log_In_Incorrect_PhoneNumber_Incorrect_Password()
+        {
+            // Arrange
+            LogInRequest logInRequest = new LogInRequest()
+            {
+                PhoneNumber = "+0987654321",
+                Password = "125214123"
+            };
+
+            var logInResponse = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", logInRequest);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, logInResponse.StatusCode);
+        }
+        #endregion
     }
 }
