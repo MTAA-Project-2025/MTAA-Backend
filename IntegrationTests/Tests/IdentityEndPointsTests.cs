@@ -191,7 +191,7 @@ namespace IntegrationTests.Tests
             var logInResponse = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", logInRequest);
 
             // Assert
-            Assert.Equal(HttpStatusCode.NotFound, logInResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, logInResponse.StatusCode);
         }
         [Fact]
         public async Task Log_In_Incorrect_Email_Incorrect_Password()
@@ -239,7 +239,7 @@ namespace IntegrationTests.Tests
             var logInResponse = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", logInRequest);
 
             // Assert
-            Assert.Equal(HttpStatusCode.NotFound, logInResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, logInResponse.StatusCode);
         }
         [Fact]
         public async Task Log_In_Incorrect_PhoneNumber_Incorrect_Password()
