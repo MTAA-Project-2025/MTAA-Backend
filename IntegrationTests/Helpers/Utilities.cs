@@ -32,6 +32,7 @@ namespace IntegrationTests.Helpers
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(testUser, UserRoles.User);
+                await userManager.SetPhoneNumberAsync(testUser, UserSettings.PhoneNumber);
             }
             await context.SaveChangesAsync();
         }
