@@ -41,9 +41,13 @@ namespace MTAA_Backend.Application.Identity.CommandHandlers
             var codeModel = await _distributedCache.GetRecordAsync<VerificationCodeModel>(recordId);
             if (codeModel == null) return false;
 
-            if (codeModel.Code != request.Code || DateTime.UtcNow > codeModel.ExpirationTime)
+            if (DateTime.UtcNow > codeModel.ExpirationTime)
             {
                 await _distributedCache.RemoveAsync(recordId);
+                return false;
+            }
+            if (codeModel.Code != request.Code)
+            {
                 return false;
             }
             codeModel.IsVerified = true;

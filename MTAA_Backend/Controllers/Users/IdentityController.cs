@@ -19,7 +19,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         [HttpPost]
         [Route("sign-up-start-email-verification")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<TokenDTO>> SignUpStartEmailVerification([FromBody] StartSignUpEmailVerificationRequest request)
+        public async Task<ActionResult> SignUpStartEmailVerification([FromBody] StartSignUpEmailVerificationRequest request)
         {
             var command = _mapper.Map<StartSignUpEmailVerification>(request);
             await _mediator.Send(command);
@@ -29,7 +29,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         [HttpPost]
         [Route("sign-up-verify-email")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<TokenDTO>> SignUpVerifyEmail([FromBody] SignUpVerifyEmailRequest request)
+        public async Task<ActionResult<bool>> SignUpVerifyEmail([FromBody] SignUpVerifyEmailRequest request)
         {
             var command = _mapper.Map<SignUpVerifyEmail>(request);
             var res = await _mediator.Send(command);
