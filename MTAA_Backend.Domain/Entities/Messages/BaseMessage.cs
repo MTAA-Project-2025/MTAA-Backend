@@ -1,4 +1,4 @@
-﻿using MTAA_Backend.Domain.Entities.Chats;
+﻿using MTAA_Backend.Domain.Entities.Groups;
 using MTAA_Backend.Domain.Entities.Shared;
 using MTAA_Backend.Domain.Entities.Users;
 using System;
@@ -17,10 +17,12 @@ namespace MTAA_Backend.Domain.Entities.Messages
 
         public bool IsRead { get; set; }
 
-        public Chat Chat { get; set; }
-        public Guid ChatId { get; set; }
+        public BaseGroup Group { get; set; }
+        public Guid GroupId { get; set; }
 
         public User Sender { get; set; }
         public string SenderId { get; set; }
+
+        public ICollection<UserGroupMembership> LastMessageUserGroupMemberships { get; set; } = new HashSet<UserGroupMembership>();
     }
 }

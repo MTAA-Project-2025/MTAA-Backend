@@ -14,15 +14,20 @@ namespace MTAA_Backend.Infrastructure.Configuration.Messages
     {
         public void Configure(EntityTypeBuilder<BaseMessage> builder)
         {
-            builder.HasOne(e => e.Chat)
+            builder.HasOne(e => e.Group)
                    .WithMany(e => e.Messages)
-                   .HasForeignKey(e => e.ChatId)
+                   .HasForeignKey(e => e.GroupId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Sender)
                    .WithMany(e => e.Messages)
                    .HasForeignKey(e => e.SenderId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(e => e.LastMessageUserGroupMemberships)
+                   .WithOne(e => e.LastMessage)
+                   .HasForeignKey(e => e.LastMessageId)
+                   .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

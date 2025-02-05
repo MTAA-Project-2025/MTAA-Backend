@@ -13,6 +13,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Resources\Groups\ChannelVisibilityTypesLocalization\GroupVisibilityTypeDescriptions.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GroupVisibilityTypeDescriptions.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Groups\ChannelVisibilityTypesLocalization\GroupVisibilityTypeNames.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GroupVisibilityTypeNames.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Localization\Errors\ErrorMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -26,6 +36,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Resources\Groups\ChannelVisibilityTypesLocalization\GroupVisibilityTypeDescriptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GroupVisibilityTypeDescriptions.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Groups\ChannelVisibilityTypesLocalization\GroupVisibilityTypeNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GroupVisibilityTypeNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Localization\Errors\ErrorMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>

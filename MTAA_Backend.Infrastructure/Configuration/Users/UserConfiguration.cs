@@ -14,7 +14,7 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasMany(e => e.Chats)
+            builder.HasMany(e => e.Groups)
                    .WithMany(e => e.Participants);
 
             builder.HasMany(e => e.Messages)
@@ -35,6 +35,11 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .WithOne(e => e.Contact)
                    .HasForeignKey(e => e.ContactId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(e => e.UserGroupMemberships)
+                   .WithOne(e => e.User)
+                   .HasForeignKey(e => e.UserId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
