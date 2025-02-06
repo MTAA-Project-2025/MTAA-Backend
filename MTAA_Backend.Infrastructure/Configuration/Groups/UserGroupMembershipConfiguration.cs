@@ -24,7 +24,7 @@ namespace MTAA_Backend.Infrastructure.Configuration.Groups
             builder.HasOne(e => e.LastMessage)
                      .WithMany(e => e.LastMessageUserGroupMemberships)
                      .HasForeignKey(e => e.LastMessageId)
-                     .OnDelete(DeleteBehavior.SetNull);
+                     .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasIndex(e => new { e.IsNotificationEnabled, e.IsArchived, e.UnreadMessagesCount });
         }

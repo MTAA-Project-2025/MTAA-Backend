@@ -15,10 +15,11 @@
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
     <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
     <PackageReference Include="Aspire.Hosting.SqlServer" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MTAA_Backend.MigrationService\MTAA_Backend.MigrationService.csproj" />
     <ProjectReference Include="..\MTAA_Backend\MTAA_Backend.Api.csproj" />
   </ItemGroup>
 

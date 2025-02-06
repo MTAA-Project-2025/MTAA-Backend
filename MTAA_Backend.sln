@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{61F220D5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{57A06B55-6C3A-48EC-B497-BF6C25C330A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTAA_Backend.MigrationService", "MTAA_Backend.MigrationService\MTAA_Backend.MigrationService.csproj", "{08D17D64-A693-4E94-A413-5EC7B822ABBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{57A06B55-6C3A-48EC-B497-BF6C25C330A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57A06B55-6C3A-48EC-B497-BF6C25C330A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57A06B55-6C3A-48EC-B497-BF6C25C330A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D17D64-A693-4E94-A413-5EC7B822ABBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D17D64-A693-4E94-A413-5EC7B822ABBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D17D64-A693-4E94-A413-5EC7B822ABBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D17D64-A693-4E94-A413-5EC7B822ABBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
