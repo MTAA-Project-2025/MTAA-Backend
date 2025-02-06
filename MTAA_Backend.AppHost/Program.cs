@@ -14,4 +14,8 @@ builder.AddProject<Projects.MTAA_Backend_Api>("mtaa-backend")
        .WithReference(db)
        .WaitFor(db);
 
+builder.AddProject<Projects.MTAA_Backend_MigrationService>("migrations")
+       .WithReference(db)
+       .WaitFor(db);
+
 builder.Build().Run();

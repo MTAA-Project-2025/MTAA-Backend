@@ -26,13 +26,16 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chats",
+                name: "BaseGroups",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Theme = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Visibility = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdentificationName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataLastDeleteTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DataLastEditTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -41,7 +44,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chats", x => x.Id);
+                    table.PrimaryKey("PK_BaseGroups", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,7 +100,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     DataLastEditTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     IsEdited = table.Column<bool>(type: "bit", nullable: false),
-                    AvatarId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AvatarId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -120,8 +123,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         name: "FK_AspNetUsers_ImageGroups_AvatarId",
                         column: x => x.AvatarId,
                         principalTable: "ImageGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -234,13 +236,37 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BaseGroupUser",
+                columns: table => new
+                {
+                    GroupsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ParticipantsId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BaseGroupUser", x => new { x.GroupsId, x.ParticipantsId });
+                    table.ForeignKey(
+                        name: "FK_BaseGroupUser_AspNetUsers_ParticipantsId",
+                        column: x => x.ParticipantsId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BaseGroupUser_BaseGroups_GroupsId",
+                        column: x => x.GroupsId,
+                        principalTable: "BaseGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BaseMessages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
-                    ChatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DataCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataLastDeleteTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -258,33 +284,9 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BaseMessages_Chats_ChatId",
-                        column: x => x.ChatId,
-                        principalTable: "Chats",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ChatUser",
-                columns: table => new
-                {
-                    ChatsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ParticipantsId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChatUser", x => new { x.ChatsId, x.ParticipantsId });
-                    table.ForeignKey(
-                        name: "FK_ChatUser_AspNetUsers_ParticipantsId",
-                        column: x => x.ParticipantsId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ChatUser_Chats_ChatsId",
-                        column: x => x.ChatsId,
-                        principalTable: "Chats",
+                        name: "FK_BaseMessages_BaseGroups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "BaseGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -319,6 +321,40 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserGroupMemberships",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsNotificationEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
+                    LastMessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UnreadMessagesCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserGroupMemberships", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserGroupMemberships_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserGroupMemberships_BaseGroups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "BaseGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserGroupMemberships_BaseMessages_LastMessageId",
+                        column: x => x.LastMessageId,
+                        principalTable: "BaseMessages",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -357,7 +393,8 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "IX_AspNetUsers_AvatarId",
                 table: "AspNetUsers",
                 column: "AvatarId",
-                unique: true);
+                unique: true,
+                filter: "[AvatarId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -367,19 +404,24 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BaseMessages_ChatId",
+                name: "IX_BaseGroups_Type",
+                table: "BaseGroups",
+                column: "Type");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BaseGroupUser_ParticipantsId",
+                table: "BaseGroupUser",
+                column: "ParticipantsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BaseMessages_GroupId",
                 table: "BaseMessages",
-                column: "ChatId");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BaseMessages_SenderId",
                 table: "BaseMessages",
                 column: "SenderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChatUser_ParticipantsId",
-                table: "ChatUser",
-                column: "ParticipantsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_ImageGroupId",
@@ -394,6 +436,26 @@ namespace MTAA_Backend.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserContacts_UserId",
                 table: "UserContacts",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroupMemberships_GroupId",
+                table: "UserGroupMemberships",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroupMemberships_IsNotificationEnabled_IsArchived_UnreadMessagesCount",
+                table: "UserGroupMemberships",
+                columns: new[] { "IsNotificationEnabled", "IsArchived", "UnreadMessagesCount" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroupMemberships_LastMessageId",
+                table: "UserGroupMemberships",
+                column: "LastMessageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroupMemberships_UserId",
+                table: "UserGroupMemberships",
                 column: "UserId");
         }
 
@@ -416,10 +478,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BaseMessages");
-
-            migrationBuilder.DropTable(
-                name: "ChatUser");
+                name: "BaseGroupUser");
 
             migrationBuilder.DropTable(
                 name: "Images");
@@ -428,13 +487,19 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "UserContacts");
 
             migrationBuilder.DropTable(
+                name: "UserGroupMemberships");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "BaseMessages");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "BaseGroups");
 
             migrationBuilder.DropTable(
                 name: "ImageGroups");

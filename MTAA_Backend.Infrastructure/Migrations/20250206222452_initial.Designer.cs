@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MTAA_Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(MTAA_BackendDbContext))]
-    [Migration("20250205224648_add-groups")]
-    partial class addgroups
+    [Migration("20250206222452_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -567,7 +567,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasOne("MTAA_Backend.Domain.Entities.Messages.BaseMessage", "LastMessage")
                         .WithMany("LastMessageUserGroupMemberships")
                         .HasForeignKey("LastMessageId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User")
                         .WithMany("UserGroupMemberships")
