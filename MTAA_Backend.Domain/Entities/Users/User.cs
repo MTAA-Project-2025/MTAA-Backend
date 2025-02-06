@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using MTAA_Backend.Domain.Entities.Chats;
+using MTAA_Backend.Domain.Entities.Groups;
 using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Entities.Messages;
 using MTAA_Backend.Domain.Entities.Shared;
@@ -30,8 +30,9 @@ namespace MTAA_Backend.Domain.Entities.Users
         public ICollection<UserContact> Contacts { get; set; } = new HashSet<UserContact>();
         public ICollection<UserContact> ContactOf { get; set; } = new HashSet<UserContact>();
 
-        public ICollection<Chat> Chats { get; set; } = new HashSet<Chat>();
+        public ICollection<BaseGroup> Groups { get; set; } = new HashSet<BaseGroup>();
         public ICollection<BaseMessage> Messages { get; set; } = new HashSet<BaseMessage>();
+        public ICollection<UserGroupMembership> UserGroupMemberships { get; set; } = new HashSet<UserGroupMembership>();
 
         public MyImageGroup? Avatar { get; set; }
         public Guid? AvatarId { get; set; }
