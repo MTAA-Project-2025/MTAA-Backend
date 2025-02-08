@@ -20,7 +20,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        //var connectionString = builder.Configuratearion.GetConnectionString("DbContextConnection") ?? throw new InvalidOperationException("Connection string 'DbContextConnection' not found.");
+        //var connectionString = builder.Configuratearion.GetContwrnectionString("DbContextConnection") ?? throw new InvalidOperationException("Connection string 'DbContextConnection' not found.");
 
         ConfigurationManager configuration = builder.Configuration;
 
