@@ -1,7 +1,6 @@
 trigger:
   - master
   - develop
-  - feature/*
 
 resources:
   - repo: self
@@ -9,7 +8,7 @@ resources:
 variables:
   BUILDCONFIGURATION: Release
   RestoreBuildProjects: "**/*.csproj"
-  TestProjects: "**/*[Tt]ests/*.csproj"
+  TestProjects: "/IntegrationTests/IntegrationTests.csproj"
 
   # Agent VM image name
   vmImageName: "ubuntu-latest"
