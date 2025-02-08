@@ -63,6 +63,8 @@ public class Program
         builder.Services.AddScoped<ICodeGeneratorService, CodeGeneratorService>();
         builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<ILanguageService, LanguageService>();
+        builder.Services.AddScoped<IAzureBlobService, AzureBlobService>();
+        builder.Services.AddScoped<IImageService, ImageService>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

@@ -88,6 +88,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ImageFormatNotAllowed.
+        /// </summary>
+        public static string ImageFormatNotAllowed {
+            get {
+                return ResourceManager.GetString("ImageFormatNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SignUpSessionExpired.
         /// </summary>
         public static string SignUpSessionExpired {

@@ -126,6 +126,9 @@
   <data name="EmailIsNotVerified" xml:space="preserve">
     <value>Email is not verified</value>
   </data>
+  <data name="ImageFormatNotAllowed" xml:space="preserve">
+    <value>Image format not allowed</value>
+  </data>
   <data name="SignUpSessionExpired" xml:space="preserve">
     <value>Session registration has expired</value>
   </data>
