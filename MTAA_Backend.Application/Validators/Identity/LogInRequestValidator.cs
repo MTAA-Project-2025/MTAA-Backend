@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MTAA_Backend.Application.Extensions;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,15 @@ namespace MTAA_Backend.Application.Validators.Identity
         public LogInRequestValidator()
         {
             RuleFor(e => e.Email)
+                .EmailAddress()
                 .MaximumLength(200);
 
             RuleFor(e => e.Password)
-                .NotEmpty()
-                .MaximumLength(200);
+                .Password();
 
             RuleFor(e => e.PhoneNumber)
-                .MaximumLength(20);
+                .PhoneNumber();
         }
+
     }
 }

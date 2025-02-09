@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MTAA_Backend.Application.Extensions;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,10 @@ namespace MTAA_Backend.Application.Validators.Identity
                 .MaximumLength(200);
 
             RuleFor(x => x.Password)
-                .NotEmpty()
-                .MinimumLength(8)
-                .MaximumLength(200);
+                .Password();
 
             RuleFor(x => x.UserName)
-                .NotEmpty()
-                .MaximumLength(200);
+                .Username();
         }
     }
 }
