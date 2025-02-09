@@ -21,7 +21,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         #region get
         [HttpGet]
         [Route("public-full-account/{userId}")]
-        [ProducesResponseType(typeof(ICollection<PublicFullAccountResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PublicFullAccountResponse), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<PublicFullAccountResponse>> PublicGetFullAccount([FromRoute] string userId)
         {
             var query = new PublicGetFullAccount()
@@ -37,7 +37,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         [HttpPut]
         [Authorize(Roles = UserRoles.User)]
         [Route("custom-update-account-avatar")]
-        [ProducesResponseType(typeof(ICollection<MyImageGroupResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(MyImageGroupResponse), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<MyImageGroupResponse>> CustomUpdateAccountAvatar([FromForm] CustomUpdateAccountAvatarRequest request)
         {
             var command = _mapper.Map<CustomUpdateAccountAvatar>(request);
@@ -48,7 +48,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         [HttpPut]
         [Authorize(Roles = UserRoles.User)]
         [Route("preset-update-account-avatar")]
-        [ProducesResponseType(typeof(ICollection<MyImageGroupResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(MyImageGroupResponse), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<MyImageGroupResponse>> PresetUpdateAccountAvatar([FromBody] PresetUpdateAccountAvatarRequest request)
         {
             var command = _mapper.Map<PresetUpdateAccountAvatar>(request);

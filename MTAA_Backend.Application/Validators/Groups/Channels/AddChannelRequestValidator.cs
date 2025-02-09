@@ -26,7 +26,6 @@ namespace MTAA_Backend.Application.Validators.Groups.Channels
                 .Must(visibility => visibilities.Contains(visibility));
 
             this.RuleFor(e => e.Image)
-                .NotNull()
                 .ChildRules(p => p.RuleFor(e => e.Length)
                     .GreaterThan(0)
                     .WithMessage("The image should be not empty")

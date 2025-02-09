@@ -70,6 +70,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel not found.
+        /// </summary>
+        public static string ChannelNotFound {
+            get {
+                return ResourceManager.GetString("ChannelNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This email already exists.
         /// </summary>
         public static string EmailAlreadyExists {
@@ -165,6 +174,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string UserCreationError {
             get {
                 return ResourceManager.GetString("UserCreationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User does not have rules.
+        /// </summary>
+        public static string UserDontHaveRules {
+            get {
+                return ResourceManager.GetString("UserDontHaveRules", resourceCulture);
             }
         }
         
