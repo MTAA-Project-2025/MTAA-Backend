@@ -129,6 +129,9 @@
   <data name="ImageFormatNotAllowed" xml:space="preserve">
     <value>Formát obrázka nie je povolený</value>
   </data>
+  <data name="PresetAvatarNotFound" xml:space="preserve">
+    <value>Prednastavený avatar sa nenašiel</value>
+  </data>
   <data name="SignUpSessionExpired" xml:space="preserve">
     <value>Registrácia relácie vypršala</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="UserCreationError" xml:space="preserve">
     <value>Chyba pri vytváraní používateľa</value>
+  </data>
+  <data name="UserNotAuthorized" xml:space="preserve">
+    <value>Používateľ nie je autorizovaný</value>
   </data>
   <data name="VerificationCodeAlreadySent" xml:space="preserve">
     <value>Potvrdzovací kód už bol odoslaný</value>

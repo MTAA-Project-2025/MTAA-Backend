@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Identity.Client;
-using MTAA_Backend.Domain.DTOs.Users.Responses;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;

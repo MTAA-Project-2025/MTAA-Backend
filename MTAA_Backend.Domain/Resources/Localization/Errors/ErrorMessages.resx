@@ -129,6 +129,9 @@
   <data name="ImageFormatNotAllowed" xml:space="preserve">
     <value>Image format not allowed</value>
   </data>
+  <data name="PresetAvatarNotFound" xml:space="preserve">
+    <value>Preset avatar not found</value>
+  </data>
   <data name="SignUpSessionExpired" xml:space="preserve">
     <value>Session registration has expired</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="UserCreationError" xml:space="preserve">
     <value>Error while creating user</value>
+  </data>
+  <data name="UserNotAuthorized" xml:space="preserve">
+    <value>User not authorized</value>
   </data>
   <data name="VerificationCodeAlreadySent" xml:space="preserve">
     <value>Confirmation code has already been sent</value>

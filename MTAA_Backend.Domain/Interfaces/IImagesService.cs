@@ -14,6 +14,6 @@ namespace MTAA_Backend.Domain.Interfaces
         public Task<MyImageGroup> SaveImage(IFormFile file, ImageSavingTypes type, CancellationToken cancellationToken = default);
         public Task<ICollection<MyImageGroup>> SaveImages(ICollection<IFormFile> files, ImageSavingTypes type, CancellationToken cancellationToken = default);
 
-        public Task RemoveImageGroup(MyImageGroup myImageGroup, ImageSavingTypes type, CancellationToken cancellationToken = default)
+        public Task RemoveImageGroup(MyImageGroup myImageGroup, CancellationToken cancellationToken = default);
     }
 }

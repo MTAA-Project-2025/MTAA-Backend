@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.Extensions;
 using MTAA_Backend.Application.Identity.Commands;
-using MTAA_Backend.Domain.DTOs.Users.Other;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Other;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Localization.Errors;

@@ -25,4 +25,9 @@
     <ProjectReference Include="..\MTAA_Backend.Infrastructure\MTAA_Backend.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Account\QueryHandlers\" />
+    <Folder Include="Account\Queries\" />
+  </ItemGroup>
+
 </Project>

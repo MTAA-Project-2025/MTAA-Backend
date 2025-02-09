@@ -6,7 +6,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MTAA_Backend.Application.Identity.Queries;
-using MTAA_Backend.Domain.DTOs.Users.Responses;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Responses;
 using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Resources.Localization.Errors;

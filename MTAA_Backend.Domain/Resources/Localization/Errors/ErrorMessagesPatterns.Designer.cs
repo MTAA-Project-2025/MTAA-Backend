@@ -97,6 +97,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PresetAvatarNotFound.
+        /// </summary>
+        public static string PresetAvatarNotFound {
+            get {
+                return ResourceManager.GetString("PresetAvatarNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SignUpSessionExpired.
         /// </summary>
         public static string SignUpSessionExpired {
@@ -138,6 +147,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string UserCreationError {
             get {
                 return ResourceManager.GetString("UserCreationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserNotAuthorized.
+        /// </summary>
+        public static string UserNotAuthorized {
+            get {
+                return ResourceManager.GetString("UserNotAuthorized", resourceCulture);
             }
         }
         

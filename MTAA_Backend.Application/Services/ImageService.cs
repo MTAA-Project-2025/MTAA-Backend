@@ -163,7 +163,7 @@ namespace MTAA_Backend.Application.Services
             return images;
         }
 
-        public async Task RemoveImageGroup(MyImageGroup myImageGroup, ImageSavingTypes type, CancellationToken cancellationToken = default)
+        public async Task RemoveImageGroup(MyImageGroup myImageGroup, CancellationToken cancellationToken = default)
         {
             if (myImageGroup == null) return;
 
