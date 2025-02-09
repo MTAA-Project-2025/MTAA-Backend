@@ -1,4 +1,5 @@
-﻿using MTAA_Backend.Domain.Entities.Shared;
+﻿using MTAA_Backend.Domain.Entities.Groups;
+using MTAA_Backend.Domain.Entities.Shared;
 using MTAA_Backend.Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,8 @@ namespace MTAA_Backend.Domain.Entities.Images
 
         public UserAvatar? UserAvatar { get; set; }
         public string? UserAvatarId { get; set; }
+
+        public Channel? Channel { get; set; }
+        public Guid? ChannelId { get; set; }
     }
 }

@@ -53,6 +53,9 @@ namespace MTAA_Backend.Application.Services
                 case ImageSavingTypes.UserAvatar:
                     return await SaveImage(file, new int[] { 100, 300 }, cancellationToken);
                     break;
+                case ImageSavingTypes.ChannelImage:
+                    return await SaveImage(file, new int[] { 100, 300, 500 }, cancellationToken);
+                    break;
             }
             return null;
         }
@@ -62,6 +65,9 @@ namespace MTAA_Backend.Application.Services
             {
                 case ImageSavingTypes.UserAvatar:
                     return await SaveImages(files, new int[] { 100, 300 }, cancellationToken);
+                    break;
+                case ImageSavingTypes.ChannelImage:
+                    return await SaveImages(files, new int[] { 100, 300, 500 }, cancellationToken);
                     break;
             }
             return new List<MyImageGroup>();

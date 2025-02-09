@@ -19,13 +19,14 @@ namespace MTAA_Backend.Infrastructure
         #endregion
 
         public DbSet<BaseMessage> BaseMessages { get; set; }
+
         public DbSet<UserContact> UserContacts { get; set; }
+        public DbSet<UserAvatar> UserAvatars { get; set; }
 
         public DbSet<MyImageGroup> ImageGroups { get; set; }
         public DbSet<UserPresetAvatarImage> UserPresetAvatarImages { get; set; }
         public DbSet<MyImage> Images { get; set; }
 
-        public DbSet<UserAvatar> UserAvatars { get; set; }
 
         public MTAA_BackendDbContext(DbContextOptions options) : base(options)
         {

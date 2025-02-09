@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ChannelAlreadyExist" xml:space="preserve">
+    <value>Kanál s týmto identifikačným názvom už existuje</value>
+  </data>
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>Tento e-mail už existuje.</value>
   </data>
@@ -125,6 +128,9 @@
   </data>
   <data name="EmailIsNotVerified" xml:space="preserve">
     <value>E-mail nie je overený</value>
+  </data>
+  <data name="GroupVisibilityTypeDontExist" xml:space="preserve">
+    <value>Tento typ viditeľnosti skupiny neexistuje</value>
   </data>
   <data name="ImageFormatNotAllowed" xml:space="preserve">
     <value>Formát obrázka nie je povolený</value>

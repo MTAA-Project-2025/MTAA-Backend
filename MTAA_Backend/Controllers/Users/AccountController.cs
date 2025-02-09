@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MTAA_Backend.Application.Account.Commands;
-using MTAA_Backend.Application.Account.Queries;
-using MTAA_Backend.Application.Identity.Commands;
+using MTAA_Backend.Application.CQRS.Users.Account.Commands;
+using MTAA_Backend.Application.CQRS.Users.Account.Queries;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
-using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
 using System.Net;
 
 namespace MTAA_Backend.Api.Controllers.Users

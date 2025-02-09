@@ -40,6 +40,11 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .WithOne(e => e.User)
                    .HasForeignKey(e => e.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(e => e.OwnedChannels)
+                   .WithOne(e => e.Owner)
+                   .HasForeignKey(e => e.OwnerId)
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

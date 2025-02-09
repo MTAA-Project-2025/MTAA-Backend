@@ -1,6 +1,6 @@
-﻿using MTAA_Backend.Application.Account.Commands;
-using MTAA_Backend.Application.Identity.Commands;
-using MTAA_Backend.Application.Identity.Queries;
+﻿using MTAA_Backend.Application.CQRS.Users.Account.Commands;
+using MTAA_Backend.Application.CQRS.Users.Identity.Commands;
+using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;

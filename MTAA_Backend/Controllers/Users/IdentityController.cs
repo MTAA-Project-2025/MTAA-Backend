@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using MTAA_Backend.Application.Identity.Commands;
-using MTAA_Backend.Application.Identity.Queries;
+using MTAA_Backend.Application.CQRS.Users.Identity.Commands;
+using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Responses;
 using System.Net;
