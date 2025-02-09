@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MTAA_Backend.Application.Account.Commands;
-using MTAA_Backend.Application.Account.Queries;
-using MTAA_Backend.Application.Identity.Commands;
+using MTAA_Backend.Application.CQRS.Users.Account.Commands;
+using MTAA_Backend.Application.CQRS.Users.Account.Queries;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
-using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
+using MTAA_Backend.Domain.Resources.Customers;
 using System.Net;
 
 namespace MTAA_Backend.Api.Controllers.Users
@@ -35,6 +35,7 @@ namespace MTAA_Backend.Api.Controllers.Users
 
         #region update
         [HttpPut]
+        [Authorize(Roles = UserRoles.User)]
         [Route("custom-update-account-avatar")]
         [ProducesResponseType(typeof(ICollection<MyImageGroupResponse>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<MyImageGroupResponse>> CustomUpdateAccountAvatar([FromForm] CustomUpdateAccountAvatarRequest request)
@@ -45,6 +46,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         }
 
         [HttpPut]
+        [Authorize(Roles = UserRoles.User)]
         [Route("preset-update-account-avatar")]
         [ProducesResponseType(typeof(ICollection<MyImageGroupResponse>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<MyImageGroupResponse>> PresetUpdateAccountAvatar([FromBody] PresetUpdateAccountAvatarRequest request)
@@ -55,6 +57,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         }
 
         [HttpPut]
+        [Authorize(Roles = UserRoles.User)]
         [Route("update-account-birth-date")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult> UpdateAccountBirthDate([FromBody] UpdateAccountBirthDateRequest request)
@@ -65,6 +68,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         }
 
         [HttpPut]
+        [Authorize(Roles = UserRoles.User)]
         [Route("update-account-display-name")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult> UpdateAccountDisplayName([FromBody] UpdateAccountDisplayNameRequest request)
@@ -75,6 +79,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         }
 
         [HttpPut]
+        [Authorize(Roles = UserRoles.User)]
         [Route("update-account-username")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult> UpdateAccountUsername([FromBody] UpdateAccountUsernameRequest request)

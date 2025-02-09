@@ -26,7 +26,7 @@ namespace MTAA_Backend.Infrastructure.Configuration.Groups
                    .HasForeignKey(e => e.GroupId)
                    .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(e => new { e.Type });
+            builder.HasIndex(e => new { e.Type, e.Visibility });
         }
     }
 }

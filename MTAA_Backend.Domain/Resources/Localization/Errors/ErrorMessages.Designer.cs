@@ -61,6 +61,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel with this identification name already exists.
+        /// </summary>
+        public static string ChannelAlreadyExist {
+            get {
+                return ResourceManager.GetString("ChannelAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This email already exists.
         /// </summary>
         public static string EmailAlreadyExists {
@@ -84,6 +93,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string EmailIsNotVerified {
             get {
                 return ResourceManager.GetString("EmailIsNotVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This group visibility type does not exist.
+        /// </summary>
+        public static string GroupVisibilityTypeDontExist {
+            get {
+                return ResourceManager.GetString("GroupVisibilityTypeDontExist", resourceCulture);
             }
         }
         

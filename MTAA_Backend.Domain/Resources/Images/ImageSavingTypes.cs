@@ -8,6 +8,7 @@ namespace MTAA_Backend.Domain.Resources.Images
 {
     public enum ImageSavingTypes
     {
-        UserAvatar
+        UserAvatar,
+        ChannelImage
     }
 }

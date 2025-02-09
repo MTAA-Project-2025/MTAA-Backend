@@ -69,11 +69,11 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
                     b.Property<string>("Visibility")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Type");
+                    b.HasIndex("Type", "Visibility");
 
                     b.ToTable("BaseGroups");
 
@@ -297,6 +297,9 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ChannelId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("DataCreationTime")
                         .HasColumnType("datetime2");
 
@@ -325,6 +328,10 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChannelId")
+                        .IsUnique()
+                        .HasFilter("[ChannelId] IS NOT NULL");
 
                     b.ToTable("ImageGroups");
 
@@ -692,11 +699,22 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdentificationName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("IdentificationName", "DisplayName");
 
                     b.HasDiscriminator().HasValue("Channel");
                 });
@@ -817,6 +835,15 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("ImageGroup");
                 });
 
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Images.MyImageGroup", b =>
+                {
+                    b.HasOne("MTAA_Backend.Domain.Entities.Groups.Channel", "Channel")
+                        .WithOne("Image")
+                        .HasForeignKey("MTAA_Backend.Domain.Entities.Images.MyImageGroup", "ChannelId");
+
+                    b.Navigation("Channel");
+                });
+
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.BaseMessage", b =>
                 {
                     b.HasOne("MTAA_Backend.Domain.Entities.Groups.BaseGroup", "Group")
@@ -930,6 +957,17 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.Channel", b =>
+                {
+                    b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "Owner")
+                        .WithMany("OwnedChannels")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.BaseGroup", b =>
                 {
                     b.Navigation("Messages");
@@ -957,12 +995,19 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
                     b.Navigation("Messages");
 
+                    b.Navigation("OwnedChannels");
+
                     b.Navigation("UserGroupMemberships");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserAvatar", b =>
                 {
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.Channel", b =>
+                {
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Images.UserPresetAvatarImage", b =>

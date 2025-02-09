@@ -4,7 +4,6 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Api.Extensions;
 using MTAA_Backend.Api.Middlewares;
-using MTAA_Backend.Application.Identity.Queries;
 using MTAA_Backend.Application.Services;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Infrastructure;
@@ -12,6 +11,7 @@ using MTAA_Backend.Application.Validators.Identity;
 using MTAA_Backend.Application.MaperProfiles.Users;
 using System.Runtime.CompilerServices;
 using MTAA_Backend.Api.Configs;
+using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
 
 
 public class Program
