@@ -9,7 +9,7 @@ using MTAA_Backend.Application.Services;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Infrastructure;
 using MTAA_Backend.Application.Validators.Identity;
-using MTAA_Backend.Application.MaperProfiles.User;
+using MTAA_Backend.Application.MaperProfiles.Users;
 using System.Runtime.CompilerServices;
 using MTAA_Backend.Api.Configs;
 
@@ -63,6 +63,9 @@ public class Program
         builder.Services.AddScoped<ICodeGeneratorService, CodeGeneratorService>();
         builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<ILanguageService, LanguageService>();
+        builder.Services.AddScoped<IAzureBlobService, AzureBlobService>();
+        builder.Services.AddScoped<IImageService, ImageService>();
+        builder.Services.AddScoped<IUserService, UserService>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

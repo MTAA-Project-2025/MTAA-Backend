@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MTAA_Backend.Domain.DTOs.Users.Requests;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;

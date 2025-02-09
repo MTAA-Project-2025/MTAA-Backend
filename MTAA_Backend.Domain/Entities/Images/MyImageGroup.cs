@@ -15,7 +15,7 @@ namespace MTAA_Backend.Domain.Entities.Images
 
         public ICollection<MyImage> Images { get; set; } = new HashSet<MyImage>();
 
-        public User User { get; set; }
-        public string UserId { get; set; }
+        public UserAvatar? UserAvatar { get; set; }
+        public string? UserAvatarId { get; set; }
     }
 }

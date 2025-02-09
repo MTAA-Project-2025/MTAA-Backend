@@ -13,9 +13,9 @@ namespace MTAA_Backend.Infrastructure.Configuration.Images
     {
         public void Configure(EntityTypeBuilder<MyImageGroup> builder)
         {
-            builder.HasOne(e => e.User)
-                   .WithOne(e => e.Avatar)
-                   .HasForeignKey<MyImageGroup>(e => e.UserId)
+            builder.HasOne(e => e.UserAvatar)
+                   .WithOne(e => e.CustomAvatar)
+                   .HasForeignKey<MyImageGroup>(e => e.UserAvatarId)
                    .IsRequired(false);
 
             builder.HasMany(e => e.Images)

@@ -155,6 +155,140 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasIndex("ImageGroupId");
 
                     b.ToTable("Images");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bf309314-7efa-4b60-a021-0b17a7a5da6f"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_1_100.jpg",
+                            Height = 100,
+                            ImageGroupId = new Guid("416c7d33-0a25-4176-b783-64b25919ac12"),
+                            ShortPath = "userAvatar_1_100",
+                            Width = 100
+                        },
+                        new
+                        {
+                            Id = new Guid("77f98ba4-1961-435c-93c6-c351572e5837"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_1_300.jpg",
+                            Height = 300,
+                            ImageGroupId = new Guid("416c7d33-0a25-4176-b783-64b25919ac12"),
+                            ShortPath = "userAvatar_1_300",
+                            Width = 300
+                        },
+                        new
+                        {
+                            Id = new Guid("5f3d5283-4fd2-4194-a4d6-345f83c967b3"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_2_100.jpg",
+                            Height = 100,
+                            ImageGroupId = new Guid("161750a4-9b50-4a1c-a5f1-3221640533c6"),
+                            ShortPath = "userAvatar_2_100",
+                            Width = 100
+                        },
+                        new
+                        {
+                            Id = new Guid("ed659976-0f06-4d6a-ad9e-9456e4a82d3c"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_2_300.jpg",
+                            Height = 300,
+                            ImageGroupId = new Guid("161750a4-9b50-4a1c-a5f1-3221640533c6"),
+                            ShortPath = "userAvatar_2_300",
+                            Width = 300
+                        },
+                        new
+                        {
+                            Id = new Guid("580c86e5-f708-44d2-aba1-d00b6d311ce1"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_3_100.jpg",
+                            Height = 100,
+                            ImageGroupId = new Guid("3e4f4c14-f4ae-4238-95b1-075d1e8a9981"),
+                            ShortPath = "userAvatar_3_100",
+                            Width = 100
+                        },
+                        new
+                        {
+                            Id = new Guid("331f73e4-2035-45fe-9e0d-33a8a930b922"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_3_300.jpg",
+                            Height = 300,
+                            ImageGroupId = new Guid("3e4f4c14-f4ae-4238-95b1-075d1e8a9981"),
+                            ShortPath = "userAvatar_3_300",
+                            Width = 300
+                        },
+                        new
+                        {
+                            Id = new Guid("4c64dbaf-3ecf-468e-8265-bc9233fc2c7e"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_4_100.jpg",
+                            Height = 100,
+                            ImageGroupId = new Guid("79fe4a86-1ca3-4dd0-ad8b-c896bef376ed"),
+                            ShortPath = "userAvatar_4_100",
+                            Width = 100
+                        },
+                        new
+                        {
+                            Id = new Guid("3efe30aa-4cfa-4003-878d-054de78ea07b"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_4_300.jpg",
+                            Height = 300,
+                            ImageGroupId = new Guid("79fe4a86-1ca3-4dd0-ad8b-c896bef376ed"),
+                            ShortPath = "userAvatar_4_300",
+                            Width = 300
+                        },
+                        new
+                        {
+                            Id = new Guid("3bead263-b9fd-4a6f-a649-c699969863b2"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_5_100.jpg",
+                            Height = 100,
+                            ImageGroupId = new Guid("9ad61bee-053b-4042-8b4a-860fe80dd05a"),
+                            ShortPath = "userAvatar_5_100",
+                            Width = 100
+                        },
+                        new
+                        {
+                            Id = new Guid("2ea5ce43-807b-4419-a506-d68c7cba07a4"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_5_300.jpg",
+                            Height = 300,
+                            ImageGroupId = new Guid("9ad61bee-053b-4042-8b4a-860fe80dd05a"),
+                            ShortPath = "userAvatar_5_300",
+                            Width = 300
+                        },
+                        new
+                        {
+                            Id = new Guid("d0c6bab5-1b86-4e29-8bcd-34e5ca1d9f2b"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_6_100.jpg",
+                            Height = 100,
+                            ImageGroupId = new Guid("d1a56d08-a7de-4855-8a13-5fbda2ca4843"),
+                            ShortPath = "userAvatar_6_100",
+                            Width = 100
+                        },
+                        new
+                        {
+                            Id = new Guid("f9ab80f0-cc7f-4f3a-83fe-e25c9e81253b"),
+                            AspectRatio = 1.0,
+                            FileType = "jpg",
+                            FullPath = "https://mtaafiles.blob.core.windows.net/images/userAvatar_6_300.jpg",
+                            Height = 300,
+                            ImageGroupId = new Guid("d1a56d08-a7de-4855-8a13-5fbda2ca4843"),
+                            ShortPath = "userAvatar_6_300",
+                            Width = 300
+                        });
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Images.MyImageGroup", b =>
@@ -172,6 +306,11 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Property<DateTime?>("DataLastEditTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -182,12 +321,16 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("UserAvatarId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ImageGroups");
+
+                    b.HasDiscriminator().HasValue("MyImageGroup");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.BaseMessage", b =>
@@ -245,6 +388,9 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Property<Guid?>("AvatarId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -258,6 +404,10 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Property<DateTime?>("DataLastEditTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -265,17 +415,11 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsEdited")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastSeen")
                         .HasColumnType("datetime2");
@@ -332,6 +476,32 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserAvatar", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CustomAvatarId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PresetAvatarId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomAvatarId")
+                        .IsUnique()
+                        .HasFilter("[CustomAvatarId] IS NOT NULL");
+
+                    b.HasIndex("PresetAvatarId");
+
+                    b.ToTable("UserAvatars");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserContact", b =>
@@ -538,6 +708,63 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("ContactChat");
                 });
 
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Images.UserPresetAvatarImage", b =>
+                {
+                    b.HasBaseType("MTAA_Backend.Domain.Entities.Images.MyImageGroup");
+
+                    b.HasDiscriminator().HasValue("UserPresetAvatarImage");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("416c7d33-0a25-4176-b783-64b25919ac12"),
+                            DataCreationTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsEdited = false,
+                            Title = "Preset Avatar"
+                        },
+                        new
+                        {
+                            Id = new Guid("161750a4-9b50-4a1c-a5f1-3221640533c6"),
+                            DataCreationTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsEdited = false,
+                            Title = "Preset Avatar"
+                        },
+                        new
+                        {
+                            Id = new Guid("3e4f4c14-f4ae-4238-95b1-075d1e8a9981"),
+                            DataCreationTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsEdited = false,
+                            Title = "Preset Avatar"
+                        },
+                        new
+                        {
+                            Id = new Guid("79fe4a86-1ca3-4dd0-ad8b-c896bef376ed"),
+                            DataCreationTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsEdited = false,
+                            Title = "Preset Avatar"
+                        },
+                        new
+                        {
+                            Id = new Guid("9ad61bee-053b-4042-8b4a-860fe80dd05a"),
+                            DataCreationTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsEdited = false,
+                            Title = "Preset Avatar"
+                        },
+                        new
+                        {
+                            Id = new Guid("d1a56d08-a7de-4855-8a13-5fbda2ca4843"),
+                            DataCreationTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            IsEdited = false,
+                            Title = "Preset Avatar"
+                        });
+                });
+
             modelBuilder.Entity("BaseGroupUser", b =>
                 {
                     b.HasOne("MTAA_Backend.Domain.Entities.Groups.BaseGroup", null)
@@ -611,11 +838,26 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
                 {
-                    b.HasOne("MTAA_Backend.Domain.Entities.Images.MyImageGroup", "Avatar")
+                    b.HasOne("MTAA_Backend.Domain.Entities.Users.UserAvatar", "Avatar")
                         .WithOne("User")
                         .HasForeignKey("MTAA_Backend.Domain.Entities.Users.User", "AvatarId");
 
                     b.Navigation("Avatar");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserAvatar", b =>
+                {
+                    b.HasOne("MTAA_Backend.Domain.Entities.Images.MyImageGroup", "CustomAvatar")
+                        .WithOne("UserAvatar")
+                        .HasForeignKey("MTAA_Backend.Domain.Entities.Users.UserAvatar", "CustomAvatarId");
+
+                    b.HasOne("MTAA_Backend.Domain.Entities.Images.UserPresetAvatarImage", "PresetAvatar")
+                        .WithMany("UserAvatars")
+                        .HasForeignKey("PresetAvatarId");
+
+                    b.Navigation("CustomAvatar");
+
+                    b.Navigation("PresetAvatar");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserContact", b =>
@@ -699,7 +941,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 {
                     b.Navigation("Images");
 
-                    b.Navigation("User");
+                    b.Navigation("UserAvatar");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.BaseMessage", b =>
@@ -716,6 +958,16 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("UserGroupMemberships");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserAvatar", b =>
+                {
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Images.UserPresetAvatarImage", b =>
+                {
+                    b.Navigation("UserAvatars");
                 });
 #pragma warning restore 612, 618
         }

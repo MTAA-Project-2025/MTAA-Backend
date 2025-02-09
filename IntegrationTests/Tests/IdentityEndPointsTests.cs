@@ -1,8 +1,6 @@
 ﻿using FakeItEasy;
 using IntegrationTests.Fixtures;
 using MTAA_Backend.Application.Identity.Commands;
-using MTAA_Backend.Domain.DTOs.Users.Requests;
-using MTAA_Backend.Domain.DTOs.Users.Responses;
 using MTAA_Backend.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -21,6 +19,8 @@ using Microsoft.AspNetCore.Identity;
 using static System.Net.Mime.MediaTypeNames;
 using MTAA_Backend.Infrastructure;
 using MTAA_Backend.Domain.Entities.Users;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Responses;
 
 namespace IntegrationTests.Tests
 {

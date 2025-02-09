@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTAA_Backend.Domain.DTOs.Users.Requests
+namespace MTAA_Backend.Domain.DTOs.Users.Identity.Requests
 {
     public class LogInRequest
     {

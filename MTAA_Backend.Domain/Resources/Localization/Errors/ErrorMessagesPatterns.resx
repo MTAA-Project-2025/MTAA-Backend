@@ -126,6 +126,12 @@
   <data name="EmailIsNotVerified" xml:space="preserve">
     <value>EmailIsNotVerified</value>
   </data>
+  <data name="ImageFormatNotAllowed" xml:space="preserve">
+    <value>ImageFormatNotAllowed</value>
+  </data>
+  <data name="PresetAvatarNotFound" xml:space="preserve">
+    <value>PresetAvatarNotFound</value>
+  </data>
   <data name="SignUpSessionExpired" xml:space="preserve">
     <value>SignUpSessionExpired</value>
   </data>
@@ -140,6 +146,12 @@
   </data>
   <data name="UserCreationError" xml:space="preserve">
     <value>UserCreationError</value>
+  </data>
+  <data name="UserNotAuthorized" xml:space="preserve">
+    <value>UserNotAuthorized</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>UserNotFound</value>
   </data>
   <data name="VerificationCodeAlreadySent" xml:space="preserve">
     <value>VerificationCodeAlreadySent</value>

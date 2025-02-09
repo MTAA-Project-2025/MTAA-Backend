@@ -13,8 +13,8 @@ namespace MTAA_Backend.Domain.Entities.Users
 {
     public class User : IdentityUser, IAuditable
     {
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public string DisplayName { get; set; } = "";
+        public DateTime BirthDate { get; set; }
 
         public string Status { get; set; }
 
@@ -34,7 +34,7 @@ namespace MTAA_Backend.Domain.Entities.Users
         public ICollection<BaseMessage> Messages { get; set; } = new HashSet<BaseMessage>();
         public ICollection<UserGroupMembership> UserGroupMemberships { get; set; } = new HashSet<UserGroupMembership>();
 
-        public MyImageGroup? Avatar { get; set; }
+        public UserAvatar? Avatar { get; set; }
         public Guid? AvatarId { get; set; }
     }
 }
