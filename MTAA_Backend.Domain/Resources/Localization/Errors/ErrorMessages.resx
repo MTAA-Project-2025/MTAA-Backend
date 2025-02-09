@@ -120,6 +120,9 @@
   <data name="ChannelAlreadyExist" xml:space="preserve">
     <value>Channel with this identification name already exists</value>
   </data>
+  <data name="ChannelNotFound" xml:space="preserve">
+    <value>Channel not found</value>
+  </data>
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>This email already exists</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="UserCreationError" xml:space="preserve">
     <value>Error while creating user</value>
+  </data>
+  <data name="UserDontHaveRules" xml:space="preserve">
+    <value>User does not have rules</value>
   </data>
   <data name="UserNotAuthorized" xml:space="preserve">
     <value>User not authorized</value>

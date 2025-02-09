@@ -8,6 +8,12 @@ namespace MTAA_Backend.Application.MaperProfiles.Groups
         public ChannelMapperProfile()
         {
             CreateMap<AddChannelRequest, AddChannel>();
+
+            CreateMap<UpdateChannelDescriptionRequest, UpdateChannelDescription>();
+            CreateMap<UpdateChannelDisplayNameRequest, UpdateChannelDisplayName>();
+            CreateMap<UpdateChannelIdentificationNameRequest, UpdateChannelIdentificationName>();
+            CreateMap<UpdateChannelImageRequest, UpdateChannelImage>();
+            CreateMap<UpdateChannelVisibilityRequest, UpdateChannelVisibility>();
         }
     }
 }

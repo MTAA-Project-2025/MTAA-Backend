@@ -39,11 +39,11 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\Groups\ChannelVisibilityTypesLocalization\GroupVisibilityTypeDescriptions.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GroupVisibilityTypeDescriptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Groups\ChannelVisibilityTypesLocalization\GroupVisibilityTypeNames.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GroupVisibilityTypeNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Localization\Errors\ErrorMessages.resx">
