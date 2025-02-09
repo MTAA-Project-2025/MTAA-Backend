@@ -1,10 +1,13 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using MTAA_Backend.Application.Account.Commands;
 using MTAA_Backend.Application.Identity.CommandHandlers;
+using MTAA_Backend.Application.Services;
+using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
@@ -22,16 +25,22 @@ namespace MTAA_Backend.Application.Account.CommandHandlers
     public class PresetUpdateAccountAvatarHandler(ILogger<SignUpByEmailHandler> logger,
         IStringLocalizer<ErrorMessages> localizer,
         MTAA_BackendDbContext dbContext,
-        IUserService userService) : IRequestHandler<PresetUpdateAccountAvatar>
+        IUserService userService,
+        IImageService imageService,
+        IMapper mapper) : IRequestHandler<PresetUpdateAccountAvatar, MyImageGroupResponse>
     {
         private readonly ILogger _logger = logger;
         private readonly IStringLocalizer _localizer = localizer;
         private readonly MTAA_BackendDbContext _dbContext = dbContext;
         private readonly IUserService _userService = userService;
+        private readonly IMapper _mapper = mapper;
+        private readonly IImageService _imageService = imageService;
 
-        public async Task Handle(PresetUpdateAccountAvatar request, CancellationToken cancellationToken)
+        public async Task<MyImageGroupResponse> Handle(PresetUpdateAccountAvatar request, CancellationToken cancellationToken)
         {
-            var imageGroup = await _dbContext.UserPresetAvatarImages.FindAsync(Guid.Parse(request.ImageGroupId));
+            var imageGroup = await _dbContext.UserPresetAvatarImages.Where(e => e.Id == Guid.Parse(request.ImageGroupId))
+                                                                    .Include(e => e.Images)
+                                                                    .FirstOrDefaultAsync(cancellationToken);
             if (imageGroup == null)
             {
                 _logger.LogError($"Preset Avatar not found: {request.ImageGroupId}");
@@ -60,9 +69,27 @@ namespace MTAA_Backend.Application.Account.CommandHandlers
             }
             else
             {
+                if (user.Avatar.CustomAvatar != null)
+                {
+                    var oldImageGroup = await _dbContext.ImageGroups.Where(e => e.Id == user.Avatar.CustomAvatarId)
+                                                                 .Include(e => e.Images)
+                                                                 .FirstOrDefaultAsync();
+                    if (oldImageGroup != null)
+                    {
+                        await _imageService.RemoveImageGroup(oldImageGroup, cancellationToken);
+                        foreach (var image in oldImageGroup.Images)
+                        {
+                            _dbContext.Images.Remove(image);
+                        }
+                        _dbContext.ImageGroups.Remove(oldImageGroup);
+                    }
+                }
+
                 user.Avatar.PresetAvatar = imageGroup;
             }
             await _dbContext.SaveChangesAsync();
+
+            return _mapper.Map<MyImageGroupResponse>(imageGroup);
         }
     }
 }

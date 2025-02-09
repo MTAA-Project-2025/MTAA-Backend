@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -23,11 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MTAA_Backend.Domain\MTAA_Backend.Domain.csproj" />
     <ProjectReference Include="..\MTAA_Backend.Infrastructure\MTAA_Backend.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Account\QueryHandlers\" />
-    <Folder Include="Account\Queries\" />
   </ItemGroup>
 
 </Project>

@@ -80,7 +80,8 @@ namespace MTAA_Backend.Application.Identity.QueryHandlers
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim("Id", user.Id)
             };
             var roles = await _userManager.GetRolesAsync(user);
             foreach (var role in roles)

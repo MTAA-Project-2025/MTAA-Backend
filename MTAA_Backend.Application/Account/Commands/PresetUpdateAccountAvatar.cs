@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MTAA_Backend.Domain.DTOs.Images.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.Account.Commands
 {
-    public class PresetUpdateAccountAvatar : IRequest
+    public class PresetUpdateAccountAvatar : IRequest<MyImageGroupResponse>
     {
         public string ImageGroupId { get; set; }
     }

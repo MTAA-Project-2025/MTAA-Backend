@@ -9,7 +9,7 @@ using MTAA_Backend.Application.Services;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Infrastructure;
 using MTAA_Backend.Application.Validators.Identity;
-using MTAA_Backend.Application.MaperProfiles.User;
+using MTAA_Backend.Application.MaperProfiles.Users;
 using System.Runtime.CompilerServices;
 using MTAA_Backend.Api.Configs;
 

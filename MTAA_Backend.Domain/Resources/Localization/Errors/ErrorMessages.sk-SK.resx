@@ -150,6 +150,9 @@
   <data name="UserNotAuthorized" xml:space="preserve">
     <value>Používateľ nie je autorizovaný</value>
   </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>Používateľ sa nenašiel</value>
+  </data>
   <data name="VerificationCodeAlreadySent" xml:space="preserve">
     <value>Potvrdzovací kód už bol odoslaný</value>
   </data>

@@ -2,8 +2,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MTAA_Backend.Application.Account.Commands;
+using MTAA_Backend.Application.Account.Queries;
 using MTAA_Backend.Application.Identity.Commands;
+using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
+using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
 using System.Net;
 
@@ -15,25 +18,40 @@ namespace MTAA_Backend.Api.Controllers.Users
         {
         }
 
+        #region get
+        [HttpGet]
+        [Route("public-full-account/{userId}")]
+        [ProducesResponseType(typeof(ICollection<PublicFullAccountResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PublicFullAccountResponse>> PublicGetFullAccount([FromRoute] string userId)
+        {
+            var query = new PublicGetFullAccount()
+            {
+                UserId = userId
+            };
+            var res = await _mediator.Send(query);
+            return Ok(res);
+        }
+        #endregion
+
         #region update
         [HttpPut]
         [Route("custom-update-account-avatar")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> CustomUpdateAccountAvatar([FromForm] CustomUpdateAccountAvatarRequest request)
+        [ProducesResponseType(typeof(ICollection<MyImageGroupResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<MyImageGroupResponse>> CustomUpdateAccountAvatar([FromForm] CustomUpdateAccountAvatarRequest request)
         {
             var command = _mapper.Map<CustomUpdateAccountAvatar>(request);
-            await _mediator.Send(command);
-            return Ok();
+            var res = await _mediator.Send(command);
+            return Ok(res);
         }
 
         [HttpPut]
         [Route("preset-update-account-avatar")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> PresetUpdateAccountAvatar([FromBody] PresetUpdateAccountAvatarRequest request)
+        [ProducesResponseType(typeof(ICollection<MyImageGroupResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<MyImageGroupResponse>> PresetUpdateAccountAvatar([FromBody] PresetUpdateAccountAvatarRequest request)
         {
             var command = _mapper.Map<PresetUpdateAccountAvatar>(request);
-            await _mediator.Send(command);
-            return Ok();
+            var res = await _mediator.Send(command);
+            return Ok(res);
         }
 
         [HttpPut]

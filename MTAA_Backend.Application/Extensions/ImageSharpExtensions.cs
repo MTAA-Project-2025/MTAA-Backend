@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats;
+using Microsoft.AspNetCore.Http;
 
 namespace MTAA_Backend.Application.Extensions
 {
@@ -26,12 +27,7 @@ namespace MTAA_Backend.Application.Extensions
         }
         public static IFormFile ConvertToIFormFile(this Image image, string fileName, IImageEncoder encoder)
         {
-            if (image == null)
-            {
-                throw new ArgumentNullException(nameof(image));
-            }
-
-            using var memoryStream = new MemoryStream();
+            var memoryStream = new MemoryStream();
             image.Save(memoryStream, encoder);
             memoryStream.Position = 0;
 

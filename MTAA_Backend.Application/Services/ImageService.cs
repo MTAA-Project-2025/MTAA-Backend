@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.Extensions;
@@ -93,11 +92,10 @@ namespace MTAA_Backend.Application.Services
                 Title = file.FileName
             };
             string uniqueString = myImageGroup.Id.ToString();
-            var newFileName = uniqueString + "."+ ImagesFileTypes.Jpg;
 
             using var image = file.ConvertToImageSharp();
 
-            var images = await SaveImageWithSizes(image, sizes, newFileName, cancellationToken);
+            var images = await SaveImageWithSizes(image, sizes, uniqueString, cancellationToken);
             foreach(var myImg in images)
             {
                 myImageGroup.Images.Add(myImg);

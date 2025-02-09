@@ -150,6 +150,9 @@
   <data name="UserNotAuthorized" xml:space="preserve">
     <value>UserNotAuthorized</value>
   </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>UserNotFound</value>
+  </data>
   <data name="VerificationCodeAlreadySent" xml:space="preserve">
     <value>VerificationCodeAlreadySent</value>
   </data>
