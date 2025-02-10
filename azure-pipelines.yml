@@ -1,59 +1,53 @@
-trigger:
-  - master
-  - develop
-
 pr:
   - master
   - develop
-
-resources:
-  - repo: self
 
 variables:
   BUILDCONFIGURATION: Release
   RestoreBuildProjects: "**/*.csproj"
   TestProjects: "/IntegrationTests/IntegrationTests.csproj"
-
-  # Agent VM image name
   vmImageName: "ubuntu-latest"
 
 stages:
   - stage: Build
-    displayName: Build and push stage
+    displayName: Build and Test
     jobs:
       - job: Build
-        displayName: Build
+        displayName: Build and Test
         pool:
           vmImage: $(vmImageName)
         steps:
-          # Use the correct .NET SDK version
           - task: UseDotNet@2
             inputs:
               packageType: 'sdk'
               version: '9.x'
 
-          # Install the necessary .NET workload
           - task: Bash@3
             inputs:
               targetType: "inline"
               script: "dotnet workload install aspire"
 
-          # Build the project
           - task: DotNetCoreCLI@2
-            displayName: Build
+            displayName: Build Solution
             inputs:
               projects: $(RestoreBuildProjects)
-              arguments: -c $(BuildConfiguration)
+              arguments: -c $(BUILDCONFIGURATION)
 
-          # Run tests and collect code coverage
           - task: DotNetCoreCLI@2
-            displayName: Test with coverage filtering
+            displayName: Run Tests
             inputs:
-              command: "test"
+              command: test
               projects: "$(TestProjects)"
-              arguments: '--configuration $(BuildConfiguration) --settings coverage.runsettings --collect "XPlat Code Coverage"'
+              arguments: '--configuration $(BUILDCONFIGURATION) --logger "trx;LogFileName=test_results.trx"'
 
-          # Publish code coverage results
+          - task: PublishTestResults@2
+            displayName: "Publish Test Results"
+            inputs:
+              testResultsFiles: "**/test_results.trx"
+              testResultsFormat: "VSTest"
+              failTaskOnFailedTests: true
+
           - task: PublishCodeCoverageResults@2
+            displayName: "Publish Code Coverage"
             inputs:
               summaryFileLocation: "$(Agent.TempDirectory)/**/coverage.cobertura.xml"
