@@ -59,7 +59,29 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
                 resourceCulture = value;
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Chat with this identification name already exists.
+        /// </summary>
+        public static string ChatAlreadyExist
+        {
+            get
+            {
+                return ResourceManager.GetString("ChatAlreadyExist", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Chat not found.
+        /// </summary>
+        public static string ChatNotFound
+        {
+            get
+            {
+                return ResourceManager.GetString("ChatNotFound", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Channel with this identification name already exists.
         /// </summary>

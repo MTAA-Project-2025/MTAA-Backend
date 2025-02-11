@@ -723,6 +723,18 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 {
                     b.HasBaseType("MTAA_Backend.Domain.Entities.Groups.BaseGroup");
 
+                    b.Property<string>("IdentificationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("IdentificationName");
+
                     b.HasDiscriminator().HasValue("ContactChat");
                 });
 
@@ -968,6 +980,17 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.Chat", b =>
+            {
+                b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User")
+                    .WithMany("OwnedChats")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+
+                b.Navigation("User");
+            });
+
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.BaseGroup", b =>
                 {
                     b.Navigation("Messages");
@@ -996,6 +1019,8 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("OwnedChannels");
+
+                    b.Navigation("OwnedChats");
 
                     b.Navigation("UserGroupMemberships");
                 });

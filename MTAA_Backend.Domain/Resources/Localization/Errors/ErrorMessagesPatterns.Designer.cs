@@ -79,6 +79,24 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ChatAlreadyExist.
+        /// </summary>
+        public static string ChatAlreadyExist {
+            get {
+                return ResourceManager.GetString("ChatAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ChatNotFound.
+        /// </summary>
+        public static string ChatNotFound {
+            get {
+                return ResourceManager.GetString("ChatNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EmailAlreadyExists.
         /// </summary>
         public static string EmailAlreadyExists {

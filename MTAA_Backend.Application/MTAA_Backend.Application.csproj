@@ -28,6 +28,8 @@
   <ItemGroup>
     <Folder Include="CQRS\Groups\Channels\QueryHandlers\" />
     <Folder Include="CQRS\Groups\Channels\Queries\" />
+	<Folder Include="CQRS\Groups\Chats\QueryHandlers\" />
+	<Folder Include="CQRS\Groups\Chats\Queries\" />
   </ItemGroup>
 
 </Project>
