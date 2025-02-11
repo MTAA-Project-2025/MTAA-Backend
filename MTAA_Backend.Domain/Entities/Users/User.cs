@@ -38,6 +38,5 @@ namespace MTAA_Backend.Domain.Entities.Users
         public Guid? AvatarId { get; set; }
 
         public ICollection<Channel> OwnedChannels { get; set; } = new HashSet<Channel>();
-        public ICollection<ContactChat> OwnedChats { get; set; } = new HashSet<ContactChat>();
     }
 }

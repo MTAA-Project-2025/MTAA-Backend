@@ -5,7 +5,6 @@ namespace MTAA_Backend.Application.CQRS.Groups.Chats.Commands
 {
     public class AddChat : IRequest<Guid>
     {
-        public string Visibility { get; set; }
-        public string IdentificationName { get; set; }
+        public string ContactId { get; set; }
     }
 }

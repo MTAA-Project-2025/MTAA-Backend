@@ -28,13 +28,6 @@ namespace MTAA_Backend.Application.CQRS.Groups.Chats.CommandHandlers
 
         public async Task<Guid> Handle(AddChat request, CancellationToken cancellationToken)
         {
-            var visibilities = GroupVisibilityTypes.GetAll();
-            if (!visibilities.Contains(request.Visibility))
-            {
-                _logger.LogError($"Visibility not found: {request.Visibility}");
-                throw new HttpException(_localizer[ErrorMessagesPatterns.GroupVisibilityTypeDontExist], HttpStatusCode.BadRequest);
-            }
-
             var userId = _userService.GetCurrentUserId();
             if (userId == null)
             {
@@ -44,13 +37,17 @@ namespace MTAA_Backend.Application.CQRS.Groups.Chats.CommandHandlers
 
             var newChat = new ContactChat()
             {
-                IdentificationName = request.IdentificationName,
-                Visibility = request.Visibility,
-                UserId = userId
+                Visibility = GroupVisibilityTypes.Invisible
             };
 
-            var chat = await _dbContext.ContactChats.Where(e => e.IdentificationName == request.IdentificationName)
-                                                   .FirstOrDefaultAsync(cancellationToken);
+            var contactExists = await _dbContext.Users.AnyAsync(u => u.Id == request.ContactId, cancellationToken);
+            if (!contactExists)
+            {
+                throw new HttpException(_localizer[ErrorMessagesPatterns.UserNotFound], HttpStatusCode.NotFound);
+            }
+
+            var chat = await _dbContext.ContactChats.Where(e => e.Participants.Any(e => e.Id == userId) &&
+                e.Participants.Any(e => e.Id == request.ContactId)).FirstOrDefaultAsync(cancellationToken);
 
             if (chat != null)
             {

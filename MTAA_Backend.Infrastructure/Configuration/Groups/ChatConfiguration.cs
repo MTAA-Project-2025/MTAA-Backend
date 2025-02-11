@@ -13,13 +13,6 @@ namespace MTAA_Backend.Infrastructure.Configuration.Groups
     {
         public void Configure(EntityTypeBuilder<ContactChat> builder)
         {
-            builder.HasOne(e => e.User)
-                   .WithMany(e => e.OwnedChats)
-                   .HasForeignKey(e => e.UserId)
-                   .OnDelete(DeleteBehavior.NoAction);
-
-
-            builder.HasIndex(e => new { e.IdentificationName });
         }
     }
 }
