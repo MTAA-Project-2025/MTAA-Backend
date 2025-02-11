@@ -123,6 +123,12 @@
   <data name="ChannelNotFound" xml:space="preserve">
     <value>ChannelNotFound</value>
   </data>
+  <data name="ChatAlreadyExist" xml:space="preserve">
+    <value>ChatAlreadyExist</value>
+  </data>
+  <data name="ChatNotFound" xml:space="preserve">
+    <value>ChatNotFound</value>
+  </data>
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>EmailAlreadyExists</value>
   </data>
