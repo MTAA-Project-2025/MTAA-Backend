@@ -9,7 +9,6 @@ namespace MTAA_Backend.Domain.DTOs.Groups.Chats.Requests
 {
     public class AddChatRequest
     {
-        public string Visibility { get; set; }
-        public string IdentificationName { get; set; }
+        public string ContactId { get; set; }
     }
 }
