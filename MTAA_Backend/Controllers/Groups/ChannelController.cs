@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Api.Guards.Groups;
+using MTAA_Backend.Application.CQRS.Groups.BaseGroups.Commands;
 using MTAA_Backend.Application.CQRS.Groups.Channels.Commands;
 using MTAA_Backend.Application.CQRS.Users.Account.Commands;
 using MTAA_Backend.Application.CQRS.Users.Account.Queries;
@@ -111,6 +112,23 @@ namespace MTAA_Backend.Api.Controllers.Groups
 
             var command = _mapper.Map<UpdateChannelVisibility>(request);
             await _mediator.Send(command);
+            return Ok();
+        }
+        #endregion
+
+        #region Delete
+        [HttpDelete]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<ActionResult> UpdateChannelDescription([FromRoute] Guid id)
+        {
+            await Guard.Against.NotChannelOwner(id, _dbContext, _localizer, _userService);
+
+            await _mediator.Send(new DeleteGroup
+            {
+                Id = id
+            });
             return Ok();
         }
         #endregion
