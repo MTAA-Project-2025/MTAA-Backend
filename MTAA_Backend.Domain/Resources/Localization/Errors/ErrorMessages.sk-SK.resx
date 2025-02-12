@@ -150,6 +150,9 @@
   <data name="SignUpSessionExpired" xml:space="preserve">
     <value>Registrácia relácie vypršala</value>
   </data>
+  <data name="UserAlreadyInGroup" xml:space="preserve">
+    <value>Používateľ je už v skupine</value>
+  </data>
   <data name="UserBadEmail" xml:space="preserve">
     <value>Nie ste zaregistrovaný alebo je e-mail nesprávny</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>Používateľ sa nenašiel</value>
+  </data>
+  <data name="UserNotInGroup" xml:space="preserve">
+    <value>Používateľ nie je v skupine</value>
   </data>
   <data name="VerificationCodeAlreadySent" xml:space="preserve">
     <value>Potvrdzovací kód už bol odoslaný</value>
