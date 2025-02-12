@@ -126,9 +126,6 @@
   <data name="ChatAlreadyExist" xml:space="preserve">
     <value>ChatAlreadyExist</value>
   </data>
-  <data name="ChatNotFound" xml:space="preserve">
-    <value>ChatNotFound</value>
-  </data>
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>EmailAlreadyExists</value>
   </data>
@@ -137,6 +134,9 @@
   </data>
   <data name="EmailIsNotVerified" xml:space="preserve">
     <value>EmailIsNotVerified</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>GroupNotFound</value>
   </data>
   <data name="GroupVisibilityTypeDontExist" xml:space="preserve">
     <value>GroupVisibilityTypeDontExist</value>
@@ -164,6 +164,9 @@
   </data>
   <data name="UserDontHaveRules" xml:space="preserve">
     <value>UserDontHaveRules</value>
+  </data>
+  <data name="UserGroupMembershipNotFound" xml:space="preserve">
+    <value>UserGroupMembershipNotFound</value>
   </data>
   <data name="UserNotAuthorized" xml:space="preserve">
     <value>UserNotAuthorized</value>

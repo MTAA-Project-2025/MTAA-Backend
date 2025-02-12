@@ -88,15 +88,6 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ChatNotFound.
-        /// </summary>
-        public static string ChatNotFound {
-            get {
-                return ResourceManager.GetString("ChatNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to EmailAlreadyExists.
         /// </summary>
         public static string EmailAlreadyExists {
@@ -120,6 +111,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string EmailIsNotVerified {
             get {
                 return ResourceManager.GetString("EmailIsNotVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GroupNotFound.
+        /// </summary>
+        public static string GroupNotFound {
+            get {
+                return ResourceManager.GetString("GroupNotFound", resourceCulture);
             }
         }
         
@@ -201,6 +201,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string UserDontHaveRules {
             get {
                 return ResourceManager.GetString("UserDontHaveRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserGroupMembershipNotFound.
+        /// </summary>
+        public static string UserGroupMembershipNotFound {
+            get {
+                return ResourceManager.GetString("UserGroupMembershipNotFound", resourceCulture);
             }
         }
         

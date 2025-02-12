@@ -123,6 +123,9 @@
   <data name="ChannelNotFound" xml:space="preserve">
     <value>Kanál sa nenašiel</value>
   </data>
+  <data name="ChatAlreadyExist" xml:space="preserve">
+    <value>Chat už existuje</value>
+  </data>
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>Tento e-mail už existuje.</value>
   </data>
@@ -131,6 +134,9 @@
   </data>
   <data name="EmailIsNotVerified" xml:space="preserve">
     <value>E-mail nie je overený</value>
+  </data>
+  <data name="GroupNotFound" xml:space="preserve">
+    <value>Skupina sa nenašla</value>
   </data>
   <data name="GroupVisibilityTypeDontExist" xml:space="preserve">
     <value>Tento typ viditeľnosti skupiny neexistuje</value>
@@ -158,6 +164,9 @@
   </data>
   <data name="UserDontHaveRules" xml:space="preserve">
     <value>Používateľ nemá pravidlá</value>
+  </data>
+  <data name="UserGroupMembershipNotFound" xml:space="preserve">
+    <value>Členstvo v skupine používateľov sa nenašlo</value>
   </data>
   <data name="UserNotAuthorized" xml:space="preserve">
     <value>Používateľ nie je autorizovaný</value>
