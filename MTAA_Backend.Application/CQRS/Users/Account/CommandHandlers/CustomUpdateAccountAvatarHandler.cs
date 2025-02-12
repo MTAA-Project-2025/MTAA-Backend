@@ -74,7 +74,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
                 {
                     var imageGroup = await _dbContext.ImageGroups.Where(e => e.Id == user.Avatar.CustomAvatarId)
                                                                  .Include(e => e.Images)
-                                                                 .FirstOrDefaultAsync();
+                                                                 .FirstOrDefaultAsync(cancellationToken);
                     if (imageGroup != null)
                     {
                         await _imageService.RemoveImageGroup(imageGroup, cancellationToken);
@@ -99,7 +99,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
 
                 response = _mapper.Map<MyImageGroupResponse>(newimageGroup);
             }
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return response;
         }

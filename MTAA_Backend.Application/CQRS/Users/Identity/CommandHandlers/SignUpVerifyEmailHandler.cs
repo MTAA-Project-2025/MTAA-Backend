@@ -43,7 +43,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
 
             if (DateTime.UtcNow > codeModel.ExpirationTime)
             {
-                await _distributedCache.RemoveAsync(recordId);
+                await _distributedCache.RemoveAsync(recordId, cancellationToken);
                 return false;
             }
             if (codeModel.Code != request.Code)
