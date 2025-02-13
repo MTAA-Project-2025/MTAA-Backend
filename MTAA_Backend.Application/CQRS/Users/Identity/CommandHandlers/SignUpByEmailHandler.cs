@@ -91,7 +91,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
             {
                 Email = request.Email,
                 Password = request.Password
-            });
+            }, cancellationToken);
         }
     }
 }

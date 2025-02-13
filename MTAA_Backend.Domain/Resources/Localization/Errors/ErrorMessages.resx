@@ -150,6 +150,9 @@
   <data name="SignUpSessionExpired" xml:space="preserve">
     <value>Session registration has expired</value>
   </data>
+  <data name="UserAlreadyInGroup" xml:space="preserve">
+    <value>User is already in the group</value>
+  </data>
   <data name="UserBadEmail" xml:space="preserve">
     <value>You are not registered or the email is incorrect</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>User not found</value>
+  </data>
+  <data name="UserNotInGroup" xml:space="preserve">
+    <value>User is not in the group</value>
   </data>
   <data name="VerificationCodeAlreadySent" xml:space="preserve">
     <value>Confirmation code has already been sent</value>

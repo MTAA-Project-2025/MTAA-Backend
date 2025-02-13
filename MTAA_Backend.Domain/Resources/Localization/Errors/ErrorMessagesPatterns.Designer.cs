@@ -160,6 +160,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UserAlreadyInGroup.
+        /// </summary>
+        public static string UserAlreadyInGroup {
+            get {
+                return ResourceManager.GetString("UserAlreadyInGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UserBadEmail.
         /// </summary>
         public static string UserBadEmail {
@@ -228,6 +237,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserNotInGroup.
+        /// </summary>
+        public static string UserNotInGroup {
+            get {
+                return ResourceManager.GetString("UserNotInGroup", resourceCulture);
             }
         }
         

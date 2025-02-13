@@ -30,7 +30,7 @@ namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
             {
                 var imageGroup = await _dbContext.ImageGroups.Where(e => e.Id == channel.ImageId)
                                                              .Include(e => e.Images)
-                                                             .FirstOrDefaultAsync();
+                                                             .FirstOrDefaultAsync(cancellationToken);
                 if (imageGroup != null)
                 {
                     await _imageService.RemoveImageGroup(imageGroup, cancellationToken);
