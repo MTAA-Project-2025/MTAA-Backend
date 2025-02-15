@@ -12,7 +12,7 @@ resources:
 variables:
   BUILDCONFIGURATION: Release
   RestoreBuildProjects: "**/*.csproj"
-  TestProjects: "/IntegrationTests/IntegrationTests.csproj"
+  TestProjects: "**/*[Tt]ests/*.csproj"
 
   # Agent VM image name
   vmImageName: "ubuntu-latest"
