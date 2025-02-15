@@ -237,7 +237,7 @@ namespace IntegrationTests.Tests
             // Arrange
             LogInRequest logInRequest = new LogInRequest()
             {
-                PhoneNumber = "+0987654321",
+                PhoneNumber = "+0987654322",
                 Password = "125214123"
             };
 
