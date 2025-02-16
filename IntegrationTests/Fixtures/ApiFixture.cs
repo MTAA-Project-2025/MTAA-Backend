@@ -1,4 +1,5 @@
-﻿using FluentAssertions.Common;
+﻿using Aspire.Hosting;
+using FluentAssertions.Common;
 using Google.Protobuf.WellKnownTypes;
 using IntegrationTests.Config;
 using IntegrationTests.Extensions;
