@@ -30,7 +30,7 @@ stages:
           - task: UseDotNet@2
             inputs:
               packageType: 'sdk'
-              version: '9.x'
+              version: '8.x'
 
           # Install the necessary .NET workload
           - task: Bash@3
