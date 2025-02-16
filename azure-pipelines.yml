@@ -15,7 +15,7 @@ variables:
   TestProjects: "**/*[Tt]ests/*.csproj"
 
   # Agent VM image name
-  vmImageName: "ubuntu-latest"
+  vmImageName: "windows-latest"
 
 stages:
   - stage: Build
