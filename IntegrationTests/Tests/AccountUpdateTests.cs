@@ -166,5 +166,54 @@ namespace IntegrationTests.Tests
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
         #endregion
+
+        #region PresetUpdateAccountAvatar
+        [Fact]
+        public async Task Update_With_Valid_Preset_Image()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new { ImageGroupId = "valid-preset-id" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_Twice_With_Valid_Preset_Image()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new { ImageGroupId = "valid-preset-id" };
+            var response1 = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
+            var response2 = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
+
+            Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_With_Invalid_Preset_Image_Id()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new { ImageGroupId = "invalid-preset-id" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_Preset_Image_With_Unregistered_User()
+        {
+            var request = new { ImageGroupId = "valid-preset-id" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+        #endregion
     }
 }
