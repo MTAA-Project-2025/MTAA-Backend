@@ -7,7 +7,8 @@ var sql = builder.AddSqlServer("sqlserver")
 
 var db = sql.AddDatabase("mtaaDb");
 
-var cache = builder.AddRedis("cache");
+var cache = builder.AddRedis("cache")
+                   .WithLifetime(ContainerLifetime.Persistent);
 
 builder.AddProject<Projects.MTAA_Backend_Api>("mtaa-backend")
        .WithReference(cache)
