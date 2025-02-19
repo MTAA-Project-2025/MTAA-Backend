@@ -11,6 +11,7 @@ var cache = builder.AddRedis("cache");
 
 builder.AddProject<Projects.MTAA_Backend_Api>("mtaa-backend")
        .WithReference(cache)
+       .WaitFor(cache)
        .WithReference(db)
        .WaitFor(db);
 

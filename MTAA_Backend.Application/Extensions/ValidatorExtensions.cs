@@ -5,7 +5,7 @@ namespace MTAA_Backend.Application.Extensions
 {
     public static class ValidatorExtensions
     {
-        private static readonly Regex PhoneNumberRegex = new(@"^\+?[1-9]\d{1,14}$");
+        private static readonly Regex PhoneNumberRegex = new(@"^\+?[0-9]\d{1,14}$");
 
         public static IRuleBuilderOptions<T, string?> PhoneNumber<T>(this IRuleBuilder<T, string?> ruleBuilder)
         {
