@@ -24,8 +24,7 @@ namespace IntegrationTests.Config
                 new Claim(ClaimTypes.Role, UserRoles.User),
                 new Claim(ClaimTypes.Role, UserRoles.Moderator),
                 new Claim(ClaimTypes.Name, UserSettings.UserName),
-                new Claim(ClaimTypes.Email, UserSettings.Email),
-                new Claim("userId",UserSettings.UserId)
+                new Claim("Id",UserSettings.UserId)
             }, "FakeScheme"));
 
             return await Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(principal,

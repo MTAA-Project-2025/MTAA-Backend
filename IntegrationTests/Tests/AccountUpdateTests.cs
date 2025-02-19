@@ -9,6 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using IntegrationTests.Helpers;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Responses;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
+using Microsoft.AspNetCore.Identity;
+using MTAA_Backend.Infrastructure;
+using MTAA_Backend.Domain.Entities.Users;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace IntegrationTests.Tests
 {
@@ -19,6 +24,16 @@ namespace IntegrationTests.Tests
 
         public AccountUpdateTests(ApiFixture fixture)
         {
+            using (var scope = fixture.Services.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scope.ServiceProvider.GetRequiredService<MTAA_BackendDbContext>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                Utilities.InitializeTestUser(db, userManager, roleManager).Wait();
+            }
+
             _blobService = A.Fake<IAzureBlobService>();
             _client = fixture.WithWebHostBuilder(builder =>
             {
@@ -51,14 +66,34 @@ namespace IntegrationTests.Tests
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var formData = new MultipartFormDataContent();
-            var fileContent = new ByteArrayContent(new byte[1024 * 1024]); // 1MB image
-            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
-            formData.Add(fileContent, "Avatar", "image.jpg");
+            IFormFile imageFile = CreateValidImageFile();
+            var stream = imageFile.OpenReadStream();
+            var fileContent = new StreamContent(stream);
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png");
 
-            var response = await _client.PutAsync("/api/v1/Account/custom-update-account-avatar", formData);
+            var form = new MultipartFormDataContent
+            {
+                { fileContent, "Avatar", imageFile.FileName }
+            };
+
+            var response = await _client.PutAsync("/api/v1/Account/custom-update-account-avatar", form);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        public static IFormFile CreateValidImageFile(string fileName = "valid-image.jpg")
+        {
+            var bitmap = new Bitmap(100, 100);
+            var stream = new MemoryStream();
+
+            bitmap.Save(stream, ImageFormat.Jpeg);
+            stream.Position = 0;
+
+            return new FormFile(stream, 0, stream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/jpg"
+            };
         }
 
         [Fact]
