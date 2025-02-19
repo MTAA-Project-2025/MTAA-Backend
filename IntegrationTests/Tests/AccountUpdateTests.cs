@@ -14,6 +14,10 @@ using MTAA_Backend.Infrastructure;
 using MTAA_Backend.Domain.Entities.Users;
 using System.Drawing.Imaging;
 using System.Drawing;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace IntegrationTests.Tests
 {
@@ -83,16 +87,19 @@ namespace IntegrationTests.Tests
 
         public static IFormFile CreateValidImageFile(string fileName = "valid-image.jpg")
         {
-            var bitmap = new Bitmap(100, 100);
-            var stream = new MemoryStream();
+            var image = new Image<Rgba32>(100, 100);
 
-            bitmap.Save(stream, ImageFormat.Jpeg);
+            image.Mutate(x => x.BackgroundColor(SixLabors.ImageSharp.Color.Blue));
+
+            var stream = new MemoryStream();
+            image.Save(stream, new JpegEncoder());
+
             stream.Position = 0;
 
             return new FormFile(stream, 0, stream.Length, "file", fileName)
             {
                 Headers = new HeaderDictionary(),
-                ContentType = "image/jpg"
+                ContentType = "image/jpeg"
             };
         }
 
