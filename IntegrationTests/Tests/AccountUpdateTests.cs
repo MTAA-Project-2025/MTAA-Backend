@@ -18,6 +18,8 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using MTAA_Backend.Domain.Entities.Images;
+using MTAA_Backend.Domain.Resources.Images;
 
 namespace IntegrationTests.Tests
 {
@@ -53,7 +55,7 @@ namespace IntegrationTests.Tests
             var loginRequest = new LogInRequest()
             {
                 Email = UserSettings.Email,
-                Password = UserSettings.Password  // Use the password set in UserSettings
+                Password = UserSettings.Password
             };
 
             var response = await _client.PostAsJsonAsync("/api/v1/Identity/log-in", loginRequest);
@@ -66,7 +68,6 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task Update_With_Valid_Image()
         {
-            // Get the token after logging in
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -106,7 +107,6 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task Update_With_Large_Image()
         {
-            // Get the token after logging in
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -123,7 +123,6 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task Update_With_Null_Image()
         {
-            // Get the token after logging in
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -138,7 +137,6 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task Update_With_NonImage_File()
         {
-            // Get the token after logging in
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -167,14 +165,14 @@ namespace IntegrationTests.Tests
         }
         #endregion
 
-        #region PresetUpdateAccountAvatar
+        #region update account preset avatar
         [Fact]
         public async Task Update_With_Valid_Preset_Image()
         {
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var request = new { ImageGroupId = "valid-preset-id" };
+            var request = new { ImageGroupId = PresetAvatarImages.Image1Id };
             var response = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -186,7 +184,7 @@ namespace IntegrationTests.Tests
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var request = new { ImageGroupId = "valid-preset-id" };
+            var request = new { ImageGroupId = PresetAvatarImages.Image1Id };
             var response1 = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
             var response2 = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
 
@@ -209,7 +207,7 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task Update_Preset_Image_With_Unregistered_User()
         {
-            var request = new { ImageGroupId = "valid-preset-id" };
+            var request = new { ImageGroupId = PresetAvatarImages.Image1Id };
             var response = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
