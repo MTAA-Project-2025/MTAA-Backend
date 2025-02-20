@@ -20,6 +20,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Resources.Images;
+using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 
 namespace IntegrationTests.Tests
 {
@@ -172,7 +173,7 @@ namespace IntegrationTests.Tests
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var request = new { ImageGroupId = PresetAvatarImages.Image1Id };
+            var request = new PresetUpdateAccountAvatarRequest { ImageGroupId = PresetAvatarImages.Image1Id };
             var response = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -184,7 +185,7 @@ namespace IntegrationTests.Tests
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var request = new { ImageGroupId = PresetAvatarImages.Image1Id };
+            var request = new PresetUpdateAccountAvatarRequest { ImageGroupId = PresetAvatarImages.Image1Id };
             var response1 = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
             var response2 = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
 
@@ -198,7 +199,7 @@ namespace IntegrationTests.Tests
             var token = await GetValidTokenForTestUser();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var request = new { ImageGroupId = "invalid-preset-id" };
+            var request = new PresetUpdateAccountAvatarRequest { ImageGroupId = Guid.NewGuid() };
             var response = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -207,7 +208,7 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task Update_Preset_Image_With_Unregistered_User()
         {
-            var request = new { ImageGroupId = PresetAvatarImages.Image1Id };
+            var request = new PresetUpdateAccountAvatarRequest { ImageGroupId = PresetAvatarImages.Image1Id };
             var response = await _client.PutAsJsonAsync("/api/v1/Account/preset-update-account-avatar", request);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);

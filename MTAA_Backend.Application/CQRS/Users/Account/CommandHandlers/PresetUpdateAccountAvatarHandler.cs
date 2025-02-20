@@ -38,7 +38,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
 
         public async Task<MyImageGroupResponse> Handle(PresetUpdateAccountAvatar request, CancellationToken cancellationToken)
         {
-            var imageGroup = await _dbContext.UserPresetAvatarImages.Where(e => e.Id == Guid.Parse(request.ImageGroupId))
+            var imageGroup = await _dbContext.UserPresetAvatarImages.Where(e => e.Id == request.ImageGroupId)
                                                                     .Include(e => e.Images)
                                                                     .FirstOrDefaultAsync(cancellationToken);
             if (imageGroup == null)
