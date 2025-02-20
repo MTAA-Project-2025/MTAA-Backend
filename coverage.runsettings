@@ -8,9 +8,9 @@
             [MTAA_Backend*]* 
           </Include>
           <Exclude>
-            [IntegrationTests*]*  
-            [MTAA_Backend.Infrastructure.Migrations*]*
+            [IntegrationTests*]*
           </Exclude>
+          <ExcludeByFile>**/Migrations/*.cs</ExcludeByFile>
         </Configuration>
       </DataCollector>
     </DataCollectors>
