@@ -9,7 +9,7 @@
           </Include>
           <Exclude>
             [IntegrationTests*]*  
-            [MTAA_Backend.Infrastructure/Migrations/*]*
+            [MTAA_Backend.Infrastructure.Migrations*]*
           </Exclude>
         </Configuration>
       </DataCollector>
