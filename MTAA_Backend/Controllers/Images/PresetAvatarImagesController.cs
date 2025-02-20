@@ -12,9 +12,9 @@ using System.Net;
 
 namespace MTAA_Backend.Api.Controllers.Images
 {
-    public class PresetAvatarImages : ApiController
+    public class PresetAvatarImagesController : ApiController
     {
-        public PresetAvatarImages(IMediator mediator,
+        public PresetAvatarImagesController(IMediator mediator,
             IMapper mapper) : base(mediator, mapper)
         {
         }
