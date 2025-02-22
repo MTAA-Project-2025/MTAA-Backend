@@ -320,5 +320,55 @@ namespace IntegrationTests.Tests
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
         #endregion
+
+        #region update account username
+        [Fact]
+        public async Task Update_With_Valid_Username()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountUsernameRequest { Username = "ValidName123" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-username", request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_With_Short_Username()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountUsernameRequest { Username = "AB" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-username", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_With_Long_Username()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountUsernameRequest { Username = new string('A', 51) };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-username", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_Username_With_Invalid_Symbols()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountUsernameRequest { Username = "Invalid@#$%" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-username", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+        #endregion
     }
 }
