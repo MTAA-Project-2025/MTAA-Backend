@@ -214,5 +214,53 @@ namespace IntegrationTests.Tests
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
         #endregion
+
+        #region update account birth date
+        [Fact]
+        public async Task Update_BirthDate_With_Valid_Date()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountBirthDateRequest { BirthDate = new DateTime(1990, 5, 20) };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-birth-date", request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_BirthDate_With_Date_Before_1900()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountBirthDateRequest { BirthDate = new DateTime(1899, 12, 31) };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-birth-date", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_BirthDate_With_Future_Date()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountBirthDateRequest { BirthDate = DateTime.UtcNow.AddYears(1) };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-birth-date", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_BirthDate_With_Unregistered_User()
+        {
+            var request = new UpdateAccountBirthDateRequest { BirthDate = new DateTime(1995, 8, 15) };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-birth-date", request);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+        #endregion
+
     }
 }
