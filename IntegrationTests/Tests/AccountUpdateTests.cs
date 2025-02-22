@@ -262,5 +262,63 @@ namespace IntegrationTests.Tests
         }
         #endregion
 
+        #region update account display name
+        [Fact]
+        public async Task Update_With_Valid_DisplayName()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountDisplayNameRequest { DisplayName = "ValidName123" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-display-name", request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_With_Short_DisplayName()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountDisplayNameRequest { DisplayName = "AB" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-display-name", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_With_Long_DisplayName()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountDisplayNameRequest { DisplayName = new string('A', 101) };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-display-name", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_With_Invalid_Symbols()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateAccountDisplayNameRequest { DisplayName = "Invalid@#$%" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-display-name", request);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_DisplayName_Unregistered_User()
+        {
+            var request = new UpdateAccountDisplayNameRequest { DisplayName = "ValidName" };
+            var response = await _client.PutAsJsonAsync("/api/v1/Account/update-account-display-name", request);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+        #endregion
     }
 }
