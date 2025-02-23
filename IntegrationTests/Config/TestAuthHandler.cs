@@ -21,9 +21,9 @@ namespace IntegrationTests.Config
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var identity = new ClaimsIdentity(Array.Empty<Claim>(), "Test");
+            var identity = new ClaimsIdentity(Array.Empty<Claim>(), "FakeScheme");
             var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, "TestScheme");
+            var ticket = new AuthenticationTicket(principal, "FakeScheme");
 
             var result = AuthenticateResult.Success(ticket);
 

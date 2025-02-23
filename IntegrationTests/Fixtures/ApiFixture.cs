@@ -92,7 +92,7 @@ namespace IntegrationTests.Fixtures
             // Ensure that the SqlServer database is fully initialized before proceeding.
             //And Db migration is rant successfully.
             // This is crucial, especially in CI/CD environments, to prevent tests from failing due to timing issues.
-            await Task.Delay(TimeSpan.FromSeconds(50));
+            await Task.Delay(TimeSpan.FromSeconds(600));
         }
     }
 }
