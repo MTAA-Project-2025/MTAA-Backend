@@ -1,4 +1,5 @@
 ﻿using MTAA_Backend.Domain.Entities.Groups;
+using MTAA_Backend.Domain.Entities.Messages;
 using MTAA_Backend.Domain.Entities.Shared;
 using MTAA_Backend.Domain.Entities.Users;
 using System;
@@ -21,5 +22,8 @@ namespace MTAA_Backend.Domain.Entities.Images
 
         public Channel? Channel { get; set; }
         public Guid? ChannelId { get; set; }
+
+        public ImagesMessage? Message { get; set; }
+        public Guid? MessageId { get; set; }
     }
 }
