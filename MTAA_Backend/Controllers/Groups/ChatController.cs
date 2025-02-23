@@ -23,25 +23,16 @@ namespace MTAA_Backend.Api.Controllers.Groups
 {
     public class ChatController : ApiController
     {
-        private readonly MTAA_BackendDbContext _dbContext;
-        private readonly IStringLocalizer _localizer;
-        private readonly IUserService _userService;
         public ChatController(IMediator mediator,
-            IMapper mapper,
-            MTAA_BackendDbContext dbContext,
-            IStringLocalizer<ErrorMessages> localizer,
-            IUserService userService) : base(mediator, mapper)
+            IMapper mapper) : base(mediator, mapper)
         {
-            _dbContext = dbContext;
-            _localizer = localizer;
-            _userService = userService;
         }
 
         [HttpPost]
         [Authorize(Roles = UserRoles.User)]
         [Route("add")]
         [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Guid>> AddChannel([FromForm] AddChatRequest request)
+        public async Task<ActionResult<Guid>> AddChat([FromBody] AddChatRequest request)
         {
             var command = _mapper.Map<AddChat>(request);
             var res = await _mediator.Send(command);

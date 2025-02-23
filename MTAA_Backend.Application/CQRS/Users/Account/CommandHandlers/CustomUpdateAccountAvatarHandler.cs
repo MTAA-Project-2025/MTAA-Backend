@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
 {
-    public class CustomUpdateAccountAvatarHandler(ILogger<SignUpByEmailHandler> logger,
+    public class CustomUpdateAccountAvatarHandler(ILogger<CustomUpdateAccountAvatarHandler> logger,
         IStringLocalizer<ErrorMessages> localizer,
         MTAA_BackendDbContext dbContext,
         IUserService userService,

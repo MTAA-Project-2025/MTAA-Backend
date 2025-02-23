@@ -14,7 +14,7 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.UserGroupMemberships.QueryHandlers
 {
-    public class GetArchivedUserGroupMembershipsHandler(ILogger<GetActiveUserGroupMembershipsHandler> logger,
+    public class GetArchivedUserGroupMembershipsHandler(ILogger<GetArchivedUserGroupMembershipsHandler> logger,
         IStringLocalizer<ErrorMessages> localizer,
         MTAA_BackendDbContext dbContext,
         IMapper mapper,

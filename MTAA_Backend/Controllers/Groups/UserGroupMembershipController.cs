@@ -39,7 +39,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
         [Authorize(Roles = UserRoles.User)]
         [Route("allow-notifications")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> AllowUserGroupMembershipNotifications([FromForm] GenericIdRequest<Guid> request)
+        public async Task<ActionResult> AllowUserGroupMembershipNotifications([FromBody] GenericIdRequest<Guid> request)
         {
             await Guard.Against.NotUserGroupMembershipOwner(request.Id, _dbContext, _localizer, _userService);
 
@@ -52,7 +52,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
         [Authorize(Roles = UserRoles.User)]
         [Route("forbid-notifications")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> ForbidUserGroupMembershipNotifications([FromForm] GenericIdRequest<Guid> request)
+        public async Task<ActionResult> ForbidUserGroupMembershipNotifications([FromBody] GenericIdRequest<Guid> request)
         {
             await Guard.Against.NotUserGroupMembershipOwner(request.Id, _dbContext, _localizer, _userService);
 
@@ -66,7 +66,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
         [Authorize(Roles = UserRoles.User)]
         [Route("archive")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> ArchiveUserGroupMembership([FromForm] GenericIdRequest<Guid> request)
+        public async Task<ActionResult> ArchiveUserGroupMembership([FromBody] GenericIdRequest<Guid> request)
         {
             await Guard.Against.NotUserGroupMembershipOwner(request.Id, _dbContext, _localizer, _userService);
 
@@ -79,7 +79,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
         [Authorize(Roles = UserRoles.User)]
         [Route("unarchive")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult> UnarchiveUserGroupMembership([FromForm] GenericIdRequest<Guid> request)
+        public async Task<ActionResult> UnarchiveUserGroupMembership([FromBody] GenericIdRequest<Guid> request)
         {
             await Guard.Against.NotUserGroupMembershipOwner(request.Id, _dbContext, _localizer, _userService);
 
@@ -116,6 +116,8 @@ namespace MTAA_Backend.Api.Controllers.Groups
         [ProducesResponseType(typeof(SimpleUserGroupMembershipResponse), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<SimpleUserGroupMembershipResponse>> GetUserGroupMembershipById([FromBody] Guid id)
         {
+            await Guard.Against.NotUserGroupMembershipOwner(id, _dbContext, _localizer, _userService);
+
             var res = await _mediator.Send(new GetUserGroupMembershipById()
             {
                 Id = id

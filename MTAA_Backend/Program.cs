@@ -66,6 +66,7 @@ public class Program
         builder.Services.AddScoped<IAzureBlobService, AzureBlobService>();
         builder.Services.AddScoped<IImageService, ImageService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IAccountService, AccountService>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

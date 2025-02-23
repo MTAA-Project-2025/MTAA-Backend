@@ -10,9 +10,11 @@ using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
 using MTAA_Backend.Application.Extensions;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Other;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Responses;
+using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Resources.Customers;
+using MTAA_Backend.Domain.Resources.Images;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Infrastructure;
 using System;
@@ -87,6 +89,10 @@ namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
             {
                 _logger.LogError($"Error while creating role: {result.Errors}");
             }
+
+            var imageGroup = await _dbContext.UserPresetAvatarImages.Where(e => e.Id == PresetAvatarImages.Image1Id)
+                                                                    .Include(e => e.Images)
+                                                                    .FirstOrDefaultAsync(cancellationToken);
 
             return await _mediator.Send(new LogIn()
             {
