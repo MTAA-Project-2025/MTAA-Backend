@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using MTAA_Backend.Application.CQRS.Users.Account.Commands;
 using MTAA_Backend.Application.CQRS.Users.Identity.Commands;
 using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
 using MTAA_Backend.Application.Extensions;

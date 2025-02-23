@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Groups\BaseGroups\Queries\" />
     <Folder Include="CQRS\Groups\Channels\QueryHandlers\" />
     <Folder Include="CQRS\Groups\Channels\Queries\" />
 	<Folder Include="CQRS\Groups\Chats\QueryHandlers\" />
