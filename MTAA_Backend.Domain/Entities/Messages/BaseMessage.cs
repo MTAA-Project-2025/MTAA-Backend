@@ -24,5 +24,10 @@ namespace MTAA_Backend.Domain.Entities.Messages
         public string SenderId { get; set; }
 
         public ICollection<UserGroupMembership> LastMessageUserGroupMemberships { get; set; } = new HashSet<UserGroupMembership>();
+    
+        public BaseMessage(string type)
+        {
+            this.Type = type;
+        }
     }
 }
