@@ -16,7 +16,7 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Chats.CommandHandlers
 {
-    public class AddChatHandler(ILogger<SignUpByEmailHandler> logger,
+    public class AddChatHandler(ILogger<AddChatHandler> logger,
         IStringLocalizer<ErrorMessages> localizer,
         MTAA_BackendDbContext dbContext,
         IUserService userService) : IRequestHandler<AddChat, Guid>

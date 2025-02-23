@@ -16,7 +16,7 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 {
-    public class AddChannelHandler(ILogger<SignUpByEmailHandler> logger,
+    public class AddChannelHandler(ILogger<AddChannelHandler> logger,
         IStringLocalizer<ErrorMessages> localizer,
         MTAA_BackendDbContext dbContext,
         IImageService imageService,

@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Account.QueryHandlers
 {
-    public class PublicGetFullAccountHandler(ILogger<SignUpByEmailHandler> logger,
+    public class PublicGetFullAccountHandler(ILogger<PublicGetFullAccountHandler> logger,
         IStringLocalizer<ErrorMessages> localizer,
         MTAA_BackendDbContext dbContext,
         IUserService userService,

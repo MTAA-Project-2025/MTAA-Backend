@@ -56,4 +56,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Groups\UserGroupMemberships\Requests\" />
+  </ItemGroup>
+
 </Project>
