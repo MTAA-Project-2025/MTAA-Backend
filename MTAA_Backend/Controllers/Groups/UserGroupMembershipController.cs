@@ -94,8 +94,10 @@ namespace MTAA_Backend.Api.Controllers.Groups
         [ProducesResponseType(typeof(ICollection<SimpleUserGroupMembershipResponse>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ICollection<SimpleUserGroupMembershipResponse>>> GetActiveUserGroupMemberships([FromBody] PageParameters request)
         {
-            var command = _mapper.Map<GetActiveUserGroupMemberships>(request);
-            var res = await _mediator.Send(command);
+            var res = await _mediator.Send(new GetArchivedUserGroupMemberships()
+            {
+                PageParameters = request
+            });
             return Ok(res);
         }
 
@@ -105,8 +107,10 @@ namespace MTAA_Backend.Api.Controllers.Groups
         [ProducesResponseType(typeof(ICollection<SimpleUserGroupMembershipResponse>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ICollection<SimpleUserGroupMembershipResponse>>> GetArchivedUserGroupMemberships([FromBody] PageParameters request)
         {
-            var command = _mapper.Map<GetArchivedUserGroupMemberships>(request);
-            var res = await _mediator.Send(command);
+            var res = await _mediator.Send(new GetArchivedUserGroupMemberships()
+            {
+                PageParameters = request
+            });
             return Ok(res);
         }
 
