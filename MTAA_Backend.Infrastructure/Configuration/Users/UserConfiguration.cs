@@ -45,6 +45,13 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .WithOne(e => e.Owner)
                    .HasForeignKey(e => e.OwnerId)
                    .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(e => e.LikedPosts)
+                   .WithMany(e => e.LikedUsers);
+
+            builder.HasMany(e => e.CreatedPosts)
+                   .WithOne(e => e.Owner)
+                   .HasForeignKey(e => e.OwnerId);
         }
     }
 }
