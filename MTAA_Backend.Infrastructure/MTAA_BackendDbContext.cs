@@ -5,6 +5,7 @@ using MTAA_Backend.Domain.Entities.Images;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using MTAA_Backend.Infrastructure.Configuration.Images;
 using MTAA_Backend.Domain.Entities.Groups;
+using MTAA_Backend.Domain.Entities.Files;
 
 namespace MTAA_Backend.Infrastructure
 {
@@ -18,8 +19,18 @@ namespace MTAA_Backend.Infrastructure
         public DbSet<UserGroupMembership> UserGroupMemberships { get; set; }
         #endregion
 
+        #region Messages
         public DbSet<BaseMessage> BaseMessages { get; set; }
+        public DbSet<FileMessage> FileMessages { get; set; }
+        public DbSet<GifMessage> GifMessages { get; set; }
+        public DbSet<ImagesMessage> ImagesMessages { get; set; }
+        public DbSet<TextMessage> TextMessages { get; set; }
+        public DbSet<VoiceMessage> VoiceMessages { get; set; }
+        #endregion
 
+
+
+        public DbSet<MyFile> MyFiles { get; set; }
         public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<UserAvatar> UserAvatars { get; set; }
 

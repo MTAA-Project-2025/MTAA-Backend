@@ -26,6 +26,11 @@ namespace MTAA_Backend.Infrastructure.Configuration.Images
                    .WithOne(e => e.Image)
                    .HasForeignKey<MyImageGroup>(e => e.ChannelId)
                    .IsRequired(false);
+
+            builder.HasOne(e => e.Message)
+                   .WithMany(e => e.Images)
+                   .HasForeignKey(e => e.MessageId)
+                   .IsRequired(false);
         }
     }
 }

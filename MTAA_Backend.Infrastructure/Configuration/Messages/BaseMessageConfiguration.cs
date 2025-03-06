@@ -28,6 +28,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Messages
                    .WithOne(e => e.LastMessage)
                    .HasForeignKey(e => e.LastMessageId)
                    .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasIndex(e => new { e.Type, e.IsRead });
         }
     }
 }

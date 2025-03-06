@@ -9,7 +9,7 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.BaseGroups.CommandHandlers
 {
-    public class DeleteGroupHandler(ILogger<JoinGroupHandler> logger,
+    public class DeleteGroupHandler(ILogger<DeleteGroupHandler> logger,
         IStringLocalizer<ErrorMessages> localizer,
         MTAA_BackendDbContext dbContext,
         IMediator mediator) : IRequestHandler<DeleteGroup>

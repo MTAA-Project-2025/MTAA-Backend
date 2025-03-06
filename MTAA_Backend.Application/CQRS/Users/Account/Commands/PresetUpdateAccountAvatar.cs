@@ -10,6 +10,6 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.Commands
 {
     public class PresetUpdateAccountAvatar : IRequest<MyImageGroupResponse>
     {
-        public string ImageGroupId { get; set; }
+        public Guid ImageGroupId { get; set; }
     }
 }

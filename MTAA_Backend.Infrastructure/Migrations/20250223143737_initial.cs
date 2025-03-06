@@ -28,6 +28,30 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MyFiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Length = table.Column<long>(type: "bigint", nullable: false),
+                    ShortPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileMessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    VoiceMessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GifMessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DataCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataLastDeleteTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataLastEditTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsEdited = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MyFiles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -240,10 +264,17 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
                     GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    GifMessage_FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ShortText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    VoiceMessage_FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: true),
                     DataCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataLastDeleteTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DataLastEditTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -265,6 +296,21 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         principalTable: "BaseGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BaseMessages_MyFiles_FileId",
+                        column: x => x.FileId,
+                        principalTable: "MyFiles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BaseMessages_MyFiles_GifMessage_FileId",
+                        column: x => x.GifMessage_FileId,
+                        principalTable: "MyFiles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BaseMessages_MyFiles_VoiceMessage_FileId",
+                        column: x => x.VoiceMessage_FileId,
+                        principalTable: "MyFiles",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -275,6 +321,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserAvatarId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChannelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    MessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     DataCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataLastDeleteTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -289,6 +336,11 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         name: "FK_ImageGroups_BaseGroups_ChannelId",
                         column: x => x.ChannelId,
                         principalTable: "BaseGroups",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ImageGroups_BaseMessages_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "BaseMessages",
                         principalColumn: "Id");
                 });
 
@@ -376,15 +428,15 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "ImageGroups",
-                columns: new[] { "Id", "ChannelId", "DataCreationTime", "DataLastDeleteTime", "DataLastEditTime", "Discriminator", "IsDeleted", "IsEdited", "Title", "UserAvatarId" },
+                columns: new[] { "Id", "ChannelId", "DataCreationTime", "DataLastDeleteTime", "DataLastEditTime", "Discriminator", "IsDeleted", "IsEdited", "MessageId", "Title", "UserAvatarId" },
                 values: new object[,]
                 {
-                    { new Guid("161750a4-9b50-4a1c-a5f1-3221640533c6"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, "Preset Avatar", null },
-                    { new Guid("3e4f4c14-f4ae-4238-95b1-075d1e8a9981"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, "Preset Avatar", null },
-                    { new Guid("416c7d33-0a25-4176-b783-64b25919ac12"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, "Preset Avatar", null },
-                    { new Guid("79fe4a86-1ca3-4dd0-ad8b-c896bef376ed"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, "Preset Avatar", null },
-                    { new Guid("9ad61bee-053b-4042-8b4a-860fe80dd05a"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, "Preset Avatar", null },
-                    { new Guid("d1a56d08-a7de-4855-8a13-5fbda2ca4843"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, "Preset Avatar", null }
+                    { new Guid("161750a4-9b50-4a1c-a5f1-3221640533c6"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
+                    { new Guid("3e4f4c14-f4ae-4238-95b1-075d1e8a9981"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
+                    { new Guid("416c7d33-0a25-4176-b783-64b25919ac12"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
+                    { new Guid("79fe4a86-1ca3-4dd0-ad8b-c896bef376ed"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
+                    { new Guid("9ad61bee-053b-4042-8b4a-860fe80dd05a"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
+                    { new Guid("d1a56d08-a7de-4855-8a13-5fbda2ca4843"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null }
                 });
 
             migrationBuilder.InsertData(
@@ -473,6 +525,20 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 column: "ParticipantsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BaseMessages_FileId",
+                table: "BaseMessages",
+                column: "FileId",
+                unique: true,
+                filter: "[FileId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BaseMessages_GifMessage_FileId",
+                table: "BaseMessages",
+                column: "GifMessage_FileId",
+                unique: true,
+                filter: "[FileId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BaseMessages_GroupId",
                 table: "BaseMessages",
                 column: "GroupId");
@@ -483,11 +549,28 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BaseMessages_Type_IsRead",
+                table: "BaseMessages",
+                columns: new[] { "Type", "IsRead" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BaseMessages_VoiceMessage_FileId",
+                table: "BaseMessages",
+                column: "VoiceMessage_FileId",
+                unique: true,
+                filter: "[FileId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ImageGroups_ChannelId",
                 table: "ImageGroups",
                 column: "ChannelId",
                 unique: true,
                 filter: "[ChannelId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ImageGroups_MessageId",
+                table: "ImageGroups",
+                column: "MessageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_ImageGroupId",
@@ -575,6 +658,10 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "FK_BaseGroups_AspNetUsers_OwnerId",
                 table: "BaseGroups");
 
+            migrationBuilder.DropForeignKey(
+                name: "FK_BaseMessages_AspNetUsers_SenderId",
+                table: "BaseMessages");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -606,9 +693,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "BaseMessages");
-
-            migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
@@ -618,7 +702,13 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "ImageGroups");
 
             migrationBuilder.DropTable(
+                name: "BaseMessages");
+
+            migrationBuilder.DropTable(
                 name: "BaseGroups");
+
+            migrationBuilder.DropTable(
+                name: "MyFiles");
         }
     }
 }

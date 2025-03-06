@@ -10,7 +10,7 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 {
-    public class UpdateChannelVisibilityHandler(ILogger<SignUpByEmailHandler> logger,
+    public class UpdateChannelVisibilityHandler(ILogger<UpdateChannelVisibilityHandler> logger,
         IStringLocalizer<ErrorMessages> localizer,
         MTAA_BackendDbContext dbContext) : IRequestHandler<UpdateChannelVisibility>
     {

@@ -8,6 +8,6 @@ namespace MTAA_Backend.Domain.DTOs.Users.Account.Requests
 {
     public class PresetUpdateAccountAvatarRequest
     {
-        public string ImageGroupId { get; set; }
+        public Guid ImageGroupId { get; set; }
     }
 }
