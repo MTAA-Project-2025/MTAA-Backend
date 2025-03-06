@@ -27,6 +27,7 @@ public class Program
 
         builder.AddSqlServerClient(connectionName: "mtaaDb");
         builder.AddSqlServerDbContext<MTAA_BackendDbContext>(connectionName: "mtaaDb");
+        builder.AddQdrantClient("qdrant");
 
         builder.Services.AddHostedService<DbMigrationJob>();
 

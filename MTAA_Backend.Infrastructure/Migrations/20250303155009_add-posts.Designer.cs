@@ -4,6 +4,7 @@ using MTAA_Backend.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MTAA_Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(MTAA_BackendDbContext))]
-    partial class MTAA_BackendDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250303155009_add-posts")]
+    partial class addposts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -719,29 +722,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.ToTable("UserContacts");
                 });
 
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserRelationship", b =>
-                {
-                    b.Property<string>("User1Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("User2Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsUser1Followig")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsUser2Followig")
-                        .HasColumnType("bit");
-
-                    b.HasKey("User1Id", "User2Id");
-
-                    b.HasIndex("User2Id");
-
-                    b.HasIndex("IsUser1Followig", "IsUser2Followig");
-
-                    b.ToTable("UserRelationship");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1222,25 +1202,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserRelationship", b =>
-                {
-                    b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User1")
-                        .WithMany("UserRelationships1")
-                        .HasForeignKey("User1Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User2")
-                        .WithMany("UserRelationships2")
-                        .HasForeignKey("User2Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User1");
-
-                    b.Navigation("User2");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1404,10 +1365,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("OwnedChannels");
 
                     b.Navigation("UserGroupMemberships");
-
-                    b.Navigation("UserRelationships1");
-
-                    b.Navigation("UserRelationships2");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.UserAvatar", b =>
