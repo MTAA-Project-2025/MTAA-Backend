@@ -38,5 +38,8 @@ namespace MTAA_Backend.Domain.Entities.Users
         public Guid? AvatarId { get; set; }
 
         public ICollection<Channel> OwnedChannels { get; set; } = new HashSet<Channel>();
+
+        public ICollection<UserRelationship> UserRelationships1 { get; set; } = new HashSet<UserRelationship>();
+        public ICollection<UserRelationship> UserRelationships2 { get; set; } = new HashSet<UserRelationship>();
     }
 }
