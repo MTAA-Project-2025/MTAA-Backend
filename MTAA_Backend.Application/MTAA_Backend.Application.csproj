@@ -29,6 +29,12 @@
     <Folder Include="CQRS\Groups\Channels\Queries\" />
 	<Folder Include="CQRS\Groups\Chats\QueryHandlers\" />
 	<Folder Include="CQRS\Groups\Chats\Queries\" />
+	<Folder Include="CQRS\Locations\Queries\" />
+	<Folder Include="CQRS\Posts\Events\" />
+	<Folder Include="CQRS\Posts\EventHandlers\" />
+	<Folder Include="CQRS\Posts\Queries\" />
+	<Folder Include="CQRS\RecomendationSystem\Commands\" />
+	<Folder Include="CQRS\RecomendationSystem\Queries\" />
   </ItemGroup>
 
 </Project>

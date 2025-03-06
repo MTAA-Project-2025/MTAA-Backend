@@ -52,6 +52,13 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
             builder.HasMany(e => e.CreatedPosts)
                    .WithOne(e => e.Owner)
                    .HasForeignKey(e => e.OwnerId);
+
+            builder.HasMany(e => e.WatchedPosts)
+                   .WithMany(e => e.WatchedUsers);
+
+            builder.HasMany(e => e.RecomendationFeeds)
+                   .WithOne(e => e.User)
+                   .HasForeignKey(e => e.UserId);
         }
     }
 }

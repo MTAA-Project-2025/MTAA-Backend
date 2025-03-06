@@ -177,5 +177,37 @@ namespace MTAA_Backend.Application.Services
                 await _azureBlobService.RemoveFileAsync(name, cancellationToken);
             }
         }
+
+        public bool IsImagesHaveSameAspectRatio(ICollection<IFormFile> files)
+        {
+            double standardAspectRatio = -1;
+            foreach (var file in files)
+            {
+                var aspectRatio = GetImageAspectRatio(file);
+                if (aspectRatio <= 0)
+                {
+                    throw new HttpException(_localizer[ErrorMessagesPatterns.ImageFormatNotAllowed], HttpStatusCode.BadRequest);
+                }
+                if (standardAspectRatio == -1)
+                {
+                    standardAspectRatio = aspectRatio;
+                    break;
+                }
+                if (Math.Abs(standardAspectRatio - aspectRatio) >= 0.001) return false;
+            }
+            return true;
+        }
+        public double GetImageAspectRatio(IFormFile file)
+        {
+            try
+            {
+                var image = file.ConvertToImageSharp();
+                return image.Width / image.Height;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
     }
 }

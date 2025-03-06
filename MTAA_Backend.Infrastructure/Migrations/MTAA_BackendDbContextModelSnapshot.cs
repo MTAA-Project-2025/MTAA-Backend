@@ -523,6 +523,9 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("GlobalScore")
+                        .HasColumnType("float");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -538,6 +541,8 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GlobalScore");
+
                     b.HasIndex("LocationId")
                         .IsUnique()
                         .HasFilter("[LocationId] IS NOT NULL");
@@ -545,6 +550,57 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.RecomendationSystem.RecomendationFeed", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Type", "Weight");
+
+                    b.ToTable("RecomendationFeeds");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.RecomendationSystem.RecomendationItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FeedId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("LocalScore")
+                        .HasColumnType("float");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FeedId");
+
+                    b.HasIndex("LocalScore");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("RecomendationItems");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
@@ -867,6 +923,21 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.ToTable("PostUser");
                 });
 
+            modelBuilder.Entity("PostUser1", b =>
+                {
+                    b.Property<Guid>("WatchedPostsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("WatchedUsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("WatchedPostsId", "WatchedUsersId");
+
+                    b.HasIndex("WatchedUsersId");
+
+                    b.ToTable("PostUser1");
+                });
+
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.Channel", b =>
                 {
                     b.HasBaseType("MTAA_Backend.Domain.Entities.Groups.BaseGroup");
@@ -1156,6 +1227,36 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.RecomendationSystem.RecomendationFeed", b =>
+                {
+                    b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User")
+                        .WithMany("RecomendationFeeds")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.RecomendationSystem.RecomendationItem", b =>
+                {
+                    b.HasOne("MTAA_Backend.Domain.Entities.Posts.RecomendationSystem.RecomendationFeed", "Feed")
+                        .WithMany("RecomendationItems")
+                        .HasForeignKey("FeedId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("MTAA_Backend.Domain.Entities.Posts.Post", "Post")
+                        .WithMany("RecomendationItems")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Feed");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
                 {
                     b.HasOne("MTAA_Backend.Domain.Entities.Users.UserAvatar", "Avatar")
@@ -1265,6 +1366,21 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PostUser1", b =>
+                {
+                    b.HasOne("MTAA_Backend.Domain.Entities.Posts.Post", null)
+                        .WithMany()
+                        .HasForeignKey("WatchedPostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MTAA_Backend.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("WatchedUsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.Channel", b =>
                 {
                     b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "Owner")
@@ -1347,6 +1463,13 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Images");
+
+                    b.Navigation("RecomendationItems");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.RecomendationSystem.RecomendationFeed", b =>
+                {
+                    b.Navigation("RecomendationItems");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
@@ -1360,6 +1483,8 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("OwnedChannels");
+
+                    b.Navigation("RecomendationFeeds");
 
                     b.Navigation("UserGroupMemberships");
                 });

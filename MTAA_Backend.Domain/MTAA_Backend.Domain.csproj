@@ -58,6 +58,7 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Groups\UserGroupMemberships\Requests\" />
+    <Folder Include="DTOs\Posts\Responses\" />
   </ItemGroup>
 
 </Project>

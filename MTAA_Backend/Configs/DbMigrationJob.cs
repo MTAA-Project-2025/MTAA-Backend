@@ -3,6 +3,8 @@ using System;
 
 namespace MTAA_Backend.Api.Configs
 {
+
+    //Taken from the original documentation of Microsoft.
     public class DbMigrationJob : IHostedService
     {
         private readonly IServiceProvider _serviceProvider;

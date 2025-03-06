@@ -9,6 +9,7 @@ using MTAA_Backend.Domain.Entities.Files;
 using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Entities.Locations;
+using MTAA_Backend.Domain.Entities.Posts.RecomendationSystem;
 
 namespace MTAA_Backend.Infrastructure
 {
@@ -33,6 +34,8 @@ namespace MTAA_Backend.Infrastructure
 
         #region Posts
         public DbSet<Post> Posts { get; set; }
+        public DbSet<RecomendationFeed> RecomendationFeeds { get; set; }
+        public DbSet<RecomendationItem> RecomendationItems { get; set; }
         public DbSet<Comment> Comments { get; set; }
         #endregion
 

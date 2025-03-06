@@ -28,6 +28,7 @@ namespace IntegrationTests.Fixtures
         /**
          * Constructor for ApiFixture.
          * Initializes the DistributedApplicationOptions and sets up the SqlServer server resource.
+         * Taken from the tutorial to Aspire.Hosting, but highly modified.
          */
         public ApiFixture()
         {

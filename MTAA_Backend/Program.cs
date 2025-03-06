@@ -9,9 +9,10 @@ using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Infrastructure;
 using MTAA_Backend.Application.Validators.Identity;
 using MTAA_Backend.Application.MaperProfiles.Users;
-using System.Runtime.CompilerServices;
 using MTAA_Backend.Api.Configs;
 using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
+using Hangfire;
+using Hangfire.SqlServer;
 
 
 public class Program
@@ -20,7 +21,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        //var connectionString = builder.Configuration.GetConnectionString("DbContextConnection") ?? throw new InvalidOperationException("Connection string 'DbContextConnection' not found.");
+        var connectionString = builder.Configuration.GetConnectionString("mtaaDb") ?? throw new InvalidOperationException("Connection string 'mtaaDb' not found.");
 
         ConfigurationManager configuration = builder.Configuration;
 
@@ -37,7 +38,21 @@ public class Program
         builder.AddServiceDefaults();
 
         builder.AddRedisDistributedCache("cache");
-        // Add services to the container.
+
+        builder.Services.AddHangfire(configuration => configuration
+               .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+               .UseSimpleAssemblyNameTypeSerializer()
+               .UseRecommendedSerializerSettings()
+               .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
+               {
+                   CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                   SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                   QueuePollInterval = TimeSpan.Zero,
+                   UseRecommendedIsolationLevel = true,
+                   DisableGlobalLocks = true,
+               }));
+
+        builder.Services.AddHangfireServer();
 
         builder.Services.AddControllers();
 

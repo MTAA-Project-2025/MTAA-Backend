@@ -28,6 +28,18 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Locations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MyFiles",
                 columns: table => new
                 {
@@ -204,6 +216,57 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OwnerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    GlobalScore = table.Column<double>(type: "float", nullable: false),
+                    DataCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataLastDeleteTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataLastEditTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsEdited = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Posts_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Locations",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecomendationFeeds",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Weight = table.Column<double>(type: "float", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecomendationFeeds", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RecomendationFeeds_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserContacts",
                 columns: table => new
                 {
@@ -270,7 +333,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     GifMessage_FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ShortText = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     VoiceMessage_FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -314,6 +376,102 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DataCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataLastDeleteTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataLastEditTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsEdited = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostUser",
+                columns: table => new
+                {
+                    LikedPostsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LikedUsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostUser", x => new { x.LikedPostsId, x.LikedUsersId });
+                    table.ForeignKey(
+                        name: "FK_PostUser_AspNetUsers_LikedUsersId",
+                        column: x => x.LikedUsersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostUser_Posts_LikedPostsId",
+                        column: x => x.LikedPostsId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostUser1",
+                columns: table => new
+                {
+                    WatchedPostsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WatchedUsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostUser1", x => new { x.WatchedPostsId, x.WatchedUsersId });
+                    table.ForeignKey(
+                        name: "FK_PostUser1_AspNetUsers_WatchedUsersId",
+                        column: x => x.WatchedUsersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostUser1_Posts_WatchedPostsId",
+                        column: x => x.WatchedPostsId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RecomendationItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocalScore = table.Column<double>(type: "float", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FeedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecomendationItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RecomendationItems_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RecomendationItems_RecomendationFeeds_FeedId",
+                        column: x => x.FeedId,
+                        principalTable: "RecomendationFeeds",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ImageGroups",
                 columns: table => new
                 {
@@ -322,6 +480,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     UserAvatarId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChannelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     MessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     DataCreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataLastDeleteTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -341,6 +500,11 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         name: "FK_ImageGroups_BaseMessages_MessageId",
                         column: x => x.MessageId,
                         principalTable: "BaseMessages",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ImageGroups_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id");
                 });
 
@@ -428,15 +592,15 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "ImageGroups",
-                columns: new[] { "Id", "ChannelId", "DataCreationTime", "DataLastDeleteTime", "DataLastEditTime", "Discriminator", "IsDeleted", "IsEdited", "MessageId", "Title", "UserAvatarId" },
+                columns: new[] { "Id", "ChannelId", "DataCreationTime", "DataLastDeleteTime", "DataLastEditTime", "Discriminator", "IsDeleted", "IsEdited", "MessageId", "PostId", "Title", "UserAvatarId" },
                 values: new object[,]
                 {
-                    { new Guid("161750a4-9b50-4a1c-a5f1-3221640533c6"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
-                    { new Guid("3e4f4c14-f4ae-4238-95b1-075d1e8a9981"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
-                    { new Guid("416c7d33-0a25-4176-b783-64b25919ac12"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
-                    { new Guid("79fe4a86-1ca3-4dd0-ad8b-c896bef376ed"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
-                    { new Guid("9ad61bee-053b-4042-8b4a-860fe80dd05a"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null },
-                    { new Guid("d1a56d08-a7de-4855-8a13-5fbda2ca4843"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, "Preset Avatar", null }
+                    { new Guid("161750a4-9b50-4a1c-a5f1-3221640533c6"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, null, "Preset Avatar", null },
+                    { new Guid("3e4f4c14-f4ae-4238-95b1-075d1e8a9981"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, null, "Preset Avatar", null },
+                    { new Guid("416c7d33-0a25-4176-b783-64b25919ac12"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, null, "Preset Avatar", null },
+                    { new Guid("79fe4a86-1ca3-4dd0-ad8b-c896bef376ed"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, null, "Preset Avatar", null },
+                    { new Guid("9ad61bee-053b-4042-8b4a-860fe80dd05a"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, null, "Preset Avatar", null },
+                    { new Guid("d1a56d08-a7de-4855-8a13-5fbda2ca4843"), null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null, "UserPresetAvatarImage", false, false, null, null, "Preset Avatar", null }
                 });
 
             migrationBuilder.InsertData(
@@ -561,6 +725,11 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 filter: "[FileId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_PostId",
+                table: "Comments",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ImageGroups_ChannelId",
                 table: "ImageGroups",
                 column: "ChannelId",
@@ -573,9 +742,66 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 column: "MessageId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ImageGroups_PostId",
+                table: "ImageGroups",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Images_ImageGroupId",
                 table: "Images",
                 column: "ImageGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_GlobalScore",
+                table: "Posts",
+                column: "GlobalScore");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_LocationId",
+                table: "Posts",
+                column: "LocationId",
+                unique: true,
+                filter: "[LocationId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_OwnerId",
+                table: "Posts",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostUser_LikedUsersId",
+                table: "PostUser",
+                column: "LikedUsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostUser1_WatchedUsersId",
+                table: "PostUser1",
+                column: "WatchedUsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecomendationFeeds_Type_Weight",
+                table: "RecomendationFeeds",
+                columns: new[] { "Type", "Weight" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecomendationFeeds_UserId",
+                table: "RecomendationFeeds",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecomendationItems_FeedId",
+                table: "RecomendationItems",
+                column: "FeedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecomendationItems_LocalScore",
+                table: "RecomendationItems",
+                column: "LocalScore");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecomendationItems_PostId",
+                table: "RecomendationItems",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAvatars_CustomAvatarId",
@@ -662,6 +888,10 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "FK_BaseMessages_AspNetUsers_SenderId",
                 table: "BaseMessages");
 
+            migrationBuilder.DropForeignKey(
+                name: "FK_Posts_AspNetUsers_OwnerId",
+                table: "Posts");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -681,7 +911,19 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "BaseGroupUser");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "Images");
+
+            migrationBuilder.DropTable(
+                name: "PostUser");
+
+            migrationBuilder.DropTable(
+                name: "PostUser1");
+
+            migrationBuilder.DropTable(
+                name: "RecomendationItems");
 
             migrationBuilder.DropTable(
                 name: "UserContacts");
@@ -691,6 +933,9 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "RecomendationFeeds");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
@@ -705,10 +950,16 @@ namespace MTAA_Backend.Infrastructure.Migrations
                 name: "BaseMessages");
 
             migrationBuilder.DropTable(
+                name: "Posts");
+
+            migrationBuilder.DropTable(
                 name: "BaseGroups");
 
             migrationBuilder.DropTable(
                 name: "MyFiles");
+
+            migrationBuilder.DropTable(
+                name: "Locations");
         }
     }
 }

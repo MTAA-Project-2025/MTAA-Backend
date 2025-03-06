@@ -15,5 +15,8 @@ namespace MTAA_Backend.Domain.Interfaces
         public Task<ICollection<MyImageGroup>> SaveImages(ICollection<IFormFile> files, ImageSavingTypes type, CancellationToken cancellationToken = default);
 
         public Task RemoveImageGroup(MyImageGroup myImageGroup, CancellationToken cancellationToken = default);
+
+        public bool IsImagesHaveSameAspectRatio(ICollection<IFormFile> files);
+        public double GetImageAspectRatio(IFormFile file);
     }
 }

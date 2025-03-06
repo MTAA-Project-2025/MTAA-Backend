@@ -32,6 +32,15 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts
             builder.HasMany(e => e.Comments)
                    .WithOne(e => e.Post)
                    .HasForeignKey(e => e.PostId);
+
+            builder.HasMany(e => e.WatchedUsers)
+                   .WithMany(e => e.WatchedPosts);
+
+            builder.HasMany(e => e.RecomendationItems)
+                   .WithOne(e => e.Post)
+                   .HasForeignKey(e => e.PostId);
+
+            builder.HasIndex(e => e.GlobalScore);
         }
     }
 }
