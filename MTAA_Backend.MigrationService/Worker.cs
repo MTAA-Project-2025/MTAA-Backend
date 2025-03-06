@@ -49,11 +49,10 @@ namespace MTAA_Backend.MigrationService
             var strategy = dbContext.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
             {
-                await dbCreator.DeleteAsync(cancellationToken);
-                /*if (!await dbCreator.ExistsAsync(cancellationToken))
+                if (!await dbCreator.ExistsAsync(cancellationToken))
                 {
                     await dbCreator.CreateAsync(cancellationToken);
-                }*/
+                }
             });
         }
 
