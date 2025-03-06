@@ -4,6 +4,7 @@ using MTAA_Backend.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MTAA_Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(MTAA_BackendDbContext))]
-    partial class MTAA_BackendDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250306134241_add-relationship")]
+    partial class addrelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -35,60 +38,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasIndex("ParticipantsId");
 
                     b.ToTable("BaseGroupUser");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Files.MyFile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DataCreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataLastDeleteTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataLastEditTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("FileMessageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullPath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("GifMessageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEdited")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("Length")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShortPath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("VoiceMessageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MyFiles");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.BaseGroup", b =>
@@ -374,12 +323,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Property<bool>("IsEdited")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("MessageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -393,29 +336,11 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[ChannelId] IS NOT NULL");
 
-                    b.HasIndex("MessageId");
-
-                    b.HasIndex("PostId");
-
                     b.ToTable("ImageGroups");
 
                     b.HasDiscriminator().HasValue("MyImageGroup");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Locations.Location", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.BaseMessage", b =>
@@ -432,11 +357,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DataLastEditTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
 
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uniqueidentifier");
@@ -456,7 +376,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -464,87 +384,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.HasIndex("Type", "IsRead");
-
                     b.ToTable("BaseMessages");
-
-                    b.HasDiscriminator().HasValue("BaseMessage");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.Comments.Comment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DataCreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataLastDeleteTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataLastEditTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEdited")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.Post", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DataCreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataLastDeleteTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataLastEditTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsEdited")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("LocationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LocationId")
-                        .IsUnique()
-                        .HasFilter("[LocationId] IS NOT NULL");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
@@ -875,21 +715,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PostUser", b =>
-                {
-                    b.Property<Guid>("LikedPostsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LikedUsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("LikedPostsId", "LikedUsersId");
-
-                    b.HasIndex("LikedUsersId");
-
-                    b.ToTable("PostUser");
-                });
-
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.Channel", b =>
                 {
                     b.HasBaseType("MTAA_Backend.Domain.Entities.Groups.BaseGroup");
@@ -984,81 +809,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.GifMessage", b =>
-                {
-                    b.HasBaseType("MTAA_Backend.Domain.Entities.Messages.BaseMessage");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("FileId")
-                        .IsUnique()
-                        .HasFilter("[FileId] IS NOT NULL");
-
-                    b.ToTable("BaseMessages", t =>
-                        {
-                            t.Property("FileId")
-                                .HasColumnName("GifMessage_FileId");
-                        });
-
-                    b.HasDiscriminator().HasValue("GifMessage");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.TextMessage", b =>
-                {
-                    b.HasBaseType("MTAA_Backend.Domain.Entities.Messages.BaseMessage");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("TextMessage");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.VoiceMessage", b =>
-                {
-                    b.HasBaseType("MTAA_Backend.Domain.Entities.Messages.BaseMessage");
-
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("time");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("FileId")
-                        .IsUnique()
-                        .HasFilter("[FileId] IS NOT NULL");
-
-                    b.ToTable("BaseMessages", t =>
-                        {
-                            t.Property("FileId")
-                                .HasColumnName("VoiceMessage_FileId");
-                        });
-
-                    b.HasDiscriminator().HasValue("VoiceMessage");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.FileMessage", b =>
-                {
-                    b.HasBaseType("MTAA_Backend.Domain.Entities.Messages.TextMessage");
-
-                    b.Property<Guid>("FileId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("FileId")
-                        .IsUnique()
-                        .HasFilter("[FileId] IS NOT NULL");
-
-                    b.HasDiscriminator().HasValue("FileMessage");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.ImagesMessage", b =>
-                {
-                    b.HasBaseType("MTAA_Backend.Domain.Entities.Messages.TextMessage");
-
-                    b.HasDiscriminator().HasValue("ImagesMessage");
-                });
-
             modelBuilder.Entity("BaseGroupUser", b =>
                 {
                     b.HasOne("MTAA_Backend.Domain.Entities.Groups.BaseGroup", null)
@@ -1117,19 +867,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .WithOne("Image")
                         .HasForeignKey("MTAA_Backend.Domain.Entities.Images.MyImageGroup", "ChannelId");
 
-                    b.HasOne("MTAA_Backend.Domain.Entities.Messages.ImagesMessage", "Message")
-                        .WithMany("Images")
-                        .HasForeignKey("MessageId");
-
-                    b.HasOne("MTAA_Backend.Domain.Entities.Posts.Post", "Post")
-                        .WithMany("Images")
-                        .HasForeignKey("PostId");
-
                     b.Navigation("Channel");
-
-                    b.Navigation("Message");
-
-                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.BaseMessage", b =>
@@ -1149,34 +887,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("Sender");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.Comments.Comment", b =>
-                {
-                    b.HasOne("MTAA_Backend.Domain.Entities.Posts.Post", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.Post", b =>
-                {
-                    b.HasOne("MTAA_Backend.Domain.Entities.Locations.Location", "Location")
-                        .WithOne("Post")
-                        .HasForeignKey("MTAA_Backend.Domain.Entities.Posts.Post", "LocationId");
-
-                    b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "Owner")
-                        .WithMany("CreatedPosts")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
@@ -1292,21 +1002,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PostUser", b =>
-                {
-                    b.HasOne("MTAA_Backend.Domain.Entities.Posts.Post", null)
-                        .WithMany()
-                        .HasForeignKey("LikedPostsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MTAA_Backend.Domain.Entities.Users.User", null)
-                        .WithMany()
-                        .HasForeignKey("LikedUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.Channel", b =>
                 {
                     b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "Owner")
@@ -1316,48 +1011,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.GifMessage", b =>
-                {
-                    b.HasOne("MTAA_Backend.Domain.Entities.Files.MyFile", "File")
-                        .WithOne("GifMessage")
-                        .HasForeignKey("MTAA_Backend.Domain.Entities.Messages.GifMessage", "FileId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("File");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.VoiceMessage", b =>
-                {
-                    b.HasOne("MTAA_Backend.Domain.Entities.Files.MyFile", "File")
-                        .WithOne("VoiceMessage")
-                        .HasForeignKey("MTAA_Backend.Domain.Entities.Messages.VoiceMessage", "FileId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("File");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.FileMessage", b =>
-                {
-                    b.HasOne("MTAA_Backend.Domain.Entities.Files.MyFile", "File")
-                        .WithOne("FileMessage")
-                        .HasForeignKey("MTAA_Backend.Domain.Entities.Messages.FileMessage", "FileId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("File");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Files.MyFile", b =>
-                {
-                    b.Navigation("FileMessage");
-
-                    b.Navigation("GifMessage");
-
-                    b.Navigation("VoiceMessage");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Groups.BaseGroup", b =>
@@ -1374,21 +1027,9 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("UserAvatar");
                 });
 
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Locations.Location", b =>
-                {
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.BaseMessage", b =>
                 {
                     b.Navigation("LastMessageUserGroupMemberships");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Posts.Post", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
@@ -1396,8 +1037,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("ContactOf");
 
                     b.Navigation("Contacts");
-
-                    b.Navigation("CreatedPosts");
 
                     b.Navigation("Messages");
 
@@ -1423,11 +1062,6 @@ namespace MTAA_Backend.Infrastructure.Migrations
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Images.UserPresetAvatarImage", b =>
                 {
                     b.Navigation("UserAvatars");
-                });
-
-            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Messages.ImagesMessage", b =>
-                {
-                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

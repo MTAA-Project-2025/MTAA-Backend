@@ -40,6 +40,10 @@ namespace MTAA_Backend.Domain.Entities.Users
 
         public ICollection<Channel> OwnedChannels { get; set; } = new HashSet<Channel>();
 
+
+        public ICollection<UserRelationship> UserRelationships1 { get; set; } = new HashSet<UserRelationship>();
+        public ICollection<UserRelationship> UserRelationships2 { get; set; } = new HashSet<UserRelationship>();
+
         public ICollection<Post> CreatedPosts { get; set; } = new HashSet<Post>();
         public ICollection<Post> LikedPosts { get; set; } = new HashSet<Post>();
     }
