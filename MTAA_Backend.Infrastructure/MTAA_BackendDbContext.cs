@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using MTAA_Backend.Infrastructure.Configuration.Images;
 using MTAA_Backend.Domain.Entities.Groups;
 using MTAA_Backend.Domain.Entities.Files;
+using MTAA_Backend.Domain.Entities.Posts;
+using MTAA_Backend.Domain.Entities.Posts.Comments;
+using MTAA_Backend.Domain.Entities.Locations;
 
 namespace MTAA_Backend.Infrastructure
 {
@@ -28,6 +31,12 @@ namespace MTAA_Backend.Infrastructure
         public DbSet<VoiceMessage> VoiceMessages { get; set; }
         #endregion
 
+        #region Posts
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        #endregion
+
+        public DbSet<Location> Locations { get; set; }
 
 
         public DbSet<MyFile> MyFiles { get; set; }

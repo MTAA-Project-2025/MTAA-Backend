@@ -46,6 +46,7 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .HasForeignKey(e => e.OwnerId)
                    .OnDelete(DeleteBehavior.NoAction);
 
+
             builder.HasMany(uc => uc.UserRelationships1)
                    .WithOne(u => u.User1)
                    .HasForeignKey(uc => uc.User1Id)
@@ -55,6 +56,13 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .WithOne(e => e.User2)
                    .HasForeignKey(uc => uc.User2Id)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(e => e.LikedPosts)
+                   .WithMany(e => e.LikedUsers);
+
+            builder.HasMany(e => e.CreatedPosts)
+                   .WithOne(e => e.Owner)
+                   .HasForeignKey(e => e.OwnerId);
         }
     }
 }
