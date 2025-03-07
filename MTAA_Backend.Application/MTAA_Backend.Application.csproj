@@ -29,8 +29,6 @@
     <Folder Include="CQRS\Groups\Channels\Queries\" />
 	<Folder Include="CQRS\Groups\Chats\QueryHandlers\" />
 	<Folder Include="CQRS\Groups\Chats\Queries\" />
-	<Folder Include="CQRS\Users\Relationships\QueryHandler\" />
-	<Folder Include="CQRS\Users\Relationships\Queries\" />
   </ItemGroup>
 
 </Project>
