@@ -14,7 +14,7 @@ namespace MTAA_Backend.Domain.Entities.Users
         public string User1Id { get; set; }
         public string User2Id { get; set; }
 
-        public bool IsUser1Followig {  get; set; }
-        public bool IsUser2Followig { get; set; }
+        public bool IsUser1Following {  get; set; }
+        public bool IsUser2Following { get; set; }
     }
 }

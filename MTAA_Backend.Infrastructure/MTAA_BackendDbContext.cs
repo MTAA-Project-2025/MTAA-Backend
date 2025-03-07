@@ -38,6 +38,8 @@ namespace MTAA_Backend.Infrastructure
         public DbSet<UserPresetAvatarImage> UserPresetAvatarImages { get; set; }
         public DbSet<MyImage> Images { get; set; }
 
+        public DbSet<UserRelationship> UserRelationships { get; set; }
+
 
         public MTAA_BackendDbContext(DbContextOptions options) : base(options)
         {
