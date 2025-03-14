@@ -11,16 +11,11 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
 {
-    public class FollowHandler(ILogger<FollowHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IUserService userService) : IRequestHandler<Follow>
+    public class FollowHandler(ILogger<FollowHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IUserService _userService) : IRequestHandler<Follow>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IUserService _userService = userService;
-
         public async Task Handle(Follow request, CancellationToken cancellationToken)
         {
             var currentUserId = _userService.GetCurrentUserId();
@@ -65,11 +60,6 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
                 {
                     relationship.IsUser2Following = true;
                 }
-
-                relationship.IsUser1Following = relationship.IsUser1Following || relationship.IsUser2Following;
-                relationship.IsUser2Following = relationship.IsUser1Following || relationship.IsUser2Following;
-
-                _dbContext.UserRelationships.Update(relationship);
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);

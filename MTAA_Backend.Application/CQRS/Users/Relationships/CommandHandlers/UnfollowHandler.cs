@@ -10,16 +10,11 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
 {
-    public class UnfollowHandler(ILogger<UnfollowHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IUserService userService) : IRequestHandler<Unfollow>
+    public class UnfollowHandler(ILogger<UnfollowHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IUserService _userService) : IRequestHandler<Unfollow>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IUserService _userService = userService;
-
         public async Task Handle(Unfollow request, CancellationToken cancellationToken)
         {
             var currentUserId = _userService.GetCurrentUserId();
@@ -49,10 +44,6 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
             if (!relationship.IsUser1Following && !relationship.IsUser2Following)
             {
                 _dbContext.UserRelationships.Remove(relationship);
-            }
-            else
-            {
-                _dbContext.UserRelationships.Update(relationship);
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
