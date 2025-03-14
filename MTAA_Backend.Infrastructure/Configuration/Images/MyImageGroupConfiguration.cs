@@ -36,6 +36,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Images
                    .WithMany(e => e.Images)
                    .HasForeignKey(e => e.PostId)
                    .IsRequired(false);
+
+            builder.HasIndex(e => new { e.Position });
         }
     }
 }

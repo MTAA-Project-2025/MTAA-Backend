@@ -9,7 +9,7 @@ using MTAA_Backend.Domain.Entities.Files;
 using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Entities.Locations;
-using MTAA_Backend.Domain.Entities.Posts.RecomendationSystem;
+using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
 
 namespace MTAA_Backend.Infrastructure
 {
@@ -34,10 +34,16 @@ namespace MTAA_Backend.Infrastructure
 
         #region Posts
         public DbSet<Post> Posts { get; set; }
-        public DbSet<RecomendationFeed> RecomendationFeeds { get; set; }
-        public DbSet<RecomendationItem> RecomendationItems { get; set; }
+        public DbSet<PostLike> PostLikes { get; set; }
+
+        public DbSet<BaseRecommendationFeed> RecommendationFeeds { get; set; }
+        public DbSet<LocalRecommendationFeed> LocalRecommendationFeeds { get; set; }
+        public DbSet<SharedRecommendationFeed> SharedRecommendationFeeds { get; set; }
+
+        public DbSet<RecommendationItem> RecommendationItems { get; set; }
         public DbSet<Comment> Comments { get; set; }
         #endregion
+
 
         public DbSet<Location> Locations { get; set; }
 
@@ -49,6 +55,7 @@ namespace MTAA_Backend.Infrastructure
         public DbSet<MyImageGroup> ImageGroups { get; set; }
         public DbSet<UserPresetAvatarImage> UserPresetAvatarImages { get; set; }
         public DbSet<MyImage> Images { get; set; }
+        public DbSet<UserRelationship> UserRelationships { get; set; }
 
 
         public MTAA_BackendDbContext(DbContextOptions options) : base(options)

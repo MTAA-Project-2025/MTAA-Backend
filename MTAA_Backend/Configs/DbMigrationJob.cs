@@ -1,4 +1,5 @@
-﻿using MTAA_Backend.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using MTAA_Backend.Infrastructure;
 using System;
 
 namespace MTAA_Backend.Api.Configs
@@ -38,7 +39,7 @@ namespace MTAA_Backend.Api.Configs
             {
                 // Apply any pending migrations to the database.
                 // Note: For demo purposes, EnsureCreatedAsync is used. In production, MigrateAsync should be used instead.
-                await db.Database.EnsureCreatedAsync(cancellationToken: cancellationToken);
+                await db.Database.MigrateAsync(cancellationToken: cancellationToken);
                 _logger.LogInformation("Database migration has been run successfully.");
             }
             catch (Exception ex)

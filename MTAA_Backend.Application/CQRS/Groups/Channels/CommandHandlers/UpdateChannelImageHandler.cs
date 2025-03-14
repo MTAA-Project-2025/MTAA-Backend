@@ -41,7 +41,7 @@ namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
                     _dbContext.ImageGroups.Remove(imageGroup);
                 }
             }
-            var newimageGroup = await _imageService.SaveImage(request.Image, ImageSavingTypes.ChannelImage, cancellationToken);
+            var newimageGroup = await _imageService.SaveImage(request.Image, 0, ImageSavingTypes.ChannelImage, cancellationToken);
             foreach (var image in newimageGroup.Images)
             {
                 _dbContext.Images.Add(image);

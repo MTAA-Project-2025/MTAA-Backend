@@ -15,10 +15,13 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts
         {
             builder.HasMany(e => e.Images)
                    .WithOne(e => e.Post)
-                   .HasForeignKey(e => e.PostId);
+                   .HasForeignKey(e => e.PostId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(e => e.LikedUsers)
-                   .WithMany(e => e.LikedPosts);
+            builder.HasMany(e => e.Likes)
+                   .WithOne(e => e.Post)
+                   .HasForeignKey(e => e.PostId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Owner)
                    .WithMany(e => e.CreatedPosts)
@@ -27,20 +30,23 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts
             builder.HasOne(e => e.Location)
                    .WithOne(e => e.Post)
                    .HasForeignKey<Post>(e => e.LocationId)
-                   .IsRequired(false);
+                   .IsRequired(false)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(e => e.Comments)
                    .WithOne(e => e.Post)
-                   .HasForeignKey(e => e.PostId);
+                   .HasForeignKey(e => e.PostId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(e => e.WatchedUsers)
                    .WithMany(e => e.WatchedPosts);
 
-            builder.HasMany(e => e.RecomendationItems)
+            builder.HasMany(e => e.RecommendationItems)
                    .WithOne(e => e.Post)
-                   .HasForeignKey(e => e.PostId);
+                   .HasForeignKey(e => e.PostId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(e => e.GlobalScore);
+            builder.HasIndex(e => new { e.GlobalScore, e.CommentsCount, e.LikesCount, e.DataCreationTime, e.IsDeleted, e.Description });
         }
     }
 }

@@ -3,8 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MTAA_Backend.Domain.Entities.Users;
+using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using MTAA_Backend.Infrastructure;
+using Qdrant.Client;
+using Qdrant.Client.Grpc;
+using System.Collections;
+using System.Numerics;
 using System.Text;
+using static Qdrant.Client.Grpc.Qdrant;
 
 namespace MTAA_Backend.Api.Extensions
 {
@@ -25,7 +31,7 @@ namespace MTAA_Backend.Api.Extensions
                     Scheme = "Bearer"
                 });
                 option.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
+                {
                     {
                         new OpenApiSecurityScheme
                         {
@@ -37,9 +43,17 @@ namespace MTAA_Backend.Api.Extensions
                         },
                         new string[]{}
                     }
+                });
             });
-            });
+
+            //services.AddSwaggerGenNewtonsoftSupport();
         }
+
+        public static void ConfigureReDoc(this IServiceCollection services)
+        {
+            
+        }
+
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<User, IdentityRole>(o =>

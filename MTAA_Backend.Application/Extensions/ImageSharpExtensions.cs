@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
+using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 
 namespace MTAA_Backend.Application.Extensions
 {

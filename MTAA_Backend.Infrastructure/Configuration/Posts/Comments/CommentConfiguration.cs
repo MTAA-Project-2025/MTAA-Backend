@@ -17,6 +17,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
             builder.HasOne(e => e.Post)
                    .WithMany(e => e.Comments)
                    .HasForeignKey(e => e.PostId);
+
+            builder.HasKey(e => new { e.DataCreationTime });
         }
     }
 }

@@ -12,11 +12,13 @@ namespace MTAA_Backend.Application.Validators.Posts
                 .MaximumLength(3000);
 
             this.RuleFor(e => e.Images)
-                .NotEmpty();
+                .NotEmpty()
+                .ChildRules(p => p.RuleFor(e => e.Count)
+                    .LessThanOrEqualTo(10));
 
             this.RuleForEach(e => e.Images)
                 .NotNull()
-                .ChildRules(p => p.RuleFor(e => e.Length)
+                .ChildRules(p => p.RuleFor(e => e.Image.Length)
                     .GreaterThan(0)
                     .WithMessage("The image should be not empty")
                     .LessThanOrEqualTo(10 * 1024 * 1024)

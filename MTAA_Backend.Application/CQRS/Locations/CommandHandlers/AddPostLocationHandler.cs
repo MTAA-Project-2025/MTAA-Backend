@@ -5,9 +5,9 @@ namespace MTAA_Backend.Application.CQRS.Locations.CommandHandlers
 {
     public class AddPostLocationHandler : IRequestHandler<AddPostLocation>
     {
-        public Task Handle(AddPostLocation request, CancellationToken cancellationToken)
+        public async Task Handle(AddPostLocation request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

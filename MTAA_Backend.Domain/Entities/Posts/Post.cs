@@ -2,7 +2,7 @@
 using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Entities.Locations;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
-using MTAA_Backend.Domain.Entities.Posts.RecomendationSystem;
+using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
 using MTAA_Backend.Domain.Entities.Shared;
 using MTAA_Backend.Domain.Entities.Users;
 using System;
@@ -23,15 +23,19 @@ namespace MTAA_Backend.Domain.Entities.Posts
         public User Owner { get; set; }
         public string OwnerId { get; set; }
 
-        public ICollection<User> LikedUsers { get; set; } = new HashSet<User>();
-        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
+        public ICollection<PostLike> Likes { get; set; } = new HashSet<PostLike>();
+        public int LikesCount { get; set; }
         
+        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
+        public int CommentsCount { get; set; }
+
+
         public Location? Location { get; set; }
         public Guid? LocationId { get; set; }
 
         public double GlobalScore { get; set; }
 
         public ICollection<User> WatchedUsers { get; set; } = new HashSet<User>();
-        public ICollection<RecomendationItem> RecomendationItems { get; set; } = new HashSet<RecomendationItem>();
+        public ICollection<RecommendationItem> RecommendationItems { get; set; } = new HashSet<RecommendationItem>();
     }
 }

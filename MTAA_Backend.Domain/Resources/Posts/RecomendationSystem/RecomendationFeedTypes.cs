@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTAA_Backend.Domain.Resources.Posts.RecomendationSystem
+namespace MTAA_Backend.Domain.Resources.Posts.RecommendationSystem
 {
-    public enum RecomendationFeedTypes
+    public enum RecommendationFeedTypes
     {
         PostsFromFollowersFeed,
         PostsFromPreferencesFeed,

@@ -9,7 +9,7 @@ namespace MTAA_Backend.Domain.Entities.Locations
 {
     public class Location
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public Post? Post { get; set; }
         public Guid? PostId { get; set; }

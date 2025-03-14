@@ -29,5 +29,6 @@ namespace MTAA_Backend.Domain.Entities.Images
 
         public Post? Post { get; set; }
         public Guid? PostId { get; set; }
+        public int Position { get; set; } = 0;
     }
 }

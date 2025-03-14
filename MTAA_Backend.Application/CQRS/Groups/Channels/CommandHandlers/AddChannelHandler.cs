@@ -63,7 +63,7 @@ namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 
             if (request.Image != null)
             {
-                var imageGroup = await _imageService.SaveImage(request.Image, ImageSavingTypes.ChannelImage, cancellationToken);
+                var imageGroup = await _imageService.SaveImage(request.Image,0, ImageSavingTypes.ChannelImage, cancellationToken);
                 foreach (var image in imageGroup.Images)
                 {
                     _dbContext.Images.Add(image);

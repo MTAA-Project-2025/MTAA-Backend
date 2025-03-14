@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Projects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,12 @@ namespace IntegrationTests.Fixtures
     {
         private readonly DistributedApplication _app;
         private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.SqlServerServerResource> _sqlServer;
+        private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.SqlServerDatabaseResource> _db;
         private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.RedisResource> _redis;
+        private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.QdrantServerResource> _qdrant;
         private string? _sqlServerConnectionString;
         private string? _redisConnectionString;
-
+        private string? _qdrantConnectionString;
 
         /**
          * Constructor for ApiFixture.
@@ -40,7 +43,14 @@ namespace IntegrationTests.Fixtures
             var builder = DistributedApplication.CreateBuilder(options);
 
             _sqlServer = builder.AddSqlServer("mtaaDb");
+
+            builder.AddProject<MTAA_Backend_MigrationService>("migrations")
+                .WithReference(_sqlServer)
+                .WaitFor(_sqlServer);
+
             _redis = builder.AddRedis("cache");
+
+            _qdrant = builder.AddQdrant("qdrant");
             builder.Services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
             _app = builder.Build();
         }
@@ -61,6 +71,7 @@ namespace IntegrationTests.Fixtures
                 {
                     { "ConnectionStrings:mtaaDb", _sqlServerConnectionString },
                     { "ConnectionStrings:cache", _redisConnectionString },
+                    { "ConnectionStrings:qdrant", _qdrantConnectionString },
                 });
             });
 
@@ -88,12 +99,14 @@ namespace IntegrationTests.Fixtures
             await _app.StartAsync();
             await _app.WaitForResourcesAsync();
             _sqlServerConnectionString = await _sqlServer.Resource.GetConnectionStringAsync();
+
             _redisConnectionString = await _redis.Resource.GetConnectionStringAsync();
+            _qdrantConnectionString = await _qdrant.Resource.ConnectionStringExpression.GetValueAsync(CancellationToken.None);
 
             // Ensure that the SqlServer database is fully initialized before proceeding.
-            //And Db migration is rant successfully.
+            // And Db migration is rant successfully.
             // This is crucial, especially in CI/CD environments, to prevent tests from failing due to timing issues.
-            await Task.Delay(TimeSpan.FromSeconds(40));
+            await Task.Delay(TimeSpan.FromSeconds(60));
         }
     }
 }
