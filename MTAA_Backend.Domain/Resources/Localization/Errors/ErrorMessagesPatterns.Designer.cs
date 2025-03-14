@@ -266,5 +266,27 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
                 return ResourceManager.GetString("VerificationCodeAlreadySent", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to InaccessibleFollowing.
+        /// </summary>
+        public static string InaccessibleFollowing
+        {
+            get
+            {
+                return ResourceManager.GetString("InaccessibleFollowing", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to UserNotFollowed.
+        /// </summary>
+        public static string UserNotFollowed
+        {
+            get
+            {
+                return ResourceManager.GetString("UserNotFollowed", resourceCulture);
+            }
+        }
     }
 }

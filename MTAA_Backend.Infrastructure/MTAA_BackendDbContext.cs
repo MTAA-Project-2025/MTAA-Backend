@@ -57,6 +57,8 @@ namespace MTAA_Backend.Infrastructure
         public DbSet<MyImage> Images { get; set; }
         public DbSet<UserRelationship> UserRelationships { get; set; }
 
+        public DbSet<UserRelationship> UserRelationships { get; set; }
+
 
         public MTAA_BackendDbContext(DbContextOptions options) : base(options)
         {
