@@ -16,16 +16,11 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Chats.CommandHandlers
 {
-    public class AddChatHandler(ILogger<AddChatHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IUserService userService) : IRequestHandler<AddChat, Guid>
+    public class AddChatHandler(ILogger<AddChatHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IUserService _userService) : IRequestHandler<AddChat, Guid>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IUserService _userService = userService;
-
         public async Task<Guid> Handle(AddChat request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();

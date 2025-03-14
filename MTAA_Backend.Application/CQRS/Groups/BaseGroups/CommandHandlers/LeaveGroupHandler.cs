@@ -10,16 +10,11 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.BaseGroups.CommandHandlers
 {
-    public class LeaveGroupHandler(ILogger<LeaveGroupHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IMediator mediator) : IRequestHandler<LeaveGroup>
+    public class LeaveGroupHandler(ILogger<LeaveGroupHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IMediator _mediator) : IRequestHandler<LeaveGroup>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMediator _mediator = mediator;
-
         public async Task Handle(LeaveGroup request, CancellationToken cancellationToken)
         {
             var group = await _dbContext.BaseGroups.Where(e => e.Id == request.GroupId)

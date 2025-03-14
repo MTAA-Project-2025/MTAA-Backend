@@ -12,6 +12,7 @@ namespace MTAA_Backend.Domain.DTOs.Images.Response
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
+        public int Position { get; set; }
 
         public ICollection<MyImageResponse> Images { get; set; } = new List<MyImageResponse>();
     }

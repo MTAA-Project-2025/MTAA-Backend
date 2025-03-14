@@ -58,11 +58,22 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(e => e.LikedPosts)
-                   .WithMany(e => e.LikedUsers);
+                   .WithOne(e => e.User)
+                   .HasForeignKey(e => e.UserId);
 
             builder.HasMany(e => e.CreatedPosts)
                    .WithOne(e => e.Owner)
                    .HasForeignKey(e => e.OwnerId);
+
+            builder.HasMany(e => e.WatchedPosts)
+                   .WithMany(e => e.WatchedUsers);
+
+            builder.HasMany(e => e.LocalRecommendationFeeds)
+                   .WithOne(e => e.User)
+                   .HasForeignKey(e => e.UserId);
+
+            builder.HasMany(e => e.SharedRecommendationFeeds)
+                   .WithMany(e => e.Users);
         }
     }
 }

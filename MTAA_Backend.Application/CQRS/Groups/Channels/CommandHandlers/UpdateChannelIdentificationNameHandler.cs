@@ -11,12 +11,9 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 {
-    public class UpdateChannelIdentificationNameHandler(IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext) : IRequestHandler<UpdateChannelIdentificationName>
+    public class UpdateChannelIdentificationNameHandler(IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext) : IRequestHandler<UpdateChannelIdentificationName>
     {
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-
         public async Task Handle(UpdateChannelIdentificationName request, CancellationToken cancellationToken)
         {
             var channel = await _dbContext.Channels.FindAsync(request.Id);

@@ -144,6 +144,9 @@
   <data name="ImageFormatNotAllowed" xml:space="preserve">
     <value>ImageFormatNotAllowed</value>
   </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>PostNotFound</value>
+  </data>
   <data name="PresetAvatarNotFound" xml:space="preserve">
     <value>PresetAvatarNotFound</value>
   </data>

@@ -14,16 +14,11 @@ using System.Runtime.InteropServices;
 
 namespace MTAA_Backend.Application.CQRS.Groups.BaseGroups.CommandHandlers
 {
-    public class JoinGroupHandler(ILogger<JoinGroupHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IMediator mediator) : IRequestHandler<JoinGroup>
+    public class JoinGroupHandler(ILogger<JoinGroupHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IMediator _mediator) : IRequestHandler<JoinGroup>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMediator _mediator = mediator;
-
         public async Task Handle(JoinGroup request, CancellationToken cancellationToken)
         {
             var group = await _dbContext.BaseGroups.Where(e => e.Id == request.GroupId)

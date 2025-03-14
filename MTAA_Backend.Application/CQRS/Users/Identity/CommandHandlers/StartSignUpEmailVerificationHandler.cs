@@ -19,18 +19,12 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
 {
-    public class StartSignUpEmailVerificationHandler(IDistributedCache distributedCache,
-        IEmailService emailService,
-        ICodeGeneratorService codeGeneratorService,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext) : IRequestHandler<StartSignUpEmailVerification>
+    public class StartSignUpEmailVerificationHandler(IDistributedCache _distributedCache,
+        IEmailService _emailService,
+        ICodeGeneratorService _codeGeneratorService,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext) : IRequestHandler<StartSignUpEmailVerification>
     {
-        private readonly IDistributedCache _distributedCache = distributedCache;
-        private readonly IEmailService _emailService = emailService;
-        private readonly ICodeGeneratorService _codeGeneratorService = codeGeneratorService;
-        private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-
         public async Task Handle(StartSignUpEmailVerification request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
