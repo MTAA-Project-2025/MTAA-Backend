@@ -15,13 +15,10 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Images.PresetImages.QueryHandlers
 {
-    public class GetAllPresetImagesHandler(IDistributedCache distributedCache,
-        IMapper mapper,
-        MTAA_BackendDbContext dbContext) : IRequestHandler<GetAllPresetImages, ICollection<MyImageGroupResponse>>
+    public class GetAllPresetImagesHandler(IDistributedCache _distributedCache,
+        IMapper _mapper,
+        MTAA_BackendDbContext _dbContext) : IRequestHandler<GetAllPresetImages, ICollection<MyImageGroupResponse>>
     {
-        private readonly IDistributedCache _distributedCache = distributedCache;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
         public async Task<ICollection<MyImageGroupResponse>> Handle(GetAllPresetImages request, CancellationToken cancellationToken)
         {
             var recordId = "PresetAvatarImages";

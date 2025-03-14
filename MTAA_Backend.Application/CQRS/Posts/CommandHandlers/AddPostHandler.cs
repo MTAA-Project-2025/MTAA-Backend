@@ -17,20 +17,13 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
 {
-    public class AddPostHandler(ILogger<AddPostHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IUserService userService,
-        IImageService imageService,
-        IMediator mediator) : IRequestHandler<AddPost, Guid>
+    public class AddPostHandler(ILogger<AddPostHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IUserService _userService,
+        IImageService _imageService,
+        IMediator _mediator) : IRequestHandler<AddPost, Guid>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IUserService _userService = userService;
-        private readonly IImageService _imageService = imageService;
-        private readonly IMediator _mediator = mediator;
-
         public async Task<Guid> Handle(AddPost request, CancellationToken cancellationToken)
         {
             var post = new Post()

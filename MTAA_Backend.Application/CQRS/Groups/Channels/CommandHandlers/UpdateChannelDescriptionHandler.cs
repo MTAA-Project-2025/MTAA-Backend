@@ -9,10 +9,8 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 {
-    public class UpdateChannelDescriptionHandler(MTAA_BackendDbContext dbContext) : IRequestHandler<UpdateChannelDescription>
+    public class UpdateChannelDescriptionHandler(MTAA_BackendDbContext _dbContext) : IRequestHandler<UpdateChannelDescription>
     {
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-
         public async Task Handle(UpdateChannelDescription request, CancellationToken cancellationToken)
         {
             var channel = await _dbContext.Channels.FindAsync(request.Id);

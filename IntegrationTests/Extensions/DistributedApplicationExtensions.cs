@@ -12,7 +12,7 @@ namespace IntegrationTests.Extensions
     public static class DistributedApplicationExtensions
     {
         /// <summary>
-        /// Taken from the tutorial to new verstion of Aspire and Aspire.Testing
+        /// Taken from the tutorial to a new version of Aspire and Aspire.Testing
         /// </summary>
         public static Task WaitForResource(this DistributedApplication app, string resourceName, string? targetState = null,
             CancellationToken cancellationToken = default)

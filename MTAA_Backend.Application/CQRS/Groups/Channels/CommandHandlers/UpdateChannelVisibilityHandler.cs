@@ -10,14 +10,10 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 {
-    public class UpdateChannelVisibilityHandler(ILogger<UpdateChannelVisibilityHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext) : IRequestHandler<UpdateChannelVisibility>
+    public class UpdateChannelVisibilityHandler(ILogger<UpdateChannelVisibilityHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext) : IRequestHandler<UpdateChannelVisibility>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-
         public async Task Handle(UpdateChannelVisibility request, CancellationToken cancellationToken)
         {
             var visibilities = GroupVisibilityTypes.GetAllPublic();

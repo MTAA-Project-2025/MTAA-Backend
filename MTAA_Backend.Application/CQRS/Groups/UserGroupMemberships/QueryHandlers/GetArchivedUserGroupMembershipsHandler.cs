@@ -14,19 +14,13 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.UserGroupMemberships.QueryHandlers
 {
-    public class GetArchivedUserGroupMembershipsHandler(ILogger<GetArchivedUserGroupMembershipsHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IMapper mapper,
-        IMediator mediator,
-        IUserService userService) : IRequestHandler<GetArchivedUserGroupMemberships, ICollection<SimpleUserGroupMembershipResponse>>
+    public class GetArchivedUserGroupMembershipsHandler(ILogger<GetArchivedUserGroupMembershipsHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IMapper _mapper,
+        IMediator _mediator,
+        IUserService _userService) : IRequestHandler<GetArchivedUserGroupMemberships, ICollection<SimpleUserGroupMembershipResponse>>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-        private readonly IMediator _mediator = mediator;
-        private readonly IUserService _userService = userService;
         public async Task<ICollection<SimpleUserGroupMembershipResponse>> Handle(GetArchivedUserGroupMemberships request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();

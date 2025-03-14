@@ -12,16 +12,11 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.BaseGroups.EventHandlers
 {
-    public class LeaveGroupEventHandler(ILogger<LeaveGroupEventHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IMediator mediator) : INotificationHandler<LeaveGroupEvent>
+    public class LeaveGroupEventHandler(ILogger<LeaveGroupEventHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IMediator _mediator) : INotificationHandler<LeaveGroupEvent>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMediator _mediator = mediator;
-
         public async Task Handle(LeaveGroupEvent notification, CancellationToken cancellationToken)
         {
             var membership = await _dbContext.UserGroupMemberships.FirstOrDefaultAsync(e => e.GroupId == notification.GroupId && e.UserId == notification.UserId, cancellationToken);

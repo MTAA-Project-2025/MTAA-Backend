@@ -18,7 +18,6 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
     public class UpdatePostHandler(ILogger<UpdatePostHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
-        IUserService _userService,
         IImageService _imageService,
         IMediator _mediator) : IRequestHandler<UpdatePost>
     {

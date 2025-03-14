@@ -9,7 +9,6 @@ using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Infrastructure;
 using MTAA_Backend.Application.Validators.Identity;
 using MTAA_Backend.Application.MaperProfiles.Users;
-using MTAA_Backend.Api.Configs;
 using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
 using Hangfire;
 using Hangfire.SqlServer;

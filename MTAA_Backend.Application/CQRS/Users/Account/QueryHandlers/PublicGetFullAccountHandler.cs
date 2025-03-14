@@ -20,20 +20,12 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Account.QueryHandlers
 {
-    public class PublicGetFullAccountHandler(ILogger<PublicGetFullAccountHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IUserService userService,
-        IImageService imageService,
-        IMapper mapper) : IRequestHandler<PublicGetFullAccount, PublicFullAccountResponse>
+    public class PublicGetFullAccountHandler(ILogger<PublicGetFullAccountHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IUserService _userService,
+        IMapper _mapper) : IRequestHandler<PublicGetFullAccount, PublicFullAccountResponse>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IUserService _userService = userService;
-        private readonly IImageService _imageService = imageService;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<PublicFullAccountResponse> Handle(PublicGetFullAccount request, CancellationToken cancellationToken)
         {
             var customerId = _userService.GetCurrentUserId();

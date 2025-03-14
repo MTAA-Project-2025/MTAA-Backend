@@ -12,14 +12,10 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 {
-    public class UpdateChannelImageHandler(MTAA_BackendDbContext dbContext,
-        IImageService imageService,
-        IMapper mapper) : IRequestHandler<UpdateChannelImage, MyImageGroupResponse>
+    public class UpdateChannelImageHandler(MTAA_BackendDbContext _dbContext,
+        IImageService _imageService,
+        IMapper _mapper) : IRequestHandler<UpdateChannelImage, MyImageGroupResponse>
     {
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IImageService _imageService = imageService;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<MyImageGroupResponse> Handle(UpdateChannelImage request, CancellationToken cancellationToken)
         {
             var channel = await _dbContext.Channels.Where(e => e.Id == request.Id)

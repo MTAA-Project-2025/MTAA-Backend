@@ -11,12 +11,11 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
 {
-    public class DeletePostHandler(ILogger<AddPostHandler> _logger,
+    public class DeletePostHandler(ILogger<DeletePostHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IUserService _userService,
-        IImageService _imageService,
-        IMediator mediator) : IRequestHandler<DeletePost>
+        IImageService _imageService) : IRequestHandler<DeletePost>
     {
         public async Task Handle(DeletePost request, CancellationToken cancellationToken)
         {

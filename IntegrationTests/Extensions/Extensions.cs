@@ -11,7 +11,7 @@ namespace IntegrationTests.Extensions
 {
     internal static class Extensions
     {
-        // Taken from the tutorial to new verstion of Aspire and Aspire.Testing
+        // Taken from the tutorial to a new version of Aspire and Aspire.Testing
         public static async Task EnsureDbCreated(this IHost app)
         {
             using var serviceScope = app.Services.CreateScope();

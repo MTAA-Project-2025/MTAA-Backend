@@ -27,22 +27,14 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
 {
-    public class SignUpByEmailHandler(IDistributedCache distributedCache,
-        ILogger<SignUpByEmailHandler> logger,
-        UserManager<User> userManager,
-        RoleManager<IdentityRole> roleManager,
-        IStringLocalizer<ErrorMessages> localizer,
-        IMediator mediator,
-        MTAA_BackendDbContext dbContext) : IRequestHandler<SignUpByEmail, TokenDTO>
+    public class SignUpByEmailHandler(IDistributedCache _distributedCache,
+        ILogger<SignUpByEmailHandler> _logger,
+        UserManager<User> _userManager,
+        RoleManager<IdentityRole> _roleManager,
+        IStringLocalizer<ErrorMessages> _localizer,
+        IMediator _mediator,
+        MTAA_BackendDbContext _dbContext) : IRequestHandler<SignUpByEmail, TokenDTO>
     {
-        private readonly IDistributedCache _distributedCache = distributedCache;
-        private readonly ILogger _logger = logger;
-        private readonly UserManager<User> _userManager = userManager;
-        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
-        private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
-        private readonly IMediator _mediator = mediator;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-
         public async Task<TokenDTO> Handle(SignUpByEmail request, CancellationToken cancellationToken)
         {
             var oldUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
