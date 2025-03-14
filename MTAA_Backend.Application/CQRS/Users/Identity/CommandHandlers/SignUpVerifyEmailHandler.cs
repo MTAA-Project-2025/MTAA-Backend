@@ -21,14 +21,10 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
 {
-    public class SignUpVerifyEmailHandler(IDistributedCache distributedCache,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext) : IRequestHandler<SignUpVerifyEmail, bool>
+    public class SignUpVerifyEmailHandler(IDistributedCache _distributedCache,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext) : IRequestHandler<SignUpVerifyEmail, bool>
     {
-        private readonly IDistributedCache _distributedCache = distributedCache;
-        private readonly IStringLocalizer<ErrorMessages> _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-
         public async Task<bool> Handle(SignUpVerifyEmail request, CancellationToken cancellationToken)
         {
             var oldUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);

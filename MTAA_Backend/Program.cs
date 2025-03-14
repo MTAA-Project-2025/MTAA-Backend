@@ -9,9 +9,16 @@ using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Infrastructure;
 using MTAA_Backend.Application.Validators.Identity;
 using MTAA_Backend.Application.MaperProfiles.Users;
-using System.Runtime.CompilerServices;
-using MTAA_Backend.Api.Configs;
 using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
+using Hangfire;
+using Hangfire.SqlServer;
+using MTAA_Backend.Application.Repositories;
+using MTAA_Backend.Domain.Interfaces.RecommendationSystem.RecommendationFeedService;
+using MTAA_Backend.Application.Services.RecommendationSystem.RecommendationFeedServices;
+using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
+using MTAA_Backend.Application.Services.RecommendationSystem;
+using Microsoft.Extensions.DependencyInjection;
+using Betalgo.Ranul.OpenAI.Extensions;
 
 
 public class Program
@@ -20,15 +27,18 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        //var connectionString = builder.Configuration.GetConnectionString("DbContextConnection") ?? throw new InvalidOperationException("Connection string 'DbContextConnection' not found.");
+        var connectionString = builder.Configuration.GetConnectionString("mtaaDb") ?? throw new InvalidOperationException("Connection string 'mtaaDb' not found.");
 
         ConfigurationManager configuration = builder.Configuration;
 
 
         builder.AddSqlServerClient(connectionName: "mtaaDb");
         builder.AddSqlServerDbContext<MTAA_BackendDbContext>(connectionName: "mtaaDb");
+        builder.AddQdrantClient("qdrant");
+        
+        builder.Services.AddOpenAIService();
 
-        builder.Services.AddHostedService<DbMigrationJob>();
+        //builder.Services.AddHostedService<DbMigrationJob>();
 
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
@@ -36,7 +46,22 @@ public class Program
         builder.AddServiceDefaults();
 
         builder.AddRedisDistributedCache("cache");
-        // Add services to the container.
+
+        builder.Services.AddHangfire(configuration => configuration
+               .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+               .UseSimpleAssemblyNameTypeSerializer()
+               .UseRecommendedSerializerSettings()
+               .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
+               {
+                   CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                   SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                   QueuePollInterval = TimeSpan.Zero,
+                   UseRecommendedIsolationLevel = true,
+                   DisableGlobalLocks = true,
+               }));
+        JobStorage.Current = new SqlServerStorage(connectionString);
+
+        builder.Services.AddHangfireServer();
 
         builder.Services.AddControllers();
 
@@ -68,6 +93,16 @@ public class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IAccountService, AccountService>();
 
+        builder.Services.AddScoped<IVectorDatabaseRepository, VectorDatabaseRepository>();
+        builder.Services.AddScoped<IPostsFromFollowersRecommendationFeedService, PostsFromFollowersRecommendationFeedService>();
+        builder.Services.AddScoped<IPostsFromGlobalPopularityRecommendationFeedService, PostsFromGlobalPopularityRecommendationFeedService>();
+        builder.Services.AddScoped<IPostsFromPreferencesRecommendationFeedService, PostsFromPreferencesRecommendationFeedService>();
+        builder.Services.AddScoped<IEmbeddingsService, EmbeddingsService>();
+        builder.Services.AddScoped<IPostsConfigureRecommendationsService, PostsConfigureRecommendationsService>();
+        builder.Services.AddScoped<IRecommendationItemsService, RecommendationItemsService>();
+
+        builder.Services.AddSingleton<IMLNetService, MLNetService>();
+
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
         builder.Services.ConfigureSwagger();
@@ -89,11 +124,13 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
             app.MapOpenApi();
+            app.UseReDoc();
         }
 
         app.UseHttpsRedirection();
 
         app.ConfigureLocalization();
+        app.ConfigureQdrant().Wait();
 
         app.UseMiddleware<ExceptionMiddleware>();
 
@@ -101,6 +138,9 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.ConfigureHangfireJobs();
+        app.ConfigureAdminUser().Wait();
 
         app.Run();
     }

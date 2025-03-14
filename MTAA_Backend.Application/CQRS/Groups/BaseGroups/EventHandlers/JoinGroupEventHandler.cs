@@ -9,10 +9,8 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Groups.BaseGroups.EventHandlers
 {
-    public class JoinGroupEventHandler(IMediator mediator) : INotificationHandler<JoinGroupEvent>
+    public class JoinGroupEventHandler(IMediator _mediator) : INotificationHandler<JoinGroupEvent>
     {
-        private readonly IMediator _mediator = mediator;
-
         public async Task Handle(JoinGroupEvent notification, CancellationToken cancellationToken)
         {
             await _mediator.Send(new AddUserGroupMembership()

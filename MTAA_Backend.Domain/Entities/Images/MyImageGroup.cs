@@ -1,5 +1,6 @@
 ﻿using MTAA_Backend.Domain.Entities.Groups;
 using MTAA_Backend.Domain.Entities.Messages;
+using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Entities.Shared;
 using MTAA_Backend.Domain.Entities.Users;
 using System;
@@ -25,5 +26,9 @@ namespace MTAA_Backend.Domain.Entities.Images
 
         public ImagesMessage? Message { get; set; }
         public Guid? MessageId { get; set; }
+
+        public Post? Post { get; set; }
+        public Guid? PostId { get; set; }
+        public int Position { get; set; } = 0;
     }
 }

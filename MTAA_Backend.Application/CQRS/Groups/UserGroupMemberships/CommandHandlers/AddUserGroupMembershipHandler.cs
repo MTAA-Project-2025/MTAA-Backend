@@ -12,14 +12,10 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.UserGroupMemberships.CommandHandlers
 {
-    internal class AddUserGroupMembershipHandler(ILogger<AddUserGroupMembershipHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext) : IRequestHandler<AddUserGroupMembership, Guid>
+    internal class AddUserGroupMembershipHandler(ILogger<AddUserGroupMembershipHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext) : IRequestHandler<AddUserGroupMembership, Guid>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-
         public async Task<Guid> Handle(AddUserGroupMembership request, CancellationToken cancellationToken)
         {
             var group = await _dbContext.BaseGroups.FindAsync(request.GroupId, cancellationToken);

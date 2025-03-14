@@ -20,6 +20,8 @@ namespace IntegrationTests.Helpers
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
             }
 
+            if (await userManager.FindByEmailAsync(UserSettings.Email) != null) return;
+
             var testUser = new User()
             {
                 UserName = UserSettings.UserName,

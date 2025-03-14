@@ -11,10 +11,12 @@ using MTAA_Backend.Infrastructure;
 using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Responses;
+using Xunit.Extensions.AssemblyFixture;
 
 namespace IntegrationTests.Tests
 {
-    public class IdentityEndPointsTests : IClassFixture<ApiFixture>
+    [Collection("Fixture collection")]
+    public class IdentityEndPointsTests
     {
         private readonly HttpClient _client;
 

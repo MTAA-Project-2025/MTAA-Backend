@@ -144,6 +144,9 @@
   <data name="ImageFormatNotAllowed" xml:space="preserve">
     <value>Formát obrázka nie je povolený</value>
   </data>
+  <data name="PostNotFound" xml:space="preserve">
+    <value>Publikácia sa nenašla</value>
+  </data>
   <data name="PresetAvatarNotFound" xml:space="preserve">
     <value>Prednastavený avatar sa nenašiel</value>
   </data>

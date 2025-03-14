@@ -7,12 +7,9 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Messages.QueryHandlers
 {
-    public class GetImagesMessageByIdHandler(MTAA_BackendDbContext dbContext,
-        IMapper mapper) : IRequestHandler<GetImagesMessageById, ImagesMessageResponse>
+    public class GetImagesMessageByIdHandler(MTAA_BackendDbContext _dbContext,
+        IMapper _mapper) : IRequestHandler<GetImagesMessageById, ImagesMessageResponse>
     {
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<ImagesMessageResponse> Handle(GetImagesMessageById request, CancellationToken cancellationToken)
         {
             var msg = await _dbContext.ImagesMessages.Where(e => e.Id == request.Id)

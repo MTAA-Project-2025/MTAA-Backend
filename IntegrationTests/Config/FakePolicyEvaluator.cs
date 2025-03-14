@@ -15,6 +15,7 @@ namespace IntegrationTests.Config
 {
     internal class FakePolicyEvaluator : IPolicyEvaluator
     {
+        // Taken from my previous project and modified as needed. Originally from a tutorial and further modified in this project.
         public virtual async Task<AuthenticateResult> AuthenticateAsync(AuthorizationPolicy policy, HttpContext context)
         {
             var principal = new ClaimsPrincipal();

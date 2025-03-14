@@ -16,18 +16,12 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 {
-    public class AddChannelHandler(ILogger<AddChannelHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IImageService imageService,
-        IUserService userService) : IRequestHandler<AddChannel, Guid>
+    public class AddChannelHandler(ILogger<AddChannelHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IImageService _imageService,
+        IUserService _userService) : IRequestHandler<AddChannel, Guid>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IImageService _imageService = imageService;
-        private readonly IUserService _userService = userService;
-
         public async Task<Guid> Handle(AddChannel request, CancellationToken cancellationToken)
         {
             var visibilities = GroupVisibilityTypes.GetAllPublic();
@@ -63,7 +57,7 @@ namespace MTAA_Backend.Application.CQRS.Groups.Channels.CommandHandlers
 
             if (request.Image != null)
             {
-                var imageGroup = await _imageService.SaveImage(request.Image, ImageSavingTypes.ChannelImage, cancellationToken);
+                var imageGroup = await _imageService.SaveImage(request.Image,0, ImageSavingTypes.ChannelImage, cancellationToken);
                 foreach (var image in imageGroup.Images)
                 {
                     _dbContext.Images.Add(image);

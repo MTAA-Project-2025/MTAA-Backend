@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using MTAA_Backend.Domain.Entities.Groups;
 using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Entities.Messages;
+using MTAA_Backend.Domain.Entities.Posts;
+using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
 using MTAA_Backend.Domain.Entities.Shared;
 using System;
 using System.Collections.Generic;
@@ -38,5 +40,17 @@ namespace MTAA_Backend.Domain.Entities.Users
         public Guid? AvatarId { get; set; }
 
         public ICollection<Channel> OwnedChannels { get; set; } = new HashSet<Channel>();
+
+
+        public ICollection<UserRelationship> UserRelationships1 { get; set; } = new HashSet<UserRelationship>();
+        public ICollection<UserRelationship> UserRelationships2 { get; set; } = new HashSet<UserRelationship>();
+
+        public ICollection<Post> CreatedPosts { get; set; } = new HashSet<Post>();
+        public ICollection<PostLike> LikedPosts { get; set; } = new HashSet<PostLike>();
+        public ICollection<Post> WatchedPosts { get; set; } = new HashSet<Post>();
+
+        public int GlobalRecommendationsFeedIndex = 0;
+        public ICollection<LocalRecommendationFeed> LocalRecommendationFeeds { get; set; } = new HashSet<LocalRecommendationFeed>();
+        public ICollection<SharedRecommendationFeed> SharedRecommendationFeeds { get; set; } = new HashSet<SharedRecommendationFeed>();
     }
 }

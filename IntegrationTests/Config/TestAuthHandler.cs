@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace IntegrationTests.Config
 {
+    // Taken from my previous project and modified as needed. Originally from a tutorial and further modified in this project.
     internal class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
