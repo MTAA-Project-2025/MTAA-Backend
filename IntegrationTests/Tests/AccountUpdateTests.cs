@@ -21,10 +21,12 @@ using SixLabors.ImageSharp.Processing;
 using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Resources.Images;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
+using Xunit.Extensions.AssemblyFixture;
 
 namespace IntegrationTests.Tests
 {
-    public class AccountUpdateTests : IClassFixture<ApiFixture>
+    [Collection("Fixture collection")]
+    public class AccountUpdateTests
     {
         private readonly HttpClient _client;
         private readonly IAzureBlobService _blobService;

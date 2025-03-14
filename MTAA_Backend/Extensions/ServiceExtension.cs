@@ -49,11 +49,6 @@ namespace MTAA_Backend.Api.Extensions
             //services.AddSwaggerGenNewtonsoftSupport();
         }
 
-        public static void ConfigureReDoc(this IServiceCollection services)
-        {
-            
-        }
-
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<User, IdentityRole>(o =>

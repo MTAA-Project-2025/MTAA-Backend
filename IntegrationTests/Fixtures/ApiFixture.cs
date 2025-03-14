@@ -3,6 +3,7 @@ using FluentAssertions.Common;
 using Google.Protobuf.WellKnownTypes;
 using IntegrationTests.Config;
 using IntegrationTests.Extensions;
+using IntegrationTests.Fixtures;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -14,10 +15,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit.Extensions.AssemblyFixture;
 
+[assembly: TestFramework(AssemblyFixtureFramework.TypeName, AssemblyFixtureFramework.AssemblyName)]
 namespace IntegrationTests.Fixtures
 {
-    public sealed class ApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
+    public class ApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
     {
         private readonly DistributedApplication _app;
         private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.SqlServerServerResource> _sqlServer;
