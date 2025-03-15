@@ -25,7 +25,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                 .HasForeignKey(uc => uc.User2Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasIndex(e => new { e.IsUser1Follow, e.IsUser2Follow });
+
+            builder.HasIndex(e => new { e.IsUser1Following, e.IsUser2Following });
         }
     }
 }

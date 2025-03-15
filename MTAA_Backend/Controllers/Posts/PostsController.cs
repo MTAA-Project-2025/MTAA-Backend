@@ -43,10 +43,14 @@ namespace MTAA_Backend.Api.Controllers.Posts
         {
             var command = _mapper.Map<AddPost>(request);
             var res = await _mediator.Send(command);
-            await _mediator.Send(new AddPostLocation()
+
+            if (request.Location != null)
             {
-                PostId = res
-            });
+                await _mediator.Send(new AddPostLocation()
+                {
+                    PostId = res
+                });
+            }
             return Ok(res);
         }
 
@@ -72,9 +76,9 @@ namespace MTAA_Backend.Api.Controllers.Posts
 
         [HttpPost]
         [Authorize(Roles = UserRoles.User)]
-        [Route("get-Recommendations")]
+        [Route("get-recommendations")]
         [ProducesResponseType(typeof(ICollection<FullPostResponse>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ICollection<FullPostResponse>>> AddPost([FromBody] PageParameters request)
+        public async Task<ActionResult<ICollection<FullPostResponse>>> GetRecommendedPosts([FromBody] PageParameters request)
         {
             var res = await _mediator.Send(new GetRecommendedPosts()
             {
@@ -87,7 +91,7 @@ namespace MTAA_Backend.Api.Controllers.Posts
         [Authorize(Roles = UserRoles.User)]
         [Route("get-global")]
         [ProducesResponseType(typeof(ICollection<FullPostResponse>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ICollection<FullPostResponse>>> AddPost([FromBody] GetGlobalPostsRequest request)
+        public async Task<ActionResult<ICollection<FullPostResponse>>> GetGlobalPosts([FromBody] GetGlobalPostsRequest request)
         {
             var command = _mapper.Map<GetGlobalPosts>(request);
             var res = await _mediator.Send(command);

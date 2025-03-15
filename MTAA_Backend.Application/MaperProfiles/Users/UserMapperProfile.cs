@@ -38,6 +38,8 @@ namespace MTAA_Backend.Application.MaperProfiles.Users
 
             CreateMap<User, PublicSimpleAccountResponse>()
                 .ForMember(dest => dest.Avatar,
+                           opt => opt.Ignore())
+                .ForMember(dest => dest.IsFollowed,
                            opt => opt.Ignore());
         }
     }
