@@ -70,8 +70,8 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
 
         public async Task RecomendPostBackgroundJob(Guid postId, string userId, CancellationToken cancellationToken = default)
         {
-            var feeds = await _dbContext.UserRelationships.Where(e => (e.User2Id == userId && e.IsUser1Follow) ||
-                                                                      (e.User1Id == userId && e.IsUser2Follow))
+            var feeds = await _dbContext.UserRelationships.Where(e => (e.User2Id == userId && e.IsUser1Following) ||
+                                                                      (e.User1Id == userId && e.IsUser2Following))
                                                           .Include(e => e.User1.LocalRecommendationFeeds.Where(f => f.Type == RecommendationFeedTypes.PostsFromFollowersFeed))
                                                               .ThenInclude(f => f.RecommendationItems)
                                                           .Include(e => e.User2.LocalRecommendationFeeds.Where(f => f.Type == RecommendationFeedTypes.PostsFromFollowersFeed))
