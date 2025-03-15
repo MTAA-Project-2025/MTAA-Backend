@@ -22,20 +22,13 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
 {
-    public class PresetUpdateAccountAvatarHandler(ILogger<PresetUpdateAccountAvatarHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IUserService userService,
-        IAccountService accountService,
-        IMapper mapper) : IRequestHandler<PresetUpdateAccountAvatar, MyImageGroupResponse>
+    public class PresetUpdateAccountAvatarHandler(ILogger<PresetUpdateAccountAvatarHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IUserService _userService,
+        IAccountService _accountService,
+        IMapper _mapper) : IRequestHandler<PresetUpdateAccountAvatar, MyImageGroupResponse>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IUserService _userService = userService;
-        private readonly IMapper _mapper = mapper;
-        private readonly IAccountService _accountService = accountService;
-
         public async Task<MyImageGroupResponse> Handle(PresetUpdateAccountAvatar request, CancellationToken cancellationToken)
         {
             var imageGroup = await _dbContext.UserPresetAvatarImages.Where(e => e.Id == request.ImageGroupId)

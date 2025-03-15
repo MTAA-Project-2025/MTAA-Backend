@@ -13,12 +13,9 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Messages.QueryHandlers
 {
-    public class GetFileMessageByIdHandler(MTAA_BackendDbContext dbContext,
-        IMapper mapper) : IRequestHandler<GetFileMessageById, FileMessageResponse>
+    public class GetFileMessageByIdHandler(MTAA_BackendDbContext _dbContext,
+        IMapper _mapper) : IRequestHandler<GetFileMessageById, FileMessageResponse>
     {
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<FileMessageResponse> Handle(GetFileMessageById request, CancellationToken cancellationToken)
         {
             var msg = await _dbContext.FileMessages.Where(e => e.Id == request.Id)

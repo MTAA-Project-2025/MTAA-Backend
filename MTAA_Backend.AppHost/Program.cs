@@ -13,16 +13,19 @@ var cache = builder.AddRedis("cache")
 var qdrant = builder.AddQdrant("qdrant")
                     .WithLifetime(ContainerLifetime.Persistent);
 
+var migrations = builder.AddProject<Projects.MTAA_Backend_MigrationService>("migrations")
+       .WithReference(db)
+       .WaitFor(db);
+
 builder.AddProject<Projects.MTAA_Backend_Api>("mtaa-backend")
        .WithReference(cache)
        .WaitFor(cache)
        .WithReference(db)
        .WaitFor(db)
        .WithReference(qdrant)
-       .WaitFor(qdrant);
+       .WaitFor(qdrant)
+       .WaitForCompletion(migrations);
 
-builder.AddProject<Projects.MTAA_Backend_MigrationService>("migrations")
-       .WithReference(db)
-       .WaitFor(db);
+
 
 builder.Build().Run();

@@ -9,14 +9,10 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.UserGroupMemberships.CommandHandlers
 {
-    public class AllowUserGroupMembershipNotificationsHandler(ILogger<AllowUserGroupMembershipNotificationsHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext) : IRequestHandler<AllowUserGroupMembershipNotifications>
+    public class AllowUserGroupMembershipNotificationsHandler(ILogger<AllowUserGroupMembershipNotificationsHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext) : IRequestHandler<AllowUserGroupMembershipNotifications>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-
         public async Task Handle(AllowUserGroupMembershipNotifications request, CancellationToken cancellationToken)
         {
             var membership = await _dbContext.UserGroupMemberships.Where(e => e.Id == request.Id)

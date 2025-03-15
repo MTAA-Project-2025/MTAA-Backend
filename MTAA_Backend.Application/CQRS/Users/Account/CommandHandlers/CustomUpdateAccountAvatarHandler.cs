@@ -23,20 +23,13 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
 {
-    public class CustomUpdateAccountAvatarHandler(ILogger<CustomUpdateAccountAvatarHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IUserService userService,
-        IImageService imageService,
-        IMapper mapper) : IRequestHandler<CustomUpdateAccountAvatar, MyImageGroupResponse>
+    public class CustomUpdateAccountAvatarHandler(ILogger<CustomUpdateAccountAvatarHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IUserService _userService,
+        IImageService _imageService,
+        IMapper _mapper) : IRequestHandler<CustomUpdateAccountAvatar, MyImageGroupResponse>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IUserService _userService = userService;
-        private readonly IImageService _imageService = imageService;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<MyImageGroupResponse> Handle(CustomUpdateAccountAvatar request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
@@ -56,7 +49,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
             if (user.Avatar == null)
             {
                 var avatar = new UserAvatar();
-                var imageGroup = await _imageService.SaveImage(request.Avatar, ImageSavingTypes.UserAvatar, cancellationToken);
+                var imageGroup = await _imageService.SaveImage(request.Avatar, 0, ImageSavingTypes.UserAvatar, cancellationToken);
                 foreach (var image in imageGroup.Images)
                 {
                     _dbContext.Images.Add(image);
@@ -89,7 +82,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
                 {
                     user.Avatar.PresetAvatar = null;
                 }
-                var newimageGroup = await _imageService.SaveImage(request.Avatar, ImageSavingTypes.UserAvatar, cancellationToken);
+                var newimageGroup = await _imageService.SaveImage(request.Avatar, 0, ImageSavingTypes.UserAvatar, cancellationToken);
                 foreach (var image in newimageGroup.Images)
                 {
                     _dbContext.Images.Add(image);

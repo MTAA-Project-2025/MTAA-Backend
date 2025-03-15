@@ -9,16 +9,11 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.BaseGroups.CommandHandlers
 {
-    public class DeleteGroupHandler(ILogger<DeleteGroupHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IMediator mediator) : IRequestHandler<DeleteGroup>
+    public class DeleteGroupHandler(ILogger<DeleteGroupHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IMediator _mediator) : IRequestHandler<DeleteGroup>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMediator _mediator = mediator;
-
         public async Task Handle(DeleteGroup request, CancellationToken cancellationToken)
         {
             var group = await _dbContext.BaseGroups.Where(e => e.Id == request.Id)

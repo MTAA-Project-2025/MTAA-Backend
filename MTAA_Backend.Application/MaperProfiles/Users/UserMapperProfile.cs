@@ -35,6 +35,10 @@ namespace MTAA_Backend.Application.MaperProfiles.Users
                            opt => opt.Ignore())
                 .ForMember(dest => dest.IsContact,
                            opt => opt.Ignore());
+
+            CreateMap<User, PublicSimpleAccountResponse>()
+                .ForMember(dest => dest.Avatar,
+                           opt => opt.Ignore());
         }
     }
 }

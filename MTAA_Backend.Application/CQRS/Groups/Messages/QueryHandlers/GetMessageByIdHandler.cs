@@ -15,14 +15,10 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.Messages.QueryHandlers
 {
-    public class GetMessageByIdHandler(ILogger<GetSimpleGroupByIdHandler> logger,
-        MTAA_BackendDbContext dbContext,
-        IMediator mediator) : IRequestHandler<GetMessageById, BaseMessageResponse>
+    public class GetMessageByIdHandler(ILogger<GetSimpleGroupByIdHandler> _logger,
+        MTAA_BackendDbContext _dbContext,
+        IMediator _mediator) : IRequestHandler<GetMessageById, BaseMessageResponse>
     {
-        private readonly ILogger _logger = logger;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMediator _mediator = mediator;
-
         public async Task<BaseMessageResponse> Handle(GetMessageById request, CancellationToken cancellationToken)
         {
             var msg = await _dbContext.BaseMessages.FindAsync(request.Id, cancellationToken);

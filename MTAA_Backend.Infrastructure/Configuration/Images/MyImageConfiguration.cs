@@ -16,6 +16,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Images
             builder.HasOne(e => e.ImageGroup)
                    .WithMany(e => e.Images)
                    .HasForeignKey(e => e.ImageGroupId);
+
+            builder.HasIndex(e => e.Type);
         }
     }
 }

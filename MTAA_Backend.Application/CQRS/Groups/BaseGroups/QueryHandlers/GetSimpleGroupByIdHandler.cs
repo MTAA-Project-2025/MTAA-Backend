@@ -17,18 +17,12 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Groups.BaseGroups.QueryHandlers
 {
-    public class GetSimpleGroupByIdHandler(ILogger<GetSimpleGroupByIdHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IMapper mapper,
-        IUserService userService) : IRequestHandler<GetSimpleGroupById, SimpleBaseGroupResponse>
+    public class GetSimpleGroupByIdHandler(ILogger<GetSimpleGroupByIdHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IMapper _mapper,
+        IUserService _userService) : IRequestHandler<GetSimpleGroupById, SimpleBaseGroupResponse>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-        private readonly IUserService _userService = userService;
-
         public async Task<SimpleBaseGroupResponse> Handle(GetSimpleGroupById request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();

@@ -13,7 +13,7 @@ namespace MTAA_Backend.Application.Validators.Account
                     .GreaterThan(0)
                     .WithMessage("The image should be not empty")
                     .LessThanOrEqualTo(10 * 1024 * 1024)
-                    .WithMessage("The image should be bigger than 10 MB"));
+                    .WithMessage("The image should not be bigger than 10 MB"));
         }
     }
 }

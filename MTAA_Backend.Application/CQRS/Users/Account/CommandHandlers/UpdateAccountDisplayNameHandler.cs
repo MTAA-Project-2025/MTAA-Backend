@@ -13,12 +13,9 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
 {
-    public class UpdateAccountDisplayNameHandler(MTAA_BackendDbContext dbContext,
-        IUserService userService) : IRequestHandler<UpdateAccountDisplayName>
+    public class UpdateAccountDisplayNameHandler(MTAA_BackendDbContext _dbContext,
+        IUserService _userService) : IRequestHandler<UpdateAccountDisplayName>
     {
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IUserService _userService = userService;
-
         public async Task Handle(UpdateAccountDisplayName request, CancellationToken cancellationToken)
         {
             var user = await _userService.GetCurrentUser();

@@ -22,18 +22,12 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Identity.QueryHandlers
 {
-    public class LogInHandler(IStringLocalizer<ErrorMessages> localizer,
-            UserManager<User> userManager,
-            IConfiguration configuration,
-            MTAA_BackendDbContext dbContext,
-            ILogger<LogInHandler> logger) : IRequestHandler<LogIn, TokenDTO>
+    public class LogInHandler(IStringLocalizer<ErrorMessages> _localizer,
+            UserManager<User> _userManager,
+            IConfiguration _configuration,
+            MTAA_BackendDbContext _dbContext,
+            ILogger<LogInHandler> _logger) : IRequestHandler<LogIn, TokenDTO>
     {
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly UserManager<User> _userManager = userManager;
-        private readonly IConfiguration _configuration = configuration;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly ILogger _logger = logger;
-
         public async Task<TokenDTO> Handle(LogIn request, CancellationToken cancellationToken)
         {
             if (request.PhoneNumber == null && request.Email == null)

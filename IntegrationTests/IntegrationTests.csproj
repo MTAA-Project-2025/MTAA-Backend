@@ -10,6 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.Qdrant" Version="9.1.0" />
 		<PackageReference Include="Aspire.Hosting.Redis" Version="9.1.0" />
 		<PackageReference Include="Aspire.Hosting.SqlServer" Version="9.1.0" />
 		<PackageReference Include="Aspire.Hosting.Testing" Version="9.1.0" />
@@ -22,6 +23,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.2" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
 		<PackageReference Include="xunit" Version="2.9.3" />
+		<PackageReference Include="Xunit.Extensions.AssemblyFixture" Version="2.6.0" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,6 +35,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<ProjectReference Include="..\MTAA_Backend.AppHost\MTAA_Backend.AppHost.csproj" />
 		<ProjectReference Include="..\MTAA_Backend.Domain\MTAA_Backend.Domain.csproj" />
 		<ProjectReference Include="..\MTAA_Backend.Infrastructure\MTAA_Backend.Infrastructure.csproj" />
 		<ProjectReference Include="..\MTAA_Backend\MTAA_Backend.Api.csproj" />
