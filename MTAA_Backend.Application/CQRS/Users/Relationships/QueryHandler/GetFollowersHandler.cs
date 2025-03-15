@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Queries;
+using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
@@ -12,18 +13,12 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
 {
-    public class GetFollowersHandler(ILogger<GetFollowersHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IMapper mapper,
-        IUserService userService) : IRequestHandler<GetFollowers, ICollection<PublicSimpleAccountResponse>>
+    public class GetFollowersHandler(ILogger<GetFollowersHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IMapper _mapper,
+        IUserService _userService) : IRequestHandler<GetFollowers, ICollection<PublicSimpleAccountResponse>>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-        private readonly IUserService _userService = userService;
-
         public async Task<ICollection<PublicSimpleAccountResponse>> Handle(GetFollowers request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
@@ -48,7 +43,26 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
                         .ThenInclude(e => e.Images)
                 .ToListAsync(cancellationToken);
 
-            return _mapper.Map<ICollection<PublicSimpleAccountResponse>>(followers);
+            var mappedFollowers = _mapper.Map<List<PublicSimpleAccountResponse>>(followers);
+
+            for (int i = 0; i < mappedFollowers.Count; i++)
+            {
+                var follower = followers[i];
+
+                if (follower.Avatar != null)
+                {
+                    if (follower.Avatar.CustomAvatar != null)
+                    {
+                        mappedFollowers[i].Avatar = _mapper.Map<MyImageGroupResponse>(follower.Avatar.CustomAvatar);
+                    }
+                    else if (follower.Avatar.PresetAvatar != null)
+                    {
+                        mappedFollowers[i].Avatar = _mapper.Map<MyImageGroupResponse>(follower.Avatar.PresetAvatar);
+                    }
+                }
+                mappedFollowers[i].IsFollowed = false;
+            }
+            return mappedFollowers;
         }
     }
 }

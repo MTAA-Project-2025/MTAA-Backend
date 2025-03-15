@@ -13,5 +13,6 @@ namespace MTAA_Backend.Domain.DTOs.Users.Account.Responses
         public string Username { get; set; }
         public string DisplayName { get; set; }
         public MyImageGroupResponse? Avatar { get; set; }
+        public bool IsFollowed { get; set; }
     }
 }

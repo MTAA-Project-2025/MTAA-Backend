@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Queries;
+using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
@@ -12,18 +13,12 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
 {
-    public class GetFriendsHandler(ILogger<GetFriendsHandler> logger,
-        IStringLocalizer<ErrorMessages> localizer,
-        MTAA_BackendDbContext dbContext,
-        IMapper mapper,
-        IUserService userService) : IRequestHandler<GetFriends, ICollection<PublicSimpleAccountResponse>>
+    public class GetFriendsHandler(ILogger<GetFriendsHandler> _logger,
+        IStringLocalizer<ErrorMessages> _localizer,
+        MTAA_BackendDbContext _dbContext,
+        IMapper _mapper,
+        IUserService _userService) : IRequestHandler<GetFriends, ICollection<PublicSimpleAccountResponse>>
     {
-        private readonly ILogger _logger = logger;
-        private readonly IStringLocalizer _localizer = localizer;
-        private readonly MTAA_BackendDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
-        private readonly IUserService _userService = userService;
-
         public async Task<ICollection<PublicSimpleAccountResponse>> Handle(GetFriends request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
@@ -48,7 +43,26 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
                         .ThenInclude(e => e.Images)
                 .ToListAsync(cancellationToken);
 
-            return _mapper.Map<ICollection<PublicSimpleAccountResponse>>(friends);
+            var mappedFriends = _mapper.Map<List<PublicSimpleAccountResponse>>(friends);
+
+            for (int i = 0; i < mappedFriends.Count; i++)
+            {
+                var friend = friends[i];
+
+                if (friend.Avatar != null)
+                {
+                    if (friend.Avatar.CustomAvatar != null)
+                    {
+                        mappedFriends[i].Avatar = _mapper.Map<MyImageGroupResponse>(friend.Avatar.CustomAvatar);
+                    }
+                    else if (friend.Avatar.PresetAvatar != null)
+                    {
+                        mappedFriends[i].Avatar = _mapper.Map<MyImageGroupResponse>(friend.Avatar.PresetAvatar);
+                    }
+                }
+                mappedFriends[i].IsFollowed = true;
+            }
+            return mappedFriends;
         }
     }
 }
