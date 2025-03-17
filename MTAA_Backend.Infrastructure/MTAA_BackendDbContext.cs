@@ -10,6 +10,7 @@ using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Entities.Locations;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
+using MTAA_Backend.Domain.Entities.Versions;
 
 namespace MTAA_Backend.Infrastructure
 {
@@ -56,6 +57,8 @@ namespace MTAA_Backend.Infrastructure
         public DbSet<UserPresetAvatarImage> UserPresetAvatarImages { get; set; }
         public DbSet<MyImage> Images { get; set; }
         public DbSet<UserRelationship> UserRelationships { get; set; }
+
+        public DbSet<VersionItem> VersionItems { get; set; }
 
 
         public MTAA_BackendDbContext(DbContextOptions options) : base(options)

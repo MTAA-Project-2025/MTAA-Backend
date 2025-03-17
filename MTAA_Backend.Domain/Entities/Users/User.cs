@@ -5,6 +5,7 @@ using MTAA_Backend.Domain.Entities.Messages;
 using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
 using MTAA_Backend.Domain.Entities.Shared;
+using MTAA_Backend.Domain.Entities.Versions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,5 +53,7 @@ namespace MTAA_Backend.Domain.Entities.Users
         public int GlobalRecommendationsFeedIndex = 0;
         public ICollection<LocalRecommendationFeed> LocalRecommendationFeeds { get; set; } = new HashSet<LocalRecommendationFeed>();
         public ICollection<SharedRecommendationFeed> SharedRecommendationFeeds { get; set; } = new HashSet<SharedRecommendationFeed>();
+
+        public ICollection<VersionItem> VersionItems { get; set; } = new HashSet<VersionItem>();
     }
 }
