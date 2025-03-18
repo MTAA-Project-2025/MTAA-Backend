@@ -1,0 +1,9 @@
+﻿using MediatR;
+using MTAA_Backend.Domain.Entities.Versions;
+
+namespace MTAA_Backend.Application.CQRS.Versions.Queries
+{
+    public class GetAllVersionItems : IRequest<IEnumerable<VersionItem>>
+    {
+    }
+}
