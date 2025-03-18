@@ -100,6 +100,7 @@ public class Program
         builder.Services.AddScoped<IEmbeddingsService, EmbeddingsService>();
         builder.Services.AddScoped<IPostsConfigureRecommendationsService, PostsConfigureRecommendationsService>();
         builder.Services.AddScoped<IRecommendationItemsService, RecommendationItemsService>();
+        builder.Services.AddScoped<IVersionItemService, VersionItemService>();
 
         builder.Services.AddSingleton<IMLNetService, MLNetService>();
 

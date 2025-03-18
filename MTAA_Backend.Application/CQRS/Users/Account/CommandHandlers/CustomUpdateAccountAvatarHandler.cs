@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using MTAA_Backend.Application.CQRS.Users.Account.Commands;
+using MTAA_Backend.Application.CQRS.Users.Account.Events;
 using MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers;
 using MTAA_Backend.Application.Services;
 using MTAA_Backend.Domain.DTOs.Images.Response;
@@ -28,7 +29,8 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
         MTAA_BackendDbContext _dbContext,
         IUserService _userService,
         IImageService _imageService,
-        IMapper _mapper) : IRequestHandler<CustomUpdateAccountAvatar, MyImageGroupResponse>
+        IMapper _mapper,
+        IMediator _mediator) : IRequestHandler<CustomUpdateAccountAvatar, MyImageGroupResponse>
     {
         public async Task<MyImageGroupResponse> Handle(CustomUpdateAccountAvatar request, CancellationToken cancellationToken)
         {
@@ -93,6 +95,11 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
                 response = _mapper.Map<MyImageGroupResponse>(newimageGroup);
             }
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            await _mediator.Publish(new AccountUpdateEvent()
+            {
+                UserId = user.Id
+            });
 
             return response;
         }

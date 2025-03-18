@@ -6,10 +6,13 @@ using MTAA_Backend.Application.CQRS.Users.Account.Commands;
 using MTAA_Backend.Application.CQRS.Users.Account.Queries;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Commands;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Queries;
+using MTAA_Backend.Application.CQRS.Versions.Queries;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Shared.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
+using MTAA_Backend.Domain.DTOs.Versioning.Responses;
+using MTAA_Backend.Domain.Entities.Versions;
 using MTAA_Backend.Domain.Resources.Customers;
 using System.Net;
 
@@ -50,6 +53,14 @@ namespace MTAA_Backend.Api.Controllers.Users
         {
             var query = new GetFriends { PageParameters = pageParameters };
             var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("all-versions")]
+        [ProducesResponseType(typeof(ICollection<VersionItemResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllVersions()
+        {
+            var result = await _mediator.Send(new GetAllVersionItems());
             return Ok(result);
         }
         #endregion
