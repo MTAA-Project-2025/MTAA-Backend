@@ -25,5 +25,7 @@ namespace MTAA_Backend.Domain.DTOs.Posts.Responses
         public bool IsLiked { get; set; }
 
         public Guid? LocationId { get; set; }
+
+        public DateTime DataCreationTime { get; set; }
     }
 }
