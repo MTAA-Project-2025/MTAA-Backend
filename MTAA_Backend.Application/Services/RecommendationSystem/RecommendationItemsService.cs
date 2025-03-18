@@ -122,17 +122,26 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
                 throw new HttpException("Feed not found");
             }
 
+            bool flag = false;
             foreach (var request in requests)
             {
+                if (feed.RecommendationItems.Any(e => e.PostId == request.PostId)) continue;
+                flag = true;
                 feed.RecommendationItemsCount++;
-                feed.RecommendationItems.Add(new RecommendationItem
+                var newItem = new RecommendationItem
                 {
                     FeedId = feed.Id,
                     PostId = request.PostId,
                     LocalScore = request.LocalScore
-                });
+                };
+                _dbContext.RecommendationItems.Add(newItem);
+                feed.RecommendationItems.Add(newItem);
             }
-            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            if (flag)
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
         }
         public async Task ClearSharedFeed(RecommendationFeedTypes feedType, CancellationToken cancellationToken = default)
         {
@@ -144,6 +153,10 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             {
                 _logger.LogError($"Recommendation feed not found: {feedType}");
                 throw new HttpException("Feed not found");
+            }
+            foreach(var item in feed.RecommendationItems)
+            {
+                _dbContext.RecommendationItems.Remove(item);
             }
             feed.RecommendationItems.Clear();
             await _dbContext.SaveChangesAsync(cancellationToken);

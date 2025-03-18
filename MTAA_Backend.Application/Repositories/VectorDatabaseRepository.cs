@@ -16,12 +16,18 @@ namespace MTAA_Backend.Application.Repositories
             _qdrantClient = qdrantClient;
         }
 
-        public async Task<IReadOnlyList<ScoredPoint>> GetPostVectors(string collectionName, float[] userVector, ulong limit, string userId, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<ScoredPoint>> GetPostVectors(string collectionName, float[] userVector, ulong limit, string? userId, ulong offset = 0, CancellationToken cancellationToken = default)
         {
+            Filter filter = null;
+            if (userId != null)
+            {
+                filter = new Filter { MustNot = { MatchKeyword("watched[]", userId) } };
+            }
             return await _qdrantClient.SearchAsync(collectionName: collectionName,
                 vector: userVector,
                 limit: limit,
-                filter: new Filter { MustNot = { MatchKeyword("watched[]", userId) } },
+                filter: filter,
+                offset: offset,
                 cancellationToken: cancellationToken);
         }
         public async Task UpdatePostWatched(Guid postId, string userId, CancellationToken cancellationToken = default)

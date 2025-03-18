@@ -15,12 +15,16 @@ using MTAA_Backend.Application.Extensions;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Domain.DTOs.Images.Response;
+using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
+using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 
 namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 {
     public class GetGlobalPostsHandler(MTAA_BackendDbContext _dbContext,
         IUserService _userService,
-        IMapper _mapper) : IRequestHandler<GetGlobalPosts, ICollection<FullPostResponse>>
+        IMapper _mapper,
+        IVectorDatabaseRepository _vectorDbRepository,
+        IEmbeddingsService _embeddingsService) : IRequestHandler<GetGlobalPosts, ICollection<FullPostResponse>>
     {
         public async Task<ICollection<FullPostResponse>> Handle(GetGlobalPosts request, CancellationToken cancellationToken)
         {
@@ -29,7 +33,10 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 
             if (request.FilterStr != null && request.FilterStr != "")
             {
-                filterCondition = filterCondition.And(e => e.Description.Contains(request.FilterStr));
+                var vector = (await _embeddingsService.GetTextEmbeddings(request.FilterStr)).Select(x => (float)x).ToArray();
+                var postIds = (await _vectorDbRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, vector, (ulong)request.PageParameters.PageSize, null, (ulong)(request.PageParameters.PageNumber * request.PageParameters.PageSize), cancellationToken)).Select(e => e.Id).ToList();
+
+                filterCondition = filterCondition.And(e => postIds.Contains(e.Id));
             }
 
             var likedPostIds = await _dbContext.PostLikes.Where(e => e.UserId == userId)
