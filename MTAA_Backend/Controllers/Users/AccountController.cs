@@ -11,6 +11,7 @@ using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Shared.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
+using MTAA_Backend.Domain.DTOs.Versioning.Responses;
 using MTAA_Backend.Domain.Entities.Versions;
 using MTAA_Backend.Domain.Resources.Customers;
 using System.Net;
@@ -56,10 +57,10 @@ namespace MTAA_Backend.Api.Controllers.Users
         }
 
         [HttpGet("all-versions")]
-        [ProducesResponseType(typeof(IEnumerable<VersionItem>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAllVersions(CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ICollection<VersionItemResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllVersions()
         {
-            var result = await _mediator.Send(new GetAllVersionItems(), cancellationToken);
+            var result = await _mediator.Send(new GetAllVersionItems());
             return Ok(result);
         }
         #endregion

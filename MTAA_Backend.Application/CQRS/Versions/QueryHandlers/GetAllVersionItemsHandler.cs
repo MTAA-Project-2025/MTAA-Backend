@@ -9,15 +9,18 @@ using System.Net;
 using System;
 using MTAA_Backend.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using MTAA_Backend.Domain.DTOs.Versioning.Responses;
+using AutoMapper;
 
 namespace MTAA_Backend.Application.CQRS.Versions.QueryHandlers
 {
     public class GetAllVersionItemsHandler(ILogger<GetAllVersionItemsHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
-        IUserService _userService) : IRequestHandler<GetAllVersionItems, IEnumerable<VersionItem>>
+        IUserService _userService,
+        IMapper _mapper) : IRequestHandler<GetAllVersionItems, ICollection<VersionItemResponse>>
     {
-        public async Task<IEnumerable<VersionItem>> Handle(GetAllVersionItems request, CancellationToken cancellationToken)
+        public async Task<ICollection<VersionItemResponse>> Handle(GetAllVersionItems request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
             if (userId == null)
@@ -27,7 +30,8 @@ namespace MTAA_Backend.Application.CQRS.Versions.QueryHandlers
             }
 
             var versionItems = await _dbContext.VersionItems.Where(v => v.UserId == userId).ToListAsync(cancellationToken);
-            return versionItems;
+
+            return _mapper.Map<ICollection<VersionItemResponse>>(versionItems);
         }
     }
 }

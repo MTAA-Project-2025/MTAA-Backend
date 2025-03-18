@@ -10,7 +10,7 @@ namespace MTAA_Backend.Application.CQRS.Versions.CommandHandler
     {
         public async Task Handle(IncreaseVersion request, CancellationToken cancellationToken)
         {
-            var versionItem = await _dbContext.VersionItems.SingleOrDefaultAsync(v => v.UserId == request.UserId && v.Id == request.VersionItemType, cancellationToken);
+            var versionItem = await _dbContext.VersionItems.SingleOrDefaultAsync(v => v.UserId == request.UserId && v.Type == request.VersionItemType, cancellationToken);
             if (versionItem != null)
             {
                 versionItem.Version++;

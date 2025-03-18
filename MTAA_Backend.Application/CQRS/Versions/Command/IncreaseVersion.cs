@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MTAA_Backend.Domain.Entities.Versions;
+using MTAA_Backend.Domain.Resources.Versioning;
 
 namespace MTAA_Backend.Application.CQRS.Versions.Command
 {

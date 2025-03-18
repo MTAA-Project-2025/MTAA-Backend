@@ -21,7 +21,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Identity.EventHandlers
         IPostsFromGlobalPopularityRecommendationFeedService _fromGlobalPopularityRecommendationService,
         IPostsFromPreferencesRecommendationFeedService _fromPreferencesRecommendationService,
         IVectorDatabaseRepository _vectorDatabaseRepository,
-        IVersionItemSeeder _versionItemSeeder) : INotificationHandler<CreateAccountEvent>
+        IVersionItemService _versionItemService) : INotificationHandler<CreateAccountEvent>
     {
         public async Task Handle(CreateAccountEvent notification, CancellationToken cancellationToken)
         {
@@ -51,7 +51,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Identity.EventHandlers
             await _vectorDatabaseRepository.AddUserPostVector(VectorCollections.UsersPostImageVectors, user.Id);
             await _vectorDatabaseRepository.AddUserPostVector(VectorCollections.UsersPostTextVectors, user.Id);
 
-            await _versionItemSeeder.SeedForUserAsync(notification.UserId, cancellationToken);
+            await _versionItemService.InitializationForUserAsync(notification.UserId, cancellationToken);
         }
     }
 }
