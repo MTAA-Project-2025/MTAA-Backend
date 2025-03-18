@@ -11,6 +11,7 @@ using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Infrastructure;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
@@ -97,7 +98,10 @@ namespace MTAA_Backend.Application.Services
 
         private async Task<ICollection<MyImage>> SaveImageWithSizes(Image image, ICollection<ImagesSize> sizes, string uniqueString, CancellationToken cancellationToken = default)
         {
-            var aspectRatio = (double)image.Width / image.Height;
+            int origWidth = image.Width;
+            int origHeight = image.Height;
+
+            var aspectRatio = (double)origWidth / origHeight;
 
             var images = new List<MyImage>(sizes.Count);
             foreach (var size in sizes)
@@ -144,10 +148,10 @@ namespace MTAA_Backend.Application.Services
                     height = (int)sizeHeight;
                 }
 
-                image.Mutate(e => e.Resize(width, height));
+                Image copy = image.Clone(x => x.Resize(width, height));
                 if (x != 0 || y != 0)
                 {
-                    image.Mutate(e => e.Crop(new Rectangle(x, y, cropWidth, cropWidth)));
+                    copy.Mutate(e => e.Crop(new Rectangle(x, y, cropWidth, cropWidth)));
                 }
 
                 var newFileName = uniqueString + "_" + size.Type + "." + ImagesFileTypes.Jpg;

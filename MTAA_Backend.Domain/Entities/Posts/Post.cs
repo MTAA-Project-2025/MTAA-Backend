@@ -15,7 +15,7 @@ namespace MTAA_Backend.Domain.Entities.Posts
 {
     public class Post : BaseEntity
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Description { get; set; }
 
         public ICollection<MyImageGroup> Images { get; set; } = new HashSet<MyImageGroup>();
