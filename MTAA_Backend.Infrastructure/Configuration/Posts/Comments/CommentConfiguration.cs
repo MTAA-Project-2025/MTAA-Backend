@@ -10,13 +10,17 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
 {
-    public class CommentConfiguratiob : IEntityTypeConfiguration<Comment>
+    public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
             builder.HasOne(e => e.Post)
                    .WithMany(e => e.Comments)
                    .HasForeignKey(e => e.PostId);
+
+            builder.HasMany(e => e.ChildComments)
+                   .WithOne(e => e.ParentComment)
+                   .HasForeignKey(e => e.ParentCommentId);
 
             builder.HasKey(e => new { e.DataCreationTime });
         }
