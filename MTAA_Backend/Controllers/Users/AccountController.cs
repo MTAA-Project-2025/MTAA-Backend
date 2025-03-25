@@ -57,6 +57,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         }
 
         [HttpGet("all-versions")]
+        [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType(typeof(ICollection<VersionItemResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllVersions()
         {

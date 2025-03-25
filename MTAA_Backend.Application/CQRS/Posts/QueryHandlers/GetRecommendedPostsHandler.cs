@@ -46,22 +46,24 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 
             for (int i = 0; i < requestFeeds.Count; i++)
             {
-                var feed = requestFeeds[i];
-                if (feed.Item2 < feed.Item3)
+                if (requestFeeds[i].Item2 < requestFeeds[i].Item3)
                 {
-                    requestFeeds[i] = (feed.Item1, feed.Item2, feed.Item2);
+                    requestFeeds[i] = (requestFeeds[i].Item1, requestFeeds[i].Item2, requestFeeds[i].Item2);
                 }
-                totalCount -= feed.Item3;
+                totalCount -= requestFeeds[i].Item3;
             }
             if (totalCount > 0)
             {
                 for (int i = 0; i < requestFeeds.Count; i++)
                 {
                     if (totalCount <= 0) break;
-                    var feed = requestFeeds[i];
 
-                    int extra = Math.Min(feed.Item3 - feed.Item2, totalCount);
-                    feed.Item2 += extra;
+                    int extra = 0;
+                    if (requestFeeds[i].Item2 > requestFeeds[i].Item3)
+                    {
+                        extra = Math.Min(requestFeeds[i].Item2 - requestFeeds[i].Item3, totalCount);
+                    }
+                    requestFeeds[i] = (requestFeeds[i].Item1, requestFeeds[i].Item2, requestFeeds[i].Item3 + extra);
                     totalCount -= extra;
                 }
             }

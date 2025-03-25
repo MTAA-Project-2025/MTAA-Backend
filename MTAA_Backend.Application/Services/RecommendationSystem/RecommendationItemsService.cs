@@ -158,6 +158,7 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             {
                 _dbContext.RecommendationItems.Remove(item);
             }
+            feed.RecommendationItemsCount = 0;
             feed.RecommendationItems.Clear();
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

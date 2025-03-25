@@ -49,11 +49,13 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
                 }
             }
 
-            if (!isSameAspectRatio)
+
+            if (!isSameAspectRatio || standardAspectRatio < 0.5 || standardAspectRatio > 2)
             {
                 _logger.LogError("Image aspect ratio is not allowed");
                 throw new HttpException(_localizer[ErrorMessagesPatterns.ImageFormatNotAllowed], HttpStatusCode.BadRequest);
             }
+
             var newImages = request.Images.Where(e => e.NewImage != null);
             var addRequests = new List<AddImageRequest>(newImages.Count());
             foreach (var newImage in newImages)

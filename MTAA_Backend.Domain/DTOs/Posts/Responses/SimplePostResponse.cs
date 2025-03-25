@@ -11,5 +11,6 @@ namespace MTAA_Backend.Domain.DTOs.Posts.Responses
     {
         public Guid Id { get; set; }
         public MyImageResponse SmallFirstImage { get; set; }
+        public DateTime DataCreationTime { get; set; }
     }
 }
