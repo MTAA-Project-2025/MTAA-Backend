@@ -13,35 +13,40 @@ namespace MTAA_Backend.Application.CQRS.Comments.QueryHandlers
         public async Task<ICollection<FullCommentResponse>> Handle(GetPostComments request, CancellationToken cancellationToken)
         {
             var comments = await _dbContext.Comments
-                .Where(c => c.PostId == request.PostId && c.ParentCommentId == null)
-                .OrderByDescending(c => c.DataCreationTime)
+                .Where(e => e.PostId == request.PostId && e.ParentCommentId == null)
+                .OrderByDescending(e => e.DataCreationTime)
                 .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
                 .Take(request.PageParameters.PageSize)
-                .Include(c => c.Owner)
-                    .ThenInclude(o => o.Avatar)
-                        .ThenInclude(a => a.CustomAvatar)
+                .Include(e => e.Owner)
+                    .ThenInclude(e => e.Avatar)
+                        .ThenInclude(e => e.CustomAvatar)
                             .ThenInclude(e => e.Images)
-                .Include(c => c.Owner)
-                    .ThenInclude(o => o.Avatar)
-                        .ThenInclude(a => a.PresetAvatar)
+                .Include(e => e.Owner)
+                    .ThenInclude(e => e.Avatar)
+                        .ThenInclude(e => e.PresetAvatar)
                             .ThenInclude(e => e.Images)
                 .ToListAsync(cancellationToken);
 
-            var result = _mapper.Map<ICollection<FullCommentResponse>>(comments);
+            var result = new List<FullCommentResponse>();
 
-            foreach (var (comment, original) in result.Zip(comments, (mapped, original) => (mapped, original)))
+            for (int i = 0; i < comments.Count; i++)
             {
-                if (original.Owner.Avatar != null)
+                var commentResponse = _mapper.Map<FullCommentResponse>(comments[i]);
+                var ownerAvatar = comments[i].Owner.Avatar;
+
+                if (ownerAvatar != null)
                 {
-                    if (original.Owner.Avatar.CustomAvatar != null)
+                    if (ownerAvatar.CustomAvatar != null)
                     {
-                        comment.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(original.Owner.Avatar.CustomAvatar);
+                        commentResponse.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(ownerAvatar.CustomAvatar);
                     }
-                    else if (original.Owner.Avatar.PresetAvatar != null)
+                    else if (ownerAvatar.PresetAvatar != null)
                     {
-                        comment.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(original.Owner.Avatar.PresetAvatar);
+                        commentResponse.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(ownerAvatar.PresetAvatar);
                     }
                 }
+
+                result.Add(commentResponse);
             }
 
             return result;

@@ -46,7 +46,6 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .HasForeignKey(e => e.OwnerId)
                    .OnDelete(DeleteBehavior.NoAction);
 
-
             builder.HasMany(uc => uc.UserRelationships1)
                    .WithOne(u => u.User1)
                    .HasForeignKey(uc => uc.User1Id)
@@ -67,6 +66,10 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
 
             builder.HasMany(e => e.WatchedPosts)
                    .WithMany(e => e.WatchedUsers);
+
+            builder.HasMany(u => u.Comments)
+                   .WithOne(c => c.Owner)
+                   .HasForeignKey(c => c.OwnerId);
 
             builder.HasMany(e => e.LocalRecommendationFeeds)
                    .WithOne(e => e.User)

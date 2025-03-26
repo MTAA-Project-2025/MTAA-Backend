@@ -290,13 +290,13 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to ResourceNotFound.
+        ///   Looks up a localized string similar to CommentNotFound.
         /// </summary>
-        public static string ResourceNotFound
+        public static string CommentNotFound
         {
             get
             {
-                return ResourceManager.GetString("ResourceNotFound", resourceCulture);
+                return ResourceManager.GetString("CommentNotFound", resourceCulture);
             }
         }
     }

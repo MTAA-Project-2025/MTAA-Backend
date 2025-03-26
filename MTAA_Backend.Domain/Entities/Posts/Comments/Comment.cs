@@ -26,5 +26,7 @@ namespace MTAA_Backend.Domain.Entities.Posts.Comments
         public Guid? ParentCommentId { get; set; }
 
         public ICollection<Comment> ChildComments { get; set; } = new HashSet<Comment>();
+        public int ChildCommentsCount { get; set; } = 0;
+
     }
 }

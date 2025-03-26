@@ -20,7 +20,7 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
             if (comment == null)
             {
                 _logger.LogError($"Comment {request.CommentId} not found or permission denied");
-                throw new HttpException(_localizer[ErrorMessagesPatterns.ResourceNotFound], HttpStatusCode.NotFound);
+                throw new HttpException(_localizer[ErrorMessagesPatterns.CommentNotFound], HttpStatusCode.NotFound);
             }
 
             comment.Text = request.NewText;
