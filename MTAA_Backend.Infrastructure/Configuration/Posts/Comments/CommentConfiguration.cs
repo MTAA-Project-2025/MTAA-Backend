@@ -23,8 +23,12 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
                    .HasForeignKey(e => e.ParentCommentId);
 
             builder.HasOne(e => e.Owner)
-                   .WithMany(e => e.Comments)
+                   .WithMany(e => e.CreatedComments)
                    .HasForeignKey(e => e.OwnerId);
+
+            builder.HasMany(e => e.CommentInteractions)
+                   .WithOne(e => e.Comment)
+                   .HasForeignKey(e => e.CommentId);
 
             builder.HasIndex(e => e.DataCreationTime);
         }

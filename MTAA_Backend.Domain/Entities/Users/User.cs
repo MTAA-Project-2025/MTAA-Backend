@@ -51,7 +51,9 @@ namespace MTAA_Backend.Domain.Entities.Users
         public ICollection<PostLike> LikedPosts { get; set; } = new HashSet<PostLike>();
         public ICollection<Post> WatchedPosts { get; set; } = new HashSet<Post>();
 
-        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
+        public ICollection<Comment> CreatedComments { get; set; } = new HashSet<Comment>();
+        
+        public ICollection<CommentInteraction> CommentInteractions { get; set; } = new HashSet<CommentInteraction>();
 
         public int GlobalRecommendationsFeedIndex = 0;
         public ICollection<LocalRecommendationFeed> LocalRecommendationFeeds { get; set; } = new HashSet<LocalRecommendationFeed>();

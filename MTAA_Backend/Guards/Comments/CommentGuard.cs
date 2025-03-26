@@ -12,7 +12,7 @@ namespace MTAA_Backend.Api.Guards.Comments
 {
     public static class CommentGuard
     {
-        public static async Task NotCommentOwner(this IGuardClause guardClause, Guid commentId, MTAA_BackendDbContext dbContext, IUserService userService, IStringLocalizer<ErrorMessages> localizer)
+        public static async Task NotCommentOwner(this IGuardClause guardClause, Guid commentId, MTAA_BackendDbContext dbContext, IStringLocalizer localizer, IUserService userService)
         {
             var comment = await dbContext.Comments.Include(c => c.Post).FirstOrDefaultAsync(c => c.Id == commentId);
             if (comment == null)

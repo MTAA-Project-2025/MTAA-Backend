@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Comments.Commands;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
-using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Comments;
@@ -13,13 +12,13 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
 {
-    public class LikeCommentHandler(
-        ILogger<LikeCommentHandler> _logger,
+    public class SetCommentInteractionToNoneHandler(
+        ILogger<SetCommentInteractionToNoneHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
-        IUserService _userService) : IRequestHandler<LikeComment>
+        IUserService _userService) : IRequestHandler<SetCommentInteractionToNone>
     {
-        public async Task Handle(LikeComment request, CancellationToken cancellationToken)
+        public async Task Handle(SetCommentInteractionToNone request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
 
@@ -38,30 +37,17 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
             {
                 if (interaction.Type == CommentInteractionType.Like)
                 {
-                    return;
+                    comment.LikesCount--;
                 }
-                else
+                else if (interaction.Type == CommentInteractionType.Dislike)
                 {
-                    interaction.Type = CommentInteractionType.Like;
-                    comment.LikesCount++;
                     comment.DislikesCount--;
                 }
-            }
-            else
-            {
-                var newInteraction = new CommentInteraction
-                {
-                    UserId = userId,
-                    CommentId = request.CommentId,
-                    Type = CommentInteractionType.Like
-                };
 
-                _dbContext.CommentInteractions.Add(newInteraction);
-                comment.LikesCount++;
-            }
+                interaction.Type = CommentInteractionType.None;
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
         }
     }
-
 }

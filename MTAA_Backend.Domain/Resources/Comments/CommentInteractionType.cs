@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTAA_Backend.Domain.DTOs.Comments.Requests
+namespace MTAA_Backend.Domain.Resources.Comments
 {
-    public class DeleteCommentRequest
+    public enum CommentInteractionType
     {
-        public Guid CommentId { get; set; }
+        Like,
+        Dislike,
+        None
     }
 }
