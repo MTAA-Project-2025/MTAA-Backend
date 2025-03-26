@@ -211,7 +211,7 @@ namespace MTAA_Backend.Application.Services
             try
             {
                 var image = file.ConvertToImageSharp();
-                return image.Width / image.Height;
+                return (double)image.Width / (double)image.Height;
             }
             catch
             {
