@@ -10,7 +10,7 @@ namespace MTAA_Backend.Application.Validators.Comments
         {
             RuleFor(e => e.Content)
                 .NotEmpty().WithMessage("Content cannot be empty.")
-                .MaximumLength(2000).WithMessage("Content cannot be longer than 200 characters.");
+                .MaximumLength(2000).WithMessage("Content cannot be longer than 2000 characters.");
         }
     }
 }
