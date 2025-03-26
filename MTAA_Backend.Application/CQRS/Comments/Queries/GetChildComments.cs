@@ -6,6 +6,7 @@ namespace MTAA_Backend.Application.CQRS.Comments.Queries
 {
     public class GetChildComments : IRequest<ICollection<FullCommentResponse>>
     {
+        public string UserId { get; set; }
         public Guid ParentCommentId { get; set; }
         public PageParameters PageParameters { get; set; }
     }

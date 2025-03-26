@@ -4,15 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Application.CQRS.Comments.Queries;
 using MTAA_Backend.Domain.DTOs.Comments.Responses;
 using MTAA_Backend.Domain.DTOs.Images.Response;
+using MTAA_Backend.Domain.Resources.Comments;
 using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Comments.QueryHandlers
 {
-    public class GetChildCommentsHandler(MTAA_BackendDbContext _dbContext, IMapper _mapper) : IRequestHandler<GetChildComments, ICollection<FullCommentResponse>>
+    public class GetChildCommentsHandler(MTAA_BackendDbContext _dbContext, IMapper _mapper)
+    : IRequestHandler<GetChildComments, ICollection<FullCommentResponse>>
     {
         public async Task<ICollection<FullCommentResponse>> Handle(GetChildComments request, CancellationToken cancellationToken)
         {
-            var comments = await _dbContext.Comments
+            var commentsWithInteraction = await _dbContext.Comments
                 .Where(e => e.ParentCommentId == request.ParentCommentId)
                 .OrderBy(e => e.DataCreationTime)
                 .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
@@ -25,15 +27,24 @@ namespace MTAA_Backend.Application.CQRS.Comments.QueryHandlers
                     .ThenInclude(e => e.Avatar)
                         .ThenInclude(e => e.PresetAvatar)
                             .ThenInclude(e => e.Images)
+                .Select(c => new
+                {
+                    Comment = c,
+                    InteractionType = c.CommentInteractions
+                    .Where(ui => ui.UserId == request.UserId)
+                    .Select(ui => (CommentInteractionType?)ui.Type)
+                    .FirstOrDefault() ?? CommentInteractionType.None
+                })
                 .ToListAsync(cancellationToken);
 
             var result = new List<FullCommentResponse>();
 
-            for (int i = 0; i < comments.Count; i++)
+            foreach (var item in commentsWithInteraction)
             {
-                var commentResponse = _mapper.Map<FullCommentResponse>(comments[i]);
-                var ownerAvatar = comments[i].Owner.Avatar;
+                var commentResponse = _mapper.Map<FullCommentResponse>(item.Comment);
+                commentResponse.Type = item.InteractionType;
 
+                var ownerAvatar = item.Comment.Owner.Avatar;
                 if (ownerAvatar != null)
                 {
                     if (ownerAvatar.CustomAvatar != null)

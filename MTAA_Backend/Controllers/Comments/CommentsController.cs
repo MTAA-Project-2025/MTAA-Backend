@@ -9,9 +9,11 @@ using MTAA_Backend.Api.Guards.Comments;
 using MTAA_Backend.Application.CQRS.Comments.Commands;
 using MTAA_Backend.Application.CQRS.Comments.Queries;
 using MTAA_Backend.Application.CQRS.Posts.Commands;
+using MTAA_Backend.Application.CQRS.Posts.Queries;
 using MTAA_Backend.Domain.DTOs.Comments.Requests;
 using MTAA_Backend.Domain.DTOs.Comments.Responses;
 using MTAA_Backend.Domain.DTOs.Shared.Requests;
+using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Customers;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
@@ -69,25 +71,33 @@ namespace MTAA_Backend.Api.Controllers.Comments
         {
             await Guard.Against.NotCommentOwner(id, _dbContext, _localizer, _userService);
 
-            await _mediator.Send(id);
+            await _mediator.Send(new DeleteComment() { CommentId = id });
             return Ok();
         }
 
         [HttpPost("get-from-post/{postId}")]
         [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType(typeof(IEnumerable<FullCommentResponse>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<FullCommentResponse>>> GetPostComments([FromRoute] Guid postId)
+        public async Task<ActionResult<IEnumerable<FullCommentResponse>>> GetPostComments([FromRoute] Guid postId, [FromBody] PageParameters pageParameters)
         {
-            var comments = await _mediator.Send(postId);
+            var comments = await _mediator.Send(new GetPostComments()
+            {
+                PostId = postId,
+                PageParameters = pageParameters
+            });
             return Ok(comments);
         }
 
         [HttpPost("get-from-children/{parentCommentId}")]
         [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType(typeof(IEnumerable<FullCommentResponse>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<FullCommentResponse>>> GetChildComments([FromRoute] Guid parentCommentId)
+        public async Task<ActionResult<IEnumerable<FullCommentResponse>>> GetChildComments([FromRoute] Guid parentCommentId, [FromBody] PageParameters pageParameters)
         {
-            var comments = await _mediator.Send(parentCommentId);
+            var comments = await _mediator.Send(new GetChildComments()
+            {
+                ParentCommentId = parentCommentId,
+                PageParameters = pageParameters
+            });
             return Ok(comments);
         }
 
@@ -96,7 +106,7 @@ namespace MTAA_Backend.Api.Controllers.Comments
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> LikeComment([FromRoute] Guid commentId)
         {
-            await _mediator.Send(commentId);
+            await _mediator.Send(new LikeComment() { CommentId = commentId });
             return Ok();
         }
 
@@ -105,7 +115,7 @@ namespace MTAA_Backend.Api.Controllers.Comments
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> DislikeComment([FromRoute] Guid commentId)
         {
-            await _mediator.Send(commentId);
+            await _mediator.Send(new DislikeComment() { CommentId = commentId });
             return Ok();
         }
     }

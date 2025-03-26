@@ -1,4 +1,5 @@
 ﻿using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
+using MTAA_Backend.Domain.Resources.Comments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,7 @@ namespace MTAA_Backend.Domain.DTOs.Comments.Responses
         public int ChildCommentsCount { get; set; }
 
         public bool IsEdited { get; set; }
+
+        public CommentInteractionType Type { get; set; }
     }
 }

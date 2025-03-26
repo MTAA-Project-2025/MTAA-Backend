@@ -40,11 +40,16 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
                 {
                     return;
                 }
-                else
+                else if (interaction.Type == CommentInteractionType.Dislike)
                 {
                     interaction.Type = CommentInteractionType.Like;
                     comment.LikesCount++;
                     comment.DislikesCount--;
+                }
+                else
+                {
+                    interaction.Type = CommentInteractionType.Like;
+                    comment.LikesCount++;
                 }
             }
             else

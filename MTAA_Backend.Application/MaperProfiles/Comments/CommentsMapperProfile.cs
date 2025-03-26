@@ -16,7 +16,8 @@ namespace MTAA_Backend.Application.MaperProfiles.Comments
         {
             CreateMap<AddCommentRequest, AddComment>();
             CreateMap<EditCommentRequest, EditComment>();
-            CreateMap<Comment, FullCommentResponse>();
+            CreateMap<Comment, FullCommentResponse>()
+                .ForMember(dest => dest.Type, opt => opt.Ignore());
         }
     }
 }
