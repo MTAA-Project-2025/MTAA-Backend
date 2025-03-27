@@ -3,6 +3,7 @@ using MTAA_Backend.Domain.Entities.Groups;
 using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Entities.Messages;
 using MTAA_Backend.Domain.Entities.Posts;
+using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
 using MTAA_Backend.Domain.Entities.Shared;
 using MTAA_Backend.Domain.Entities.Versions;
@@ -44,6 +45,10 @@ namespace MTAA_Backend.Domain.Entities.Users
         public ICollection<Post> CreatedPosts { get; set; } = new HashSet<Post>();
         public ICollection<PostLike> LikedPosts { get; set; } = new HashSet<PostLike>();
         public ICollection<Post> WatchedPosts { get; set; } = new HashSet<Post>();
+
+        public ICollection<Comment> CreatedComments { get; set; } = new HashSet<Comment>();
+        
+        public ICollection<CommentInteraction> CommentInteractions { get; set; } = new HashSet<CommentInteraction>();
 
         public int GlobalRecommendationsFeedIndex = 0;
         public ICollection<LocalRecommendationFeed> LocalRecommendationFeeds { get; set; } = new HashSet<LocalRecommendationFeed>();

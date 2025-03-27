@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
 {
-    public class CommentConfiguratiob : IEntityTypeConfiguration<Comment>
+    public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
@@ -18,7 +18,19 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
                    .WithMany(e => e.Comments)
                    .HasForeignKey(e => e.PostId);
 
-            builder.HasKey(e => new { e.DataCreationTime });
+            builder.HasMany(e => e.ChildComments)
+                   .WithOne(e => e.ParentComment)
+                   .HasForeignKey(e => e.ParentCommentId);
+
+            builder.HasOne(e => e.Owner)
+                   .WithMany(e => e.CreatedComments)
+                   .HasForeignKey(e => e.OwnerId);
+
+            builder.HasMany(e => e.CommentInteractions)
+                   .WithOne(e => e.Comment)
+                   .HasForeignKey(e => e.CommentId);
+
+            builder.HasIndex(e => e.DataCreationTime);
         }
     }
 }

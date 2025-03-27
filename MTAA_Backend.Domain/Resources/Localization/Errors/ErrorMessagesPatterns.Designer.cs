@@ -288,5 +288,16 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
                 return ResourceManager.GetString("UserNotFollowed", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to CommentNotFound.
+        /// </summary>
+        public static string CommentNotFound
+        {
+            get
+            {
+                return ResourceManager.GetString("CommentNotFound", resourceCulture);
+            }
+        }
     }
 }

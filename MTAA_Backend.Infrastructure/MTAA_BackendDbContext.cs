@@ -42,7 +42,9 @@ namespace MTAA_Backend.Infrastructure
         public DbSet<SharedRecommendationFeed> SharedRecommendationFeeds { get; set; }
 
         public DbSet<RecommendationItem> RecommendationItems { get; set; }
+        
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentInteraction> CommentInteractions { get; set; }
         #endregion
 
 
