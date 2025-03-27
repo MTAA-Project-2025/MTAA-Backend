@@ -147,7 +147,6 @@ namespace MTAA_Backend.Api.Extensions
                 Email = email,
                 DisplayName = username,
                 EmailConfirmed = true,
-                Status = "",
             };
 
             var result = await _userManager.CreateAsync(newUser, password);

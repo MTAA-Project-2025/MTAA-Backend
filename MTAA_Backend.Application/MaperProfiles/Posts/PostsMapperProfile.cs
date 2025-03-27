@@ -2,6 +2,7 @@
 using MTAA_Backend.Application.CQRS.Posts.Queries;
 using MTAA_Backend.Domain.DTOs.Posts.Requests;
 using MTAA_Backend.Domain.DTOs.Posts.Responses;
+using MTAA_Backend.Domain.DTOs.Shared.Requests;
 using MTAA_Backend.Domain.Entities.Posts;
 
 namespace MTAA_Backend.Application.MaperProfiles.Posts
@@ -12,7 +13,7 @@ namespace MTAA_Backend.Application.MaperProfiles.Posts
         {
             CreateMap<AddPostRequest, AddPost>();
             CreateMap<UpdatePostRequest, UpdatePost>();
-            CreateMap<GetGlobalPostsRequest, GetGlobalPosts>();
+            CreateMap<GlobalSearchRequest, GetGlobalPosts>();
             CreateMap<Post, FullPostResponse>()
                 .ForMember(dest => dest.IsLiked, opt => opt.Ignore());
         }

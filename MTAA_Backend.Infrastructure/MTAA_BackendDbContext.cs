@@ -50,7 +50,6 @@ namespace MTAA_Backend.Infrastructure
 
 
         public DbSet<MyFile> MyFiles { get; set; }
-        public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<UserAvatar> UserAvatars { get; set; }
 
         public DbSet<MyImageGroup> ImageGroups { get; set; }

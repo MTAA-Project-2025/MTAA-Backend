@@ -2,12 +2,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MTAA_Backend.Application.CQRS.Posts.Queries;
 using MTAA_Backend.Application.CQRS.Users.Account.Commands;
 using MTAA_Backend.Application.CQRS.Users.Account.Queries;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Commands;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Queries;
 using MTAA_Backend.Application.CQRS.Versions.Queries;
 using MTAA_Backend.Domain.DTOs.Images.Response;
+using MTAA_Backend.Domain.DTOs.Posts.Responses;
 using MTAA_Backend.Domain.DTOs.Shared.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
@@ -39,7 +41,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         }
 
         [HttpGet("followers")]
-        [ProducesResponseType(typeof(ICollection<PublicSimpleAccountResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<PublicBaseAccountResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetFollowers([FromQuery] PageParameters pageParameters)
         {
             var query = new GetFollowers { PageParameters = pageParameters };
@@ -48,7 +50,7 @@ namespace MTAA_Backend.Api.Controllers.Users
         }
 
         [HttpGet("friends")]
-        [ProducesResponseType(typeof(ICollection<PublicSimpleAccountResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ICollection<PublicBaseAccountResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetFriends([FromQuery] PageParameters pageParameters)
         {
             var query = new GetFriends { PageParameters = pageParameters };
@@ -63,6 +65,17 @@ namespace MTAA_Backend.Api.Controllers.Users
         {
             var result = await _mediator.Send(new GetAllVersionItems());
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("get-global")]
+        [ProducesResponseType(typeof(ICollection<PublicBaseAccountResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ICollection<PublicBaseAccountResponse>>> GetGlobalUsers([FromBody] GlobalSearchRequest request)
+        {
+            var command = _mapper.Map<GetGlobalUsers>(request);
+            var res = await _mediator.Send(command);
+            return Ok(res);
         }
         #endregion
 

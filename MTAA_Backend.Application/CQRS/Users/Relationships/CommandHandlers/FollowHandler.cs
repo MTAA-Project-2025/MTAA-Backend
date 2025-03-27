@@ -11,8 +11,7 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
 {
-    public class FollowHandler(ILogger<FollowHandler> _logger,
-        IStringLocalizer<ErrorMessages> _localizer,
+    public class FollowHandler(IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IUserService _userService) : IRequestHandler<Follow>
     {

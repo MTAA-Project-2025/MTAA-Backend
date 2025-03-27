@@ -17,9 +17,7 @@ namespace MTAA_Backend.Domain.Entities.Users
     public class User : IdentityUser, IAuditable
     {
         public string DisplayName { get; set; } = "";
-        public DateTime BirthDate { get; set; }
-
-        public string Status { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         public DateTime LastSeen { get; set; } = DateTime.UtcNow;
 
@@ -29,9 +27,6 @@ namespace MTAA_Backend.Domain.Entities.Users
 
         public bool IsDeleted { get; set; }
         public bool IsEdited { get; set; }
-
-        public ICollection<UserContact> Contacts { get; set; } = new HashSet<UserContact>();
-        public ICollection<UserContact> ContactOf { get; set; } = new HashSet<UserContact>();
 
         public ICollection<BaseGroup> Groups { get; set; } = new HashSet<BaseGroup>();
         public ICollection<BaseMessage> Messages { get; set; } = new HashSet<BaseMessage>();

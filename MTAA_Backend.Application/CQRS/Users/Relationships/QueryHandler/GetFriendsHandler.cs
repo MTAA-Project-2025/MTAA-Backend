@@ -3,12 +3,15 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Queries;
+using MTAA_Backend.Application.Extensions;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
+using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Infrastructure;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
@@ -17,9 +20,9 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IMapper _mapper,
-        IUserService _userService) : IRequestHandler<GetFriends, ICollection<PublicSimpleAccountResponse>>
+        IUserService _userService) : IRequestHandler<GetFriends, ICollection<PublicBaseAccountResponse>>
     {
-        public async Task<ICollection<PublicSimpleAccountResponse>> Handle(GetFriends request, CancellationToken cancellationToken)
+        public async Task<ICollection<PublicBaseAccountResponse>> Handle(GetFriends request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
             if (userId == null)
@@ -28,9 +31,17 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
                 throw new HttpException(_localizer[ErrorMessagesPatterns.UserNotAuthorized], HttpStatusCode.Unauthorized);
             }
 
+            Expression<Func<UserRelationship, bool>> filterCondition = r => (r.User2Id == userId && r.IsUser1Following && r.IsUser2Following) ||
+                                                                (r.User1Id == userId && r.IsUser2Following && r.IsUser1Following);
+
+            if (request.FilterStr != null && request.FilterStr != "")
+            {
+                filterCondition = filterCondition.And(r => (r.User1Id == userId && EF.Functions.Like(r.User2.DisplayName, $"%{request.FilterStr}%")) ||
+                                                           (r.User2Id == userId && EF.Functions.Like(r.User1.DisplayName, $"%{request.FilterStr}%")));
+            }
+
             var friends = await _dbContext.UserRelationships
-                .Where(r => ((r.User1Id == userId && r.IsUser1Following && r.IsUser2Following) ||
-                             (r.User2Id == userId && r.IsUser1Following && r.IsUser2Following)))
+                .Where(filterCondition)
                 .OrderBy(r => r.User1Id == userId ? r.User2 : r.User1)
                 .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
                 .Take(request.PageParameters.PageSize)
@@ -43,7 +54,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
                         .ThenInclude(e => e.Images)
                 .ToListAsync(cancellationToken);
 
-            var mappedFriends = _mapper.Map<List<PublicSimpleAccountResponse>>(friends);
+            var mappedFriends = _mapper.Map<List<PublicBaseAccountResponse>>(friends);
 
             for (int i = 0; i < mappedFriends.Count; i++)
             {
@@ -60,7 +71,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
                         mappedFriends[i].Avatar = _mapper.Map<MyImageGroupResponse>(friend.Avatar.PresetAvatar);
                     }
                 }
-                mappedFriends[i].IsFollowed = true;
+                mappedFriends[i].IsFollowing = true;
             }
             return mappedFriends;
         }

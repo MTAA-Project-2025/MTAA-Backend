@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
+using System.Collections.Generic;
 
 namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 {
@@ -34,14 +35,10 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
             if (request.FilterStr != null && request.FilterStr != "")
             {
                 var vector = (await _embeddingsService.GetTextEmbeddings(request.FilterStr)).Select(x => (float)x).ToArray();
-                var postIds = (await _vectorDbRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, vector, (ulong)request.PageParameters.PageSize, null, (ulong)(request.PageParameters.PageNumber * request.PageParameters.PageSize), cancellationToken)).Select(e => e.Id).ToList();
+                var postIds = (await _vectorDbRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, vector, (ulong)request.PageParameters.PageSize, null, (ulong)(request.PageParameters.PageNumber * request.PageParameters.PageSize), cancellationToken)).Select(e => Guid.Parse(e.Id.Uuid)).ToList();
 
-                filterCondition = filterCondition.And(e => postIds.Contains(e.Id));
+                filterCondition = filterCondition.And(e => postIds.Any(id => id == e.Id));
             }
-
-            var likedPostIds = await _dbContext.PostLikes.Where(e => e.UserId == userId)
-                                                         .Select(e => e.Id)
-                                                         .ToListAsync(cancellationToken);
 
             var posts = await _dbContext.Posts.Where(filterCondition)
                                               .OrderByDescending(e => e.GlobalScore)
@@ -57,14 +54,20 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                                                           .ThenInclude(e => e.Images)
                                               .Include(e => e.Images)
                                                   .ThenInclude(e => e.Images)
+                                              .Select(e => new
+                                              {
+                                                  Post = e,
+                                                  IsLiked = e.Likes.Any(e => e.UserId == userId)
+                                              })
                                               .ToListAsync(cancellationToken);
 
-            var mappedPosts = _mapper.Map<List<FullPostResponse>>(posts);
-            for(int i = 0; i < mappedPosts.Count; i++)
+            var mappedPosts = new List<FullPostResponse>(posts.Count);
+            for (int i = 0; i < posts.Count; i++)
             {
-                var mappedPost = mappedPosts[i];
-                var post = posts[i];
-                mappedPost.IsLiked = likedPostIds.Contains(post.Id);
+                var post = posts[i].Post;
+                var mappedPost = _mapper.Map<FullPostResponse>(post);
+                mappedPost.IsLiked = posts[i].IsLiked;
+
 
                 if (post.Owner.Avatar != null)
                 {
@@ -77,6 +80,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                         mappedPost.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(post.Owner.Avatar.PresetAvatar);
                     }
                 }
+                mappedPosts.Add(mappedPost);
             }
 
             return mappedPosts;

@@ -19,6 +19,7 @@ using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
 using MTAA_Backend.Application.Services.RecommendationSystem;
 using Microsoft.Extensions.DependencyInjection;
 using Betalgo.Ranul.OpenAI.Extensions;
+using MTAA_Backend.Domain.Entities.Users;
 
 
 public class Program

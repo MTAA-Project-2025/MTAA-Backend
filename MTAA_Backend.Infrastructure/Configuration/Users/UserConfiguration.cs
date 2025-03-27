@@ -26,16 +26,6 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .HasForeignKey<User>(e => e.AvatarId)
                    .IsRequired(false);
 
-            builder.HasMany(e => e.Contacts)
-                   .WithOne(e => e.User)
-                   .HasForeignKey(e => e.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(e => e.ContactOf)
-                   .WithOne(e => e.Contact)
-                   .HasForeignKey(e => e.ContactId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasMany(e => e.UserGroupMemberships)
                    .WithOne(e => e.User)
                    .HasForeignKey(e => e.UserId)
