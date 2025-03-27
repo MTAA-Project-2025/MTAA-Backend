@@ -16,7 +16,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
         {
             builder.HasOne(e => e.Post)
                    .WithMany(e => e.Comments)
-                   .HasForeignKey(e => e.PostId);
+                   .HasForeignKey(e => e.PostId)
+                   .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(e => e.ChildComments)
                    .WithOne(e => e.ParentComment)
@@ -24,13 +25,16 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
 
             builder.HasOne(e => e.Owner)
                    .WithMany(e => e.CreatedComments)
-                   .HasForeignKey(e => e.OwnerId);
+                   .HasForeignKey(e => e.OwnerId)
+                   .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(e => e.CommentInteractions)
                    .WithOne(e => e.Comment)
                    .HasForeignKey(e => e.CommentId);
 
             builder.HasIndex(e => e.DataCreationTime);
+
+            builder.HasIndex(e => new { e.LikesCount, e.DislikesCount, e.DataCreationTime, e.IsDeleted });
         }
     }
 }

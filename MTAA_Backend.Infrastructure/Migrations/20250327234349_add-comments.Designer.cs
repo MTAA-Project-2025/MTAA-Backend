@@ -4,6 +4,7 @@ using MTAA_Backend.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MTAA_Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(MTAA_BackendDbContext))]
-    partial class MTAA_BackendDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250327234349_add-comments")]
+    partial class addcomments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1351,7 +1354,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "Owner")
                         .WithMany("CreatedComments")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MTAA_Backend.Domain.Entities.Posts.Comments.Comment", "ParentComment")
@@ -1376,7 +1379,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasOne("MTAA_Backend.Domain.Entities.Posts.Comments.Comment", "Comment")
                         .WithMany("CommentInteractions")
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User")

@@ -27,7 +27,6 @@ namespace IntegrationTests.Helpers
                 UserName = UserSettings.UserName,
                 Email = UserSettings.Email,
                 EmailConfirmed = true,
-                Status = "",
             };
             var result = await userManager.CreateAsync(testUser, UserSettings.Password);
 

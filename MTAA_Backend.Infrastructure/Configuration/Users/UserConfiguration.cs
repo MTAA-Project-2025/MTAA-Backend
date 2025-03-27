@@ -71,6 +71,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
 
             builder.HasMany(e => e.SharedRecommendationFeeds)
                    .WithMany(e => e.Users);
+
+            builder.HasIndex(e => new { e.DataCreationTime, e.IsDeleted, e.DisplayName, e.UserName });
         }
     }
 }
