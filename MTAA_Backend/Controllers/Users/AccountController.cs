@@ -28,32 +28,40 @@ namespace MTAA_Backend.Api.Controllers.Users
 
         #region get
         [HttpGet]
-        [Route("public-full-account/{userId}")]
-        [ProducesResponseType(typeof(PublicFullAccountResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PublicFullAccountResponse>> PublicGetFullAccount([FromRoute] string userId)
+        [Route("full-account")]
+        [Authorize(Roles = UserRoles.User)]
+        [ProducesResponseType(typeof(UserFullAccountResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<UserFullAccountResponse>> GetUserFullAccount()
         {
-            var query = new PublicGetFullAccount()
-            {
-                UserId = userId
-            };
+            var query = new GetUserFullAccount();
             var res = await _mediator.Send(query);
             return Ok(res);
         }
 
-        [HttpGet("followers")]
+        [HttpPost("get-followers")]
+        [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType(typeof(ICollection<PublicBaseAccountResponse>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetFollowers([FromQuery] PageParameters pageParameters)
+        public async Task<IActionResult> GetFollowers([FromBody] GlobalSearchRequest request)
         {
-            var query = new GetFollowers { PageParameters = pageParameters };
+            var query = new GetFollowers()
+            {
+                FilterStr = request.FilterStr,
+                PageParameters = request.PageParameters
+            };
             var result = await _mediator.Send(query);
             return Ok(result);
         }
 
-        [HttpGet("friends")]
+        [HttpPost("get-friends")]
+        [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType(typeof(ICollection<PublicBaseAccountResponse>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetFriends([FromQuery] PageParameters pageParameters)
+        public async Task<IActionResult> GetFriends([FromBody] GlobalSearchRequest request)
         {
-            var query = new GetFriends { PageParameters = pageParameters };
+            var query = new GetFriends()
+            {
+                FilterStr = request.FilterStr,
+                PageParameters = request.PageParameters
+            };
             var result = await _mediator.Send(query);
             return Ok(result);
         }
@@ -65,17 +73,6 @@ namespace MTAA_Backend.Api.Controllers.Users
         {
             var result = await _mediator.Send(new GetAllVersionItems());
             return Ok(result);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = UserRoles.User)]
-        [Route("get-global")]
-        [ProducesResponseType(typeof(ICollection<PublicBaseAccountResponse>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ICollection<PublicBaseAccountResponse>>> GetGlobalUsers([FromBody] GlobalSearchRequest request)
-        {
-            var command = _mapper.Map<GetGlobalUsers>(request);
-            var res = await _mediator.Send(command);
-            return Ok(res);
         }
         #endregion
 
@@ -132,24 +129,6 @@ namespace MTAA_Backend.Api.Controllers.Users
         {
             var command = _mapper.Map<UpdateAccountUsername>(request);
             await _mediator.Send(command);
-            return Ok();
-        }
-        #endregion
-
-        #region interact
-        [HttpPost("follow")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Follow([FromBody] Follow request)
-        {
-            await _mediator.Send(request);
-            return Ok();
-        }
-
-        [HttpPost("unfollow")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Unfollow([FromBody] Unfollow request)
-        {
-            await _mediator.Send(request);
             return Ok();
         }
         #endregion
