@@ -48,7 +48,10 @@ namespace MTAA_Backend.Api.Controllers.Posts
             {
                 await _mediator.Send(new AddPostLocation()
                 {
-                    PostId = res
+                    PostId = res,
+                    Latitude=request.Location.Latitude,
+                    EventTime=request.Location.EventTime,
+                    Longitude=request.Location.Longitude
                 });
             }
             return Ok(res);
@@ -91,7 +94,7 @@ namespace MTAA_Backend.Api.Controllers.Posts
         [Authorize(Roles = UserRoles.User)]
         [Route("get-global")]
         [ProducesResponseType(typeof(ICollection<FullPostResponse>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ICollection<FullPostResponse>>> GetGlobalPosts([FromBody] GetGlobalPostsRequest request)
+        public async Task<ActionResult<ICollection<FullPostResponse>>> GetGlobalPosts([FromBody] GlobalSearchRequest request)
         {
             var command = _mapper.Map<GetGlobalPosts>(request);
             var res = await _mediator.Send(command);
@@ -137,6 +140,35 @@ namespace MTAA_Backend.Api.Controllers.Posts
             {
                 Id = id
             });
+            return Ok();
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("add-like/{postId}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<ActionResult> AddLike([FromRoute] Guid postId)
+        {
+            await _mediator.Send(new AddPostLike()
+            {
+                Id = postId
+            });
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("remove-like/{postId}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<ActionResult> RemoveLike([FromRoute] Guid postId)
+        {
+            await _mediator.Send(new RemovePostLike()
+            {
+                Id = postId
+            });
+
             return Ok();
         }
     }

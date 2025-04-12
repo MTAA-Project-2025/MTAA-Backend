@@ -2,12 +2,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MTAA_Backend.Application.CQRS.Posts.Queries;
 using MTAA_Backend.Application.CQRS.Users.Account.Commands;
 using MTAA_Backend.Application.CQRS.Users.Account.Queries;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Commands;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Queries;
 using MTAA_Backend.Application.CQRS.Versions.Queries;
 using MTAA_Backend.Domain.DTOs.Images.Response;
+using MTAA_Backend.Domain.DTOs.Posts.Responses;
 using MTAA_Backend.Domain.DTOs.Shared.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
@@ -26,37 +28,46 @@ namespace MTAA_Backend.Api.Controllers.Users
 
         #region get
         [HttpGet]
-        [Route("public-full-account/{userId}")]
-        [ProducesResponseType(typeof(PublicFullAccountResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PublicFullAccountResponse>> PublicGetFullAccount([FromRoute] string userId)
+        [Route("full-account")]
+        [Authorize(Roles = UserRoles.User)]
+        [ProducesResponseType(typeof(UserFullAccountResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<UserFullAccountResponse>> GetUserFullAccount()
         {
-            var query = new PublicGetFullAccount()
-            {
-                UserId = userId
-            };
+            var query = new GetUserFullAccount();
             var res = await _mediator.Send(query);
             return Ok(res);
         }
 
-        [HttpGet("followers")]
-        [ProducesResponseType(typeof(ICollection<PublicSimpleAccountResponse>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetFollowers([FromQuery] PageParameters pageParameters)
+        [HttpPost("get-followers")]
+        [Authorize(Roles = UserRoles.User)]
+        [ProducesResponseType(typeof(ICollection<PublicBaseAccountResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetFollowers([FromBody] GlobalSearchRequest request)
         {
-            var query = new GetFollowers { PageParameters = pageParameters };
+            var query = new GetFollowers()
+            {
+                FilterStr = request.FilterStr,
+                PageParameters = request.PageParameters
+            };
             var result = await _mediator.Send(query);
             return Ok(result);
         }
 
-        [HttpGet("friends")]
-        [ProducesResponseType(typeof(ICollection<PublicSimpleAccountResponse>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetFriends([FromQuery] PageParameters pageParameters)
+        [HttpPost("get-friends")]
+        [Authorize(Roles = UserRoles.User)]
+        [ProducesResponseType(typeof(ICollection<PublicBaseAccountResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetFriends([FromBody] GlobalSearchRequest request)
         {
-            var query = new GetFriends { PageParameters = pageParameters };
+            var query = new GetFriends()
+            {
+                FilterStr = request.FilterStr,
+                PageParameters = request.PageParameters
+            };
             var result = await _mediator.Send(query);
             return Ok(result);
         }
 
         [HttpGet("all-versions")]
+        [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType(typeof(ICollection<VersionItemResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllVersions()
         {
@@ -118,24 +129,6 @@ namespace MTAA_Backend.Api.Controllers.Users
         {
             var command = _mapper.Map<UpdateAccountUsername>(request);
             await _mediator.Send(command);
-            return Ok();
-        }
-        #endregion
-
-        #region interact
-        [HttpPost("follow")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Follow([FromBody] Follow request)
-        {
-            await _mediator.Send(request);
-            return Ok();
-        }
-
-        [HttpPost("unfollow")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Unfollow([FromBody] Unfollow request)
-        {
-            await _mediator.Send(request);
             return Ok();
         }
         #endregion

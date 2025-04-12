@@ -126,6 +126,9 @@
   <data name="ChatAlreadyExist" xml:space="preserve">
     <value>Chat už existuje</value>
   </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Komentár sa nenašiel</value>
+  </data>
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>Tento e-mail už existuje.</value>
   </data>
@@ -143,6 +146,12 @@
   </data>
   <data name="ImageFormatNotAllowed" xml:space="preserve">
     <value>Formát obrázka nie je povolený</value>
+  </data>
+  <data name="InaccessibleFollowing" xml:space="preserve">
+    <value>Neprístupné sledovanie</value>
+  </data>
+  <data name="LocationPropertiesNotCorrect" xml:space="preserve">
+    <value>Vlastnosti lokality nie sú povolené</value>
   </data>
   <data name="PostNotFound" xml:space="preserve">
     <value>Publikácia sa nenašla</value>
@@ -176,6 +185,9 @@
   </data>
   <data name="UserNotAuthorized" xml:space="preserve">
     <value>Používateľ nie je autorizovaný</value>
+  </data>
+  <data name="UserNotFollowed" xml:space="preserve">
+    <value>Používateľ nie je sledovaný</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>Používateľ sa nenašiel</value>

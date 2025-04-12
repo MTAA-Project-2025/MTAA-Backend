@@ -16,6 +16,12 @@ namespace MTAA_Backend.Infrastructure.Configuration.Locations
             builder.HasOne(e => e.Post)
                 .WithOne(e => e.Location)
                 .HasForeignKey<Location>(e => e.PostId);
+
+            builder.HasMany(e => e.Points)
+                   .WithOne(e => e.Location)
+                   .HasForeignKey(e => e.LocationId);
+
+            builder.HasIndex(e => e.EventTime);
         }
     }
 }

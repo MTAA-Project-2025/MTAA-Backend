@@ -126,6 +126,9 @@
   <data name="ChatAlreadyExist" xml:space="preserve">
     <value>Chat already exist</value>
   </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>Comment not found</value>
+  </data>
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>This email already exists</value>
   </data>
@@ -143,6 +146,12 @@
   </data>
   <data name="ImageFormatNotAllowed" xml:space="preserve">
     <value>Image format not allowed</value>
+  </data>
+  <data name="InaccessibleFollowing" xml:space="preserve">
+    <value>Inaccessible following</value>
+  </data>
+  <data name="LocationPropertiesNotCorrect" xml:space="preserve">
+    <value>Location properties are not allowed</value>
   </data>
   <data name="PostNotFound" xml:space="preserve">
     <value>Post not found</value>
@@ -176,6 +185,9 @@
   </data>
   <data name="UserNotAuthorized" xml:space="preserve">
     <value>User not authorized</value>
+  </data>
+  <data name="UserNotFollowed" xml:space="preserve">
+    <value>User is not followed</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>User not found</value>

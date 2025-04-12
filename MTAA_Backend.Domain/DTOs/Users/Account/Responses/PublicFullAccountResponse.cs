@@ -10,22 +10,11 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Domain.DTOs.Users.Account.Responses
 {
-    public class PublicFullAccountResponse
+    public class PublicFullAccountResponse : PublicBaseAccountResponse
     {
-        public string Id { get; set; }
-        public string Username { get; set; }
-        public string DisplayName { get; set; }
-        public DateTime BirthDate { get; set; }
-
-        public string Status { get; set; }
-
-        public DateTime LastSeen { get; set; }
-
         public DateTime DataCreationTime { get; set; }
 
-        public bool IsContact { get; set; }
-        public bool IsBlocked { get; set; }
-
-        public MyImageGroupResponse? Avatar { get; set; }
+        public int FriendsCount { get; set; }
+        public int FollowersCount { get; set; }
     }
 }

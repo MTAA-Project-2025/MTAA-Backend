@@ -18,7 +18,7 @@ namespace MTAA_Backend.Domain.DTOs.Posts.Responses
         public string Description { get; set; }
         public ICollection<MyImageGroupResponse> Images { get; set; }
 
-        public PublicSimpleAccountResponse Owner { get; set; }
+        public PublicBaseAccountResponse Owner { get; set; }
 
         public int LikesCount { get; set; }
         public int CommentsCount { get; set; }

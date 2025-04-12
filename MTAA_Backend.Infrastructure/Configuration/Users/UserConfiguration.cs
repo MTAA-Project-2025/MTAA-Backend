@@ -26,16 +26,6 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                    .HasForeignKey<User>(e => e.AvatarId)
                    .IsRequired(false);
 
-            builder.HasMany(e => e.Contacts)
-                   .WithOne(e => e.User)
-                   .HasForeignKey(e => e.UserId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(e => e.ContactOf)
-                   .WithOne(e => e.Contact)
-                   .HasForeignKey(e => e.ContactId)
-                   .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasMany(e => e.UserGroupMemberships)
                    .WithOne(e => e.User)
                    .HasForeignKey(e => e.UserId)
@@ -81,6 +71,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
 
             builder.HasMany(e => e.SharedRecommendationFeeds)
                    .WithMany(e => e.Users);
+
+            builder.HasIndex(e => new { e.DataCreationTime, e.IsDeleted, e.DisplayName, e.UserName });
         }
     }
 }

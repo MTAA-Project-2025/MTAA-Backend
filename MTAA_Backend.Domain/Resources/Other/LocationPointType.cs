@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTAA_Backend.Domain.DTOs.Locations.Requests
+namespace MTAA_Backend.Domain.Resources.Other
 {
-    public class UpdateLocationRequest
+    public enum LocationPointType
     {
+        Point,
+        Cluster
     }
 }

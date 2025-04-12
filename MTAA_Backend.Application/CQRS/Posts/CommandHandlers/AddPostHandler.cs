@@ -34,11 +34,13 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
             post.OwnerId = userId;
 
             bool isSameAspectRatio = _imageService.IsImagesHaveSameAspectRatio(request.Images.Select(e => e.Image).ToList());
-            if (!isSameAspectRatio)
+            var aspectRatio = _imageService.GetImageAspectRatio(request.Images.First().Image);
+            if (!isSameAspectRatio || aspectRatio < 0.5 || aspectRatio > 2)
             {
                 _logger.LogError("Image aspect ratio is not allowed");
                 throw new HttpException(_localizer[ErrorMessagesPatterns.ImageFormatNotAllowed], HttpStatusCode.BadRequest);
             }
+            
 
             var imageGroups = await _imageService.SaveImages(request.Images, ImageSavingTypes.PostImage);
 

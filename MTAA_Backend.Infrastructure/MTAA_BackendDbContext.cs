@@ -11,6 +11,7 @@ using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Entities.Locations;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
 using MTAA_Backend.Domain.Entities.Versions;
+using NetTopologySuite;
 
 namespace MTAA_Backend.Infrastructure
 {
@@ -49,10 +50,9 @@ namespace MTAA_Backend.Infrastructure
 
 
         public DbSet<Location> Locations { get; set; }
-
+        public DbSet<LocationPoint> LocationPoints { get; set; }
 
         public DbSet<MyFile> MyFiles { get; set; }
-        public DbSet<UserContact> UserContacts { get; set; }
         public DbSet<UserAvatar> UserAvatars { get; set; }
 
         public DbSet<MyImageGroup> ImageGroups { get; set; }
@@ -69,6 +69,9 @@ namespace MTAA_Backend.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            modelBuilder.HasPostgresExtension("postgis");
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(MyImageConfiguration).Assembly);
         }
     }

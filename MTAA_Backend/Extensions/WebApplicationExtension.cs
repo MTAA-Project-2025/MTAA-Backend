@@ -1,17 +1,23 @@
 ﻿using Hangfire;
+using Hangfire.PostgreSql;
+using Hangfire.SqlServer;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MTAA_Backend.Application.CQRS.Users.Identity.Events;
 using MTAA_Backend.Domain.Entities.Users;
+using MTAA_Backend.Domain.Interfaces.Locations;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem.RecommendationFeedService;
 using MTAA_Backend.Domain.Resources.Customers;
 using MTAA_Backend.Domain.Resources.Localization;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
 namespace MTAA_Backend.Api.Extensions
@@ -41,6 +47,12 @@ namespace MTAA_Backend.Api.Extensions
             var client = scope.ServiceProvider.GetRequiredService<QdrantClient>();
 
             var existedCollections = await client.ListCollectionsAsync();
+
+/*            foreach(var name in existedCollections)
+            {
+                await client.DeleteCollectionAsync(name);
+            }
+            existedCollections = await client.ListCollectionsAsync();*/
 
             if (!existedCollections.Contains(VectorCollections.PostTextEmbeddings))
             {
@@ -113,15 +125,24 @@ namespace MTAA_Backend.Api.Extensions
             using var scope = app.Services.CreateScope();
             var globalPopularityService = scope.ServiceProvider.GetRequiredService<IPostsFromGlobalPopularityRecommendationFeedService>();
             var preferencesPopularityService = scope.ServiceProvider.GetRequiredService<IPostsFromPreferencesRecommendationFeedService>();
+            var locationsService = scope.ServiceProvider.GetRequiredService<ILocationService>();
 
-            RecurringJob.AddOrUpdate(
+            var recurringJobs = app.Services.GetService<IRecurringJobManager>();
+            recurringJobs.AddOrUpdate(
                 "update-global-posts-Recommendation",
                 () => globalPopularityService.RecomendPostsBackgroundJob(CancellationToken.None),
                 Cron.Hourly()
             );
 
-            RecurringJob.AddOrUpdate(
+            recurringJobs.AddOrUpdate(
                 "update-posts-from-preferences-Recommendation",
+            () => preferencesPopularityService.RecomendPostsBackgroundJob(CancellationToken.None),
+                Cron.Hourly()
+            );
+
+
+            recurringJobs.AddOrUpdate(
+                "correct-locations",
             () => preferencesPopularityService.RecomendPostsBackgroundJob(CancellationToken.None),
                 Cron.Hourly()
             );
@@ -147,7 +168,6 @@ namespace MTAA_Backend.Api.Extensions
                 Email = email,
                 DisplayName = username,
                 EmailConfirmed = true,
-                Status = "",
             };
 
             var result = await _userManager.CreateAsync(newUser, password);

@@ -18,11 +18,13 @@ namespace MTAA_Backend.Application.Validators.Posts
 
             this.RuleForEach(e => e.Images)
                 .NotNull()
-                .ChildRules(p => p.RuleFor(e => e.NewImage.Length)
-                    .GreaterThan(0)
-                    .WithMessage("The image should be not empty")
-                    .LessThanOrEqualTo(10 * 1024 * 1024)
-                    .WithMessage("The image should not be bigger than 10 MB"));
+                .ChildRules(p => p.RuleFor(e => e.NewImage)
+                    .ChildRules(img => img.RuleFor(i => i.Length)
+                        .GreaterThan(0)
+                        .WithMessage("The image should be not empty")
+                        .LessThanOrEqualTo(10 * 1024 * 1024)
+                        .WithMessage("The image should not be bigger than 10 MB"))
+                    .When(e => e.NewImage != null));
         }
     }
 }

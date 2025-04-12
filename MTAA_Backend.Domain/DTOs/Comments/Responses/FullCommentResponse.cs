@@ -14,7 +14,7 @@ namespace MTAA_Backend.Domain.DTOs.Comments.Responses
 
         public string Text { get; set; }
 
-        public PublicSimpleAccountResponse Owner { get; set; }
+        public PublicBaseAccountResponse Owner { get; set; }
 
         public int LikesCount { get; set; }
         public int DislikesCount { get; set; }

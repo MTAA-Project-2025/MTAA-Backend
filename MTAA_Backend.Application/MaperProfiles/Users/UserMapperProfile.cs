@@ -1,6 +1,9 @@
-﻿using MTAA_Backend.Application.CQRS.Users.Account.Commands;
+﻿using MTAA_Backend.Application.CQRS.Posts.Queries;
+using MTAA_Backend.Application.CQRS.Users.Account.Commands;
+using MTAA_Backend.Application.CQRS.Users.Account.Queries;
 using MTAA_Backend.Application.CQRS.Users.Identity.Commands;
 using MTAA_Backend.Application.CQRS.Users.Identity.Queries;
+using MTAA_Backend.Domain.DTOs.Shared.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
@@ -29,18 +32,34 @@ namespace MTAA_Backend.Application.MaperProfiles.Users
             CreateMap<UpdateAccountUsernameRequest, UpdateAccountUsername>();
 
             CreateMap<User, PublicFullAccountResponse>()
-                .ForMember(dest => dest.IsBlocked,
-                           opt => opt.Ignore())
                 .ForMember(dest => dest.Avatar,
                            opt => opt.Ignore())
-                .ForMember(dest => dest.IsContact,
+                .ForMember(dest => dest.IsFollowing,
+                           opt => opt.Ignore())
+                .ForMember(dest => dest.FriendsCount,
+                           opt => opt.Ignore())
+                .ForMember(dest => dest.FollowersCount,
                            opt => opt.Ignore());
 
-            CreateMap<User, PublicSimpleAccountResponse>()
+            CreateMap<User, UserFullAccountResponse>()
                 .ForMember(dest => dest.Avatar,
                            opt => opt.Ignore())
-                .ForMember(dest => dest.IsFollowed,
+                .ForMember(dest => dest.IsFollowing,
+                           opt => opt.Ignore())
+                .ForMember(dest => dest.FriendsCount,
+                           opt => opt.Ignore())
+                .ForMember(dest => dest.FollowersCount,
+                           opt => opt.Ignore())
+                .ForMember(dest => dest.LikesCount,
                            opt => opt.Ignore());
+
+            CreateMap<User, PublicBaseAccountResponse>()
+                .ForMember(dest => dest.Avatar,
+                           opt => opt.Ignore())
+                .ForMember(dest => dest.IsFollowing,
+                           opt => opt.Ignore());
+
+            CreateMap<GlobalSearchRequest, GetGlobalUsers>();
         }
     }
 }

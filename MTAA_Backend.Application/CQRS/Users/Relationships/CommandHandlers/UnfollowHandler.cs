@@ -10,8 +10,7 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
 {
-    public class UnfollowHandler(ILogger<UnfollowHandler> _logger,
-        IStringLocalizer<ErrorMessages> _localizer,
+    public class UnfollowHandler(IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IUserService _userService) : IRequestHandler<Unfollow>
     {

@@ -13,5 +13,9 @@ namespace MTAA_Backend.Domain.Entities.Locations
 
         public Post? Post { get; set; }
         public Guid? PostId { get; set; }
+
+        public DateTime EventTime { get; set; }
+
+        public ICollection<LocationPoint> Points { get; set; } = new HashSet<LocationPoint>();
     }
 }

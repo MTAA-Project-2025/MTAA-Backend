@@ -37,6 +37,16 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.QueryHandlers
                                              .Include(e => e.Avatar)
                                                  .ThenInclude(e => e.PresetAvatar)
                                                     .ThenInclude(e => e.Images)
+                                             .Select(user => new
+                                             {
+                                                 User = user,
+                                                 IsFollowing = user.UserRelationships1.Any(e => e.User2Id == customerId && e.IsUser1Following) ||
+                                                               user.UserRelationships2.Any(e => e.User1Id == customerId && e.IsUser2Following),
+                                                 FriendsCount = user.UserRelationships1.Count(e => e.IsUser1Following && e.IsUser2Following) +
+                                                                user.UserRelationships2.Count(e => e.IsUser1Following && e.IsUser2Following),
+                                                 FollowersCount = user.UserRelationships1.Count(e=>!e.IsUser1Following && e.IsUser2Following) +
+                                                                  user.UserRelationships2.Count(e => !e.IsUser2Following && e.IsUser1Following)
+                                             })
                                              .FirstOrDefaultAsync(cancellationToken);
 
             if (user == null)
@@ -45,22 +55,20 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.QueryHandlers
                 throw new HttpException(_localizer[ErrorMessagesPatterns.UserNotFound], HttpStatusCode.NotFound);
             }
 
-            var response = _mapper.Map<PublicFullAccountResponse>(user);
+            var response = _mapper.Map<PublicFullAccountResponse>(user.User);
+            response.IsFollowing = user.IsFollowing;
+            response.FriendsCount = user.FriendsCount;
+            response.FollowersCount = user.FollowersCount;
 
-            if (customerId != null)
+            if (user.User.Avatar != null)
             {
-                response.IsContact = await _dbContext.UserContacts.AnyAsync(e => e.UserId == customerId && e.ContactId == request.UserId, cancellationToken);
-            }
-
-            if (user.Avatar != null)
-            {
-                if (user.Avatar.CustomAvatar != null)
+                if (user.User.Avatar.CustomAvatar != null)
                 {
-                    response.Avatar = _mapper.Map<MyImageGroupResponse>(user.Avatar.CustomAvatar);
+                    response.Avatar = _mapper.Map<MyImageGroupResponse>(user.User.Avatar.CustomAvatar);
                 }
-                else if (user.Avatar.PresetAvatar != null)
+                else if (user.User.Avatar.PresetAvatar != null)
                 {
-                    response.Avatar = _mapper.Map<MyImageGroupResponse>(user.Avatar.PresetAvatar);
+                    response.Avatar = _mapper.Map<MyImageGroupResponse>(user.User.Avatar.PresetAvatar);
                 }
             }
 

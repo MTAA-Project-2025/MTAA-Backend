@@ -36,25 +36,47 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
 
             var images = request.Images.Where(e => e.NewImage != null).Select(e => e.NewImage).ToList();
 
-            bool isSameAspectRatio = true;
-            double standardAspectRatio = post.Images.First().Images.Where(e => e.Type == ImageSizeType.Middle).First().AspectRatio;
-
-            foreach(var image in images)
+            if (images.Count > 0)
             {
-                double aspectRatio = _imageService.GetImageAspectRatio(image);
-                if (Math.Abs(standardAspectRatio - aspectRatio) >= 0.001)
+                bool isSameAspectRatio = _imageService.IsImagesHaveSameAspectRatio(images);
+                double newAspectRatio = _imageService.GetImageAspectRatio(images.FirstOrDefault());
+
+                if (isSameAspectRatio)
                 {
-                    isSameAspectRatio = false;
-                    break;
+                    var oldImageIds = request.Images.Where(e => e.NewImage == null && e.OldImageId != null).Select(e => e.OldImageId).ToList();
+
+                    var oldImages = post.Images.Select(e => e.Images.Where(e => e.Type == ImageSizeType.Middle).FirstOrDefault()).Where(e => oldImageIds.Contains(e.Id)).ToList();
+
+                    if (oldImages.Count > 0)
+                    {
+                        double standardAspectRatio = oldImages.FirstOrDefault().AspectRatio;
+
+                        foreach (var image in images)
+                        {
+                            double aspectRatio = _imageService.GetImageAspectRatio(image);
+                            if (Math.Abs(standardAspectRatio - aspectRatio) >= 0.01)
+                            {
+                                isSameAspectRatio = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+
+                if (!isSameAspectRatio || newAspectRatio < 0.5 || newAspectRatio > 2)
+                {
+                    _logger.LogError("Image aspect ratio is not allowed");
+                    throw new HttpException(_localizer[ErrorMessagesPatterns.ImageFormatNotAllowed], HttpStatusCode.BadRequest);
                 }
             }
 
-            if (!isSameAspectRatio)
-            {
-                _logger.LogError("Image aspect ratio is not allowed");
-                throw new HttpException(_localizer[ErrorMessagesPatterns.ImageFormatNotAllowed], HttpStatusCode.BadRequest);
-            }
-            var newImages = request.Images.Where(e => e.NewImage != null);
+
+
+
+
+
+            var newImages = request.Images.Where(e => e.NewImage != null).ToList();
             var addRequests = new List<AddImageRequest>(newImages.Count());
             foreach (var newImage in newImages)
             {
@@ -83,7 +105,8 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
 
                 _dbContext.ImageGroups.Add(imageGroup);
             }
-            _dbContext.Posts.Add(post);
+
+            post.Description = request.Description;
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             await _mediator.Publish(new UpdatePostEvent()

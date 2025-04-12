@@ -60,8 +60,8 @@ namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
             {
                 Email = request.Email,
                 UserName = request.UserName,
+                DisplayName = request.UserName,
                 EmailConfirmed = true,
-                Status = ""
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);

@@ -32,6 +32,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                                               {
                                                   id = e.Id,
                                                   image = e.Images.First().Images.Where(e => e.Type == ImageSizeType.Small).FirstOrDefault(),
+                                                  DataCreationTime = e.DataCreationTime
                                               })
                                               .ToListAsync(cancellationToken);
 
@@ -42,7 +43,8 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                 mappedPosts.Add(new SimplePostResponse()
                 {
                     Id = post.id,
-                    SmallFirstImage = _mapper.Map<MyImageResponse>(post.image)
+                    SmallFirstImage = _mapper.Map<MyImageResponse>(post.image),
+                    DataCreationTime = post.DataCreationTime
                 });
             }
 

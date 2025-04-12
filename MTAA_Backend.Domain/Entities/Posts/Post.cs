@@ -31,7 +31,6 @@ namespace MTAA_Backend.Domain.Entities.Posts
 
 
         public Location? Location { get; set; }
-        public Guid? LocationId { get; set; }
 
         public double GlobalScore { get; set; }
 
