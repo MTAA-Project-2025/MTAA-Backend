@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Domain.DTOs.Locations.Requests
 {
-    public class AddLocationRequest
+    public class GetLocationPointsRequest
     {
-        public double Latitude { get; set; }
         public double Longitude { get; set; }
-
-        public DateTime EventTime { get; set; }
+        public double Latitude { get; set; }
+        public int ZoomLevel { get; set; }
+        public double Radius { get; set; }
     }
 }

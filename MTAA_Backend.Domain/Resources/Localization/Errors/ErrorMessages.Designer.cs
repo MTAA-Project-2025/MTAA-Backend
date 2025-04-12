@@ -88,6 +88,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment not found.
+        /// </summary>
+        public static string CommentNotFound {
+            get {
+                return ResourceManager.GetString("CommentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This email already exists.
         /// </summary>
         public static string EmailAlreadyExists {
@@ -138,6 +147,24 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string ImageFormatNotAllowed {
             get {
                 return ResourceManager.GetString("ImageFormatNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inaccessible following.
+        /// </summary>
+        public static string InaccessibleFollowing {
+            get {
+                return ResourceManager.GetString("InaccessibleFollowing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location properties are not allowed.
+        /// </summary>
+        public static string LocationPropertiesNotCorrect {
+            get {
+                return ResourceManager.GetString("LocationPropertiesNotCorrect", resourceCulture);
             }
         }
         
@@ -237,6 +264,15 @@ namespace MTAA_Backend.Domain.Resources.Localization.Errors {
         public static string UserNotAuthorized {
             get {
                 return ResourceManager.GetString("UserNotAuthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User is not followed.
+        /// </summary>
+        public static string UserNotFollowed {
+            get {
+                return ResourceManager.GetString("UserNotFollowed", resourceCulture);
             }
         }
         

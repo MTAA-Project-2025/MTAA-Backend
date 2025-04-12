@@ -31,7 +31,7 @@ namespace MTAA_Backend.MigrationService
                 var dbContext = scope.ServiceProvider.GetRequiredService<MTAA_BackendDbContext>();
 
                 await EnsureDatabaseAsync(dbContext, cancellationToken);
-                await RunMigrationAsync(dbContext, cancellationToken);
+                //await RunMigrationAsync(dbContext, cancellationToken);
             }
             catch (Exception ex)
             {

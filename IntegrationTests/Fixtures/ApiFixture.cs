@@ -23,8 +23,8 @@ namespace IntegrationTests.Fixtures
     public class ApiFixture : WebApplicationFactory<Program>, IAsyncLifetime
     {
         private readonly DistributedApplication _app;
-        private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.SqlServerServerResource> _sqlServer;
-        private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.SqlServerDatabaseResource> _db;
+        private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.PostgresServerResource> _dbServer;
+        private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.PostgresDatabaseResource> _db;
         private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.RedisResource> _redis;
         private readonly IResourceBuilder<Aspire.Hosting.ApplicationModel.QdrantServerResource> _qdrant;
         private string? _sqlServerConnectionString;
@@ -45,11 +45,11 @@ namespace IntegrationTests.Fixtures
             };
             var builder = DistributedApplication.CreateBuilder(options);
 
-            _sqlServer = builder.AddSqlServer("mtaaDb");
+            _dbServer = builder.AddPostgres("mtaaDb");
 
             builder.AddProject<MTAA_Backend_MigrationService>("migrations")
-                .WithReference(_sqlServer)
-                .WaitFor(_sqlServer);
+                .WithReference(_dbServer)
+                .WaitFor(_dbServer);
 
             _redis = builder.AddRedis("cache");
 
@@ -102,7 +102,7 @@ namespace IntegrationTests.Fixtures
         {
             await _app.StartAsync();
             await _app.WaitForResourcesAsync();
-            _sqlServerConnectionString = await _sqlServer.Resource.GetConnectionStringAsync();
+            _sqlServerConnectionString = await _dbServer.Resource.GetConnectionStringAsync();
 
             _redisConnectionString = await _redis.Resource.GetConnectionStringAsync();
             _qdrantConnectionString = await _qdrant.Resource.ConnectionStringExpression.GetValueAsync(CancellationToken.None);

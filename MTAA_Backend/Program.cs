@@ -20,6 +20,13 @@ using MTAA_Backend.Application.Services.RecommendationSystem;
 using Microsoft.Extensions.DependencyInjection;
 using Betalgo.Ranul.OpenAI.Extensions;
 using MTAA_Backend.Domain.Entities.Users;
+using Hangfire.PostgreSql;
+using MTAA_Backend.Domain.Interfaces.Locations;
+using MTAA_Backend.Application.Services.Locations;
+using MTAA_Backend.MigrationService;
+using Microsoft.Extensions.Options;
+using System.Reflection.PortableExecutable;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 
 public class Program
@@ -33,8 +40,16 @@ public class Program
         ConfigurationManager configuration = builder.Configuration;
 
 
-        builder.AddSqlServerClient(connectionName: "mtaaDb");
-        builder.AddSqlServerDbContext<MTAA_BackendDbContext>(connectionName: "mtaaDb");
+        builder.AddNpgsqlDataSource(connectionName: "mtaaDb");
+        builder.AddNpgsqlDbContext<MTAA_BackendDbContext>(connectionName: "mtaaDb", configureDbContextOptions: configure =>
+        {
+            configure.UseNpgsql(opt =>
+            {
+                opt.UseNetTopologySuite();
+                opt.EnableRetryOnFailure();
+            });
+
+        });
         builder.AddQdrantClient("qdrant");
         
         builder.Services.AddOpenAIService();
@@ -48,19 +63,13 @@ public class Program
 
         builder.AddRedisDistributedCache("cache");
 
+        //builder.Services.AddHostedService<Worker>();
+
         builder.Services.AddHangfire(configuration => configuration
                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                .UseSimpleAssemblyNameTypeSerializer()
                .UseRecommendedSerializerSettings()
-               .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
-               {
-                   CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                   SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                   QueuePollInterval = TimeSpan.Zero,
-                   UseRecommendedIsolationLevel = true,
-                   DisableGlobalLocks = true,
-               }));
-        JobStorage.Current = new SqlServerStorage(connectionString);
+               .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
 
         builder.Services.AddHangfireServer();
 
@@ -103,6 +112,9 @@ public class Program
         builder.Services.AddScoped<IRecommendationItemsService, RecommendationItemsService>();
         builder.Services.AddScoped<IVersionItemService, VersionItemService>();
 
+        builder.Services.AddScoped<INormalizeLocationService, NormalizeLocationService>();
+        builder.Services.AddScoped<ILocationService, LocationService>();
+
         builder.Services.AddSingleton<IMLNetService, MLNetService>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -115,6 +127,11 @@ public class Program
 
         var app = builder.Build();
 
+        Task.Delay(10000);
+        using var scope = app.Services.CreateScope();
+        var dbcontext = scope.ServiceProvider.GetRequiredService<MTAA_BackendDbContext>();
+        //dbcontext.Database.EnsureDeletedAsync().Wait();
+        dbcontext.Database.MigrateAsync().Wait();
 
 
         app.MapDefaultEndpoints();
@@ -123,6 +140,8 @@ public class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            app.UseHangfireDashboard();
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.MapOpenApi();

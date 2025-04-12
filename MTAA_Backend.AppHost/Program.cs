@@ -2,7 +2,9 @@ using Aspire.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var sql = builder.AddSqlServer("sqlserver")
+var sql = builder.AddPostgres("postgres")
+                 .WithImage("postgis/postgis")
+                 .WithPgAdmin()
                  .WithLifetime(ContainerLifetime.Persistent);
 
 var db = sql.AddDatabase("mtaaDb");
@@ -13,9 +15,9 @@ var cache = builder.AddRedis("cache")
 var qdrant = builder.AddQdrant("qdrant")
                     .WithLifetime(ContainerLifetime.Persistent);
 
-var migrations = builder.AddProject<Projects.MTAA_Backend_MigrationService>("migrations")
-       .WithReference(db)
-       .WaitFor(db);
+//var migrations = builder.AddProject<Projects.MTAA_Backend_MigrationService>("migrations")
+//       .WithReference(db)
+//       .WaitFor(db);
 
 builder.AddProject<Projects.MTAA_Backend_Api>("mtaa-backend")
        .WithReference(cache)
@@ -23,8 +25,7 @@ builder.AddProject<Projects.MTAA_Backend_Api>("mtaa-backend")
        .WithReference(db)
        .WaitFor(db)
        .WithReference(qdrant)
-       .WaitFor(qdrant)
-       .WaitForCompletion(migrations);
+       .WaitFor(qdrant);
 
 
 

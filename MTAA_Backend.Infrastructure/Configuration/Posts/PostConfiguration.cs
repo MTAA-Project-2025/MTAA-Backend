@@ -27,12 +27,6 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts
                    .WithMany(e => e.CreatedPosts)
                    .HasForeignKey(e => e.OwnerId);
 
-            builder.HasOne(e => e.Location)
-                   .WithOne(e => e.Post)
-                   .HasForeignKey<Post>(e => e.LocationId)
-                   .IsRequired(false)
-                   .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasMany(e => e.Comments)
                    .WithOne(e => e.Post)
                    .HasForeignKey(e => e.PostId)

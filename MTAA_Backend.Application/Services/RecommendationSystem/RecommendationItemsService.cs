@@ -65,12 +65,14 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
                 }
                 if (flag) continue;
 
-                feed.RecommendationItems.Add(new RecommendationItem
+                var newItem = new RecommendationItem
                 {
                     FeedId = feed.Id,
                     PostId = request.PostId,
                     LocalScore = request.LocalScore
-                });
+                };
+                _dbContext.RecommendationItems.Add(newItem);
+                feed.RecommendationItems.Add(newItem);
             }
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

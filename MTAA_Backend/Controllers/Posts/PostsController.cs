@@ -48,7 +48,10 @@ namespace MTAA_Backend.Api.Controllers.Posts
             {
                 await _mediator.Send(new AddPostLocation()
                 {
-                    PostId = res
+                    PostId = res,
+                    Latitude=request.Location.Latitude,
+                    EventTime=request.Location.EventTime,
+                    Longitude=request.Location.Longitude
                 });
             }
             return Ok(res);

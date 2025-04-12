@@ -13,6 +13,6 @@ namespace MTAA_Backend.Domain.DTOs.Posts.Requests
         public Guid Id { get; set; }
         public ICollection<UpdateImageRequest> Images { get; set; }
         public string Description { get; set; }
-        public UpdateLocationRequest? Location { get; set; }
+        public AddLocationRequest? Location { get; set; }
     }
 }

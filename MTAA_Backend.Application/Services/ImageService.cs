@@ -112,8 +112,14 @@ namespace MTAA_Backend.Application.Services
                 int? sizeHeight = size.Height;
                 int cropWidth = 0;
 
-                if (sizeWidth != null && (int)sizeWidth > image.Width) sizeWidth = image.Width;
-                if (sizeHeight != null && (int)sizeHeight > image.Height) sizeHeight = image.Height;
+                if (sizeWidth != null && (int)sizeWidth > image.Width)
+                {
+                    sizeWidth = image.Width;
+                }
+                if (sizeHeight != null && (int)sizeHeight > image.Height)
+                {
+                    sizeHeight = image.Height;
+                }
 
                 if (sizeWidth != null && sizeHeight != null)
                 {

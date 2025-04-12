@@ -126,6 +126,9 @@
   <data name="ChatAlreadyExist" xml:space="preserve">
     <value>ChatAlreadyExist</value>
   </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>CommentNotFound</value>
+  </data>
   <data name="EmailAlreadyExists" xml:space="preserve">
     <value>EmailAlreadyExists</value>
   </data>
@@ -143,6 +146,12 @@
   </data>
   <data name="ImageFormatNotAllowed" xml:space="preserve">
     <value>ImageFormatNotAllowed</value>
+  </data>
+  <data name="InaccessibleFollowing" xml:space="preserve">
+    <value>InaccessibleFollowing</value>
+  </data>
+  <data name="LocationPropertiesNotCorrect" xml:space="preserve">
+    <value>LocationPropertiesNotCorrect</value>
   </data>
   <data name="PostNotFound" xml:space="preserve">
     <value>PostNotFound</value>
@@ -176,6 +185,9 @@
   </data>
   <data name="UserNotAuthorized" xml:space="preserve">
     <value>UserNotAuthorized</value>
+  </data>
+  <data name="UserNotFollowed" xml:space="preserve">
+    <value>UserNotFollowed</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
     <value>UserNotFound</value>
