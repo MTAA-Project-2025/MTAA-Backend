@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - master
+      - release/*
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.x'
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Build the solution
+      run: dotnet build --no-restore
+
+    - name: Run integration tests
+      run: dotnet test IntegrationTests --no-build --logger trx
+
+    - name: Upload test results (optional)
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: '**/*.trx'

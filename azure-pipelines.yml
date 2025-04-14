@@ -1,0 +1,59 @@
+trigger:
+  - master
+  - develop
+
+pr:
+  - master
+  - develop
+
+resources:
+  - repo: self
+
+variables:
+  BUILDCONFIGURATION: Release
+  RestoreBuildProjects: "**/*.csproj"
+  TestProjects: "**/*[Tt]ests/*.csproj"
+
+  # Agent VM image name
+  vmImageName: "ubuntu-latest"
+
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          # Use the correct .NET SDK version
+          - task: UseDotNet@2
+            inputs:
+              packageType: 'sdk'
+              version: '9.x'
+
+          # Install the necessary .NET workload
+          - task: Bash@3
+            inputs:
+              targetType: "inline"
+              script: "dotnet workload install aspire"
+
+          # Build the project
+          - task: DotNetCoreCLI@2
+            displayName: Build
+            inputs:
+              projects: $(RestoreBuildProjects)
+              arguments: -c $(BuildConfiguration)
+
+          # Run tests and collect code coverage
+          - task: DotNetCoreCLI@2
+            displayName: Test with coverage filtering
+            inputs:
+              command: "test"
+              projects: "$(TestProjects)"
+              arguments: '--configuration $(BuildConfiguration) --settings coverage.runsettings --collect "XPlat Code Coverage"'
+
+          # Publish code coverage results
+          - task: PublishCodeCoverageResults@2
+            inputs:
+              summaryFileLocation: "$(Agent.TempDirectory)/**/coverage.cobertura.xml"
