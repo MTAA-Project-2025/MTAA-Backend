@@ -8,7 +8,7 @@ namespace MTAA_Backend.Application.Validators.Comments
     {
         public EditCommentRequestValidator()
         {
-            RuleFor(e => e.Content)
+            RuleFor(e => e.Text)
                 .NotEmpty().WithMessage("Content cannot be empty.")
                 .MaximumLength(2000).WithMessage("Content cannot be longer than 2000 characters.");
         }

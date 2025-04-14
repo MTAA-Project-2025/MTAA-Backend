@@ -42,16 +42,22 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
 
             var friends = await _dbContext.UserRelationships
                 .Where(filterCondition)
-                .OrderBy(r => r.User1Id == userId ? r.User2 : r.User1)
-                .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
-                .Take(request.PageParameters.PageSize)
-                .Select(r => r.User1Id == userId ? r.User2 : r.User1)
-                .Include(e => e.Avatar)
+                .Include(e => e.User1.Avatar)
                     .ThenInclude(e => e.CustomAvatar)
                         .ThenInclude(e => e.Images)
-                .Include(e => e.Avatar)
+                .Include(e => e.User1.Avatar)
                     .ThenInclude(e => e.PresetAvatar)
                         .ThenInclude(e => e.Images)
+                .Include(r => r.User2.Avatar)
+                    .ThenInclude(e => e.CustomAvatar)
+                        .ThenInclude(e => e.Images)
+                .Include(e => e.User2.Avatar)
+                    .ThenInclude(e => e.PresetAvatar)
+                        .ThenInclude(e => e.Images)
+                .OrderBy(r => r.User1Id == userId ? r.User2.UserName : r.User1.UserName)
+                .Select(r => r.User1Id == userId ? r.User2 : r.User1)
+                .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
+                .Take(request.PageParameters.PageSize)
                 .ToListAsync(cancellationToken);
 
             var mappedFriends = _mapper.Map<List<PublicBaseAccountResponse>>(friends);
