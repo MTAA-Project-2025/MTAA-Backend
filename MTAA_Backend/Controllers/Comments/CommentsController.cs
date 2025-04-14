@@ -22,8 +22,6 @@ using System.Net;
 
 namespace MTAA_Backend.Api.Controllers.Comments
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class CommentsController : ApiController
     {
         private readonly MTAA_BackendDbContext _dbContext;

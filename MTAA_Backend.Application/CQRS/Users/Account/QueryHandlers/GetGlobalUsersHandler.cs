@@ -54,7 +54,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.QueryHandlers
                 })
                 .ToListAsync(cancellationToken);
 
-            var mappedUsers = _mapper.Map<List<PublicBaseAccountResponse>>(users);
+            var mappedUsers = _mapper.Map<List<PublicBaseAccountResponse>>(users.Select(e => e.User).ToList());
 
             for (int i = 0; i < mappedUsers.Count; i++)
             {

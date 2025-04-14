@@ -23,7 +23,7 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
                 throw new HttpException(_localizer[ErrorMessagesPatterns.CommentNotFound], HttpStatusCode.NotFound);
             }
 
-            comment.Text = request.NewText;
+            comment.Text = request.Text;
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }

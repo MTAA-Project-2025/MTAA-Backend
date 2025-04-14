@@ -9,6 +9,6 @@ namespace MTAA_Backend.Domain.DTOs.Comments.Requests
     public class AddCommentRequest
     {
         public Guid PostId { get; set; }
-        public string Content { get; set; }
+        public string Text { get; set; }
     }
 }
