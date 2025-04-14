@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Entities.Locations;
+using MTAA_Backend.Domain.Entities.Notifications;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
 using MTAA_Backend.Domain.Entities.Shared;
@@ -36,5 +37,7 @@ namespace MTAA_Backend.Domain.Entities.Posts
 
         public ICollection<User> WatchedUsers { get; set; } = new HashSet<User>();
         public ICollection<RecommendationItem> RecommendationItems { get; set; } = new HashSet<RecommendationItem>();
+
+        public ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
     }
 }

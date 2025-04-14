@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using MTAA_Backend.Domain.Entities.Groups;
 using MTAA_Backend.Domain.Entities.Images;
 using MTAA_Backend.Domain.Entities.Messages;
+using MTAA_Backend.Domain.Entities.Notifications;
 using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
@@ -55,5 +56,7 @@ namespace MTAA_Backend.Domain.Entities.Users
         public ICollection<SharedRecommendationFeed> SharedRecommendationFeeds { get; set; } = new HashSet<SharedRecommendationFeed>();
 
         public ICollection<VersionItem> VersionItems { get; set; } = new HashSet<VersionItem>();
+
+        public ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
     }
 }

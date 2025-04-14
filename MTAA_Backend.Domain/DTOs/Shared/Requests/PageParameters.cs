@@ -22,7 +22,9 @@ namespace MTAA_Backend.Domain.DTOs.Shared.Requests
             }
             set
             {
-                pageSize = (value > maxPageSize) ? maxPageSize : value;
+                if (value <= 0) pageSize = 1;
+                else if (value > maxPageSize) pageSize = maxPageSize;
+                else pageSize = value;
             }
         }
     }

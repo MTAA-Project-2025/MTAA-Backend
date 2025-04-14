@@ -40,6 +40,10 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts
                    .HasForeignKey(e => e.PostId)
                    .OnDelete(DeleteBehavior.Cascade);
 
+            builder.HasMany(p => p.Notifications)
+                    .WithOne(n => n.Post)
+                    .HasForeignKey(n => n.PostId);
+
             builder.HasIndex(e => new { e.GlobalScore, e.CommentsCount, e.LikesCount, e.DataCreationTime, e.IsDeleted });
         }
     }

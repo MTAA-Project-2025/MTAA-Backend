@@ -1,4 +1,5 @@
-﻿using MTAA_Backend.Domain.Entities.Shared;
+﻿using MTAA_Backend.Domain.Entities.Notifications;
+using MTAA_Backend.Domain.Entities.Shared;
 using MTAA_Backend.Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
@@ -29,5 +30,7 @@ namespace MTAA_Backend.Domain.Entities.Posts.Comments
         public int ChildCommentsCount { get; set; } = 0;
 
         public ICollection<CommentInteraction> CommentInteractions { get; set; } = new HashSet<CommentInteraction>();
+
+        public ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
     }
 }

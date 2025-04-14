@@ -27,6 +27,7 @@ using MTAA_Backend.MigrationService;
 using Microsoft.Extensions.Options;
 using System.Reflection.PortableExecutable;
 using Microsoft.Identity.Client.Extensions.Msal;
+using MTAA_Backend.Application.Services.Notifications;
 
 
 public class Program
@@ -114,6 +115,8 @@ public class Program
 
         builder.Services.AddScoped<INormalizeLocationService, NormalizeLocationService>();
         builder.Services.AddScoped<ILocationService, LocationService>();
+
+        builder.Services.AddScoped<ISSEClientStorage, SSEClientStorage>();
 
         builder.Services.AddSingleton<IMLNetService, MLNetService>();
 
