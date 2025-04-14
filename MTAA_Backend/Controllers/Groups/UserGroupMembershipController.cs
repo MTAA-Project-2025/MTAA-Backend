@@ -88,7 +88,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize(Roles = UserRoles.User)]
         [Route("get-active-collection")]
         [ProducesResponseType(typeof(ICollection<SimpleUserGroupMembershipResponse>), (int)HttpStatusCode.OK)]
@@ -101,7 +101,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
             return Ok(res);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize(Roles = UserRoles.User)]
         [Route("get-archive-collection")]
         [ProducesResponseType(typeof(ICollection<SimpleUserGroupMembershipResponse>), (int)HttpStatusCode.OK)]
@@ -118,7 +118,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
         [Authorize(Roles = UserRoles.User)]
         [Route("get-by-id/{id}")]
         [ProducesResponseType(typeof(SimpleUserGroupMembershipResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<SimpleUserGroupMembershipResponse>> GetUserGroupMembershipById([FromBody] Guid id)
+        public async Task<ActionResult<SimpleUserGroupMembershipResponse>> GetUserGroupMembershipById([FromRoute] Guid id)
         {
             await Guard.Against.NotUserGroupMembershipOwner(id, _dbContext, _localizer, _userService);
 
