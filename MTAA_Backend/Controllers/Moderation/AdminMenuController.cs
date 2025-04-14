@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Locations.Commands;
+using MTAA_Backend.Application.CQRS.Notifications.Commands;
 using MTAA_Backend.Application.CQRS.Posts.Commands;
 using MTAA_Backend.Application.CQRS.Users.Identity.Commands;
 using MTAA_Backend.Application.Extensions;
+using MTAA_Backend.Domain.DTOs.Notifications.Requests;
 using MTAA_Backend.Domain.DTOs.Posts.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Other;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
@@ -19,6 +21,7 @@ using MTAA_Backend.Domain.Interfaces.Locations;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem.RecommendationFeedService;
 using MTAA_Backend.Domain.Resources.Customers;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
+using MTAA_Backend.Domain.Resources.Notifications;
 using MTAA_Backend.Infrastructure;
 using System.Net;
 using System.Threading;
@@ -98,5 +101,24 @@ namespace MTAA_Backend.Api.Controllers.Moderation
 
             return Ok(res);
         }
-    }
+
+        [HttpPost("notifications/system")]
+        public async Task<IActionResult> AddSystemNotification([FromBody] AddSystemNotificationRequest request)
+        {
+            foreach (var userId in request.UserIds)
+            {
+                await _mediator.Send(new AddNotification
+                {
+                    Title = request.Title,
+                    Text = request.Text,
+                    Type = NotificationType.System,
+                    UserId = userId,
+                    PostId = null,
+                    CommentId = null
+                });
+            }
+
+            return Ok();
+        }
+    }   
 }
