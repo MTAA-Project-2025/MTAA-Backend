@@ -32,6 +32,10 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
                    .WithOne(e => e.Comment)
                    .HasForeignKey(e => e.CommentId);
 
+            builder.HasMany(c => c.Notifications)
+                    .WithOne(n => n.Comment)
+                    .HasForeignKey(n => n.CommentId);
+
             builder.HasIndex(e => e.DataCreationTime);
 
             builder.HasIndex(e => new { e.LikesCount, e.DislikesCount, e.DataCreationTime, e.IsDeleted });

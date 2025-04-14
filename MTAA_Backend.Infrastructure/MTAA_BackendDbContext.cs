@@ -12,6 +12,8 @@ using MTAA_Backend.Domain.Entities.Locations;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
 using MTAA_Backend.Domain.Entities.Versions;
 using NetTopologySuite;
+using MTAA_Backend.Domain.Entities.Notifications;
+using MTAA_Backend.Infrastructure.Configuration.Notifications;
 
 namespace MTAA_Backend.Infrastructure
 {
@@ -62,6 +64,7 @@ namespace MTAA_Backend.Infrastructure
 
         public DbSet<VersionItem> VersionItems { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
 
         public MTAA_BackendDbContext(DbContextOptions options) : base(options)
         {
