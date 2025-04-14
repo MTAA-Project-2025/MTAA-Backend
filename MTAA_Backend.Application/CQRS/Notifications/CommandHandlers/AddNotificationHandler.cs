@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MTAA_Backend.Application.CQRS.Notifications.Commands;
+using MTAA_Backend.Application.CQRS.Notifications.Events;
 using MTAA_Backend.Domain.Entities.Notifications;
 using MTAA_Backend.Infrastructure;
 
@@ -22,13 +23,13 @@ namespace MTAA_Backend.Application.CQRS.Notifications.CommandHandlers
 
             await _dbContext.Notifications.AddAsync(notification, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            /*
-            await _mediator.Publish(new NotificationCreatedEvent
+            
+            await _mediator.Publish(new AddNotificationEvent
             {
                 NotificationId = notification.Id,
                 UserId = notification.UserId
             });
-            */
+            
         }
     }
 }

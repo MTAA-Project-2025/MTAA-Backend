@@ -102,7 +102,10 @@ namespace MTAA_Backend.Api.Controllers.Moderation
             return Ok(res);
         }
 
+        [HttpPost]
+        [Authorize(Roles = UserRoles.Moderator)]
         [HttpPost("notifications/system")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddSystemNotification([FromBody] AddSystemNotificationRequest request)
         {
             foreach (var userId in request.UserIds)

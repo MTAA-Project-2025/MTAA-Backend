@@ -2,24 +2,35 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Application.CQRS.Notifications.Queries;
+using MTAA_Backend.Application.Extensions;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Notifications.Responses;
+using MTAA_Backend.Domain.Entities.Notifications;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Images;
 using MTAA_Backend.Infrastructure;
+using System.Collections;
+using System.Linq.Expressions;
 
 namespace MTAA_Backend.Application.CQRS.Notifications.QueryHandlers
 {
     public class GetNotificationsHandler(MTAA_BackendDbContext _dbContext,
         IUserService _userService,
-        IMapper _mapper) : IRequestHandler<GetNotifications, List<NotificationResponse>>
+        IMapper _mapper) : IRequestHandler<GetNotifications, ICollection<NotificationResponse>>
     {
-        public async Task<List<NotificationResponse>> Handle(GetNotifications request, CancellationToken cancellationToken)
+        public async Task<ICollection<NotificationResponse>> Handle(GetNotifications request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
 
+            Expression<Func<Notification, bool>> filterCondition = n => n.UserId == userId;
+
+            if (request.Type != null)
+            {
+                filterCondition = filterCondition.And(n => n.Type == request.Type);
+            }
+
             var notifications = await _dbContext.Notifications
-                .Where(n => n.UserId == userId)
+                .Where(filterCondition)
                 .OrderByDescending(n => n.DataCreationTime)
                 .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
                 .Take(request.PageParameters.PageSize)
