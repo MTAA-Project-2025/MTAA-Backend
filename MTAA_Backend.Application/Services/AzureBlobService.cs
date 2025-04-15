@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using MTAA_Backend.Domain.Interfaces;
 
@@ -43,14 +44,14 @@ namespace MTAA_Backend.Application.Services
         }
 
 
-        public async Task<Azure.Response> RemoveFileAsync(string fileName, CancellationToken cancellationToken = default)
+        public async Task<Azure.Response<bool>?> RemoveFileAsync(string fileName, CancellationToken cancellationToken = default)
         {
             if (blobContainerClient == null)
             {
                 throw new InvalidOperationException("AzureBlobService not initialized");
             }
 
-            var response = await blobContainerClient.DeleteBlobAsync(fileName, cancellationToken: cancellationToken);
+            var response = await blobContainerClient.DeleteBlobIfExistsAsync(fileName, cancellationToken: cancellationToken);
             return response;
         }
     }

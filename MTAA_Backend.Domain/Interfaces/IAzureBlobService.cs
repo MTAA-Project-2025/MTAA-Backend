@@ -13,6 +13,6 @@ namespace MTAA_Backend.Domain.Interfaces
         public void Initialize(string connectionString, string containerName);
         public Task<BlobContentInfo> UploadFileAsync(IFormFile file, CancellationToken cancellationToken = default);
         public Task<ICollection<BlobContentInfo>> UploadFilesAsync(ICollection<IFormFile> files, CancellationToken cancellationToken = default);
-        public Task<Azure.Response> RemoveFileAsync(string fileName, CancellationToken cancellationToken = default);
+        public Task<Azure.Response<bool>?> RemoveFileAsync(string fileName, CancellationToken cancellationToken = default);
     }
 }

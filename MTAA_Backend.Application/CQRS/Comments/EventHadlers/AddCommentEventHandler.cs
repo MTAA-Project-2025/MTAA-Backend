@@ -1,15 +1,41 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Application.CQRS.Comments.Events;
+using MTAA_Backend.Application.CQRS.Notifications.Commands;
+using MTAA_Backend.Domain.Entities.Posts;
+using MTAA_Backend.Domain.Interfaces;
+using MTAA_Backend.Domain.Resources.Notifications;
 using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Comments.EventHadlers
 {
-    public class AddCommentEventHandler(MTAA_BackendDbContext _dbContext) : INotificationHandler<AddCommentEvent>
+    public class AddCommentEventHandler(MTAA_BackendDbContext _dbContext,
+        IMediator _mediator,
+        IUserService _userService) : INotificationHandler<AddCommentEvent>
     {
+        readonly int maxLength = 200;
         public async Task Handle(AddCommentEvent notification, CancellationToken cancellationToken)
         {
-            if (notification.ParentCommentId == null) return;
+            var currentUser = await _userService.GetCurrentUser();
+            if (notification.ParentCommentId == null)
+            {
+                if (notification.PostId == null) return;
+                var post = await _dbContext.Posts.Where(e => e.Id == notification.PostId).FirstOrDefaultAsync(cancellationToken);
+                
+                
+                if (post == null || currentUser == null) return;
+
+                await _mediator.Send(new AddNotification()
+                {
+                    PostId = post.Id,
+                    Title = $"New comment",
+                    Text = $"{currentUser.DisplayName} added new comment. " + ((notification.Text.Length <= maxLength) ? notification.Text : notification.Text.Substring(0, maxLength)),
+                    UserId = post.OwnerId,
+                    Type = NotificationType.WriteCommentOnPost
+                });
+
+                return;
+            }
 
             var parentId = notification.ParentCommentId;
 
@@ -26,8 +52,19 @@ namespace MTAA_Backend.Application.CQRS.Comments.EventHadlers
                     parentId = null;
                 }
             }
-
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            var firstparentComment = await _dbContext.Comments.Where(c => c.Id == parentId).Include(e => e.Owner).FirstOrDefaultAsync(cancellationToken);
+            if (firstparentComment == null || currentUser == null) return;
+
+            await _mediator.Send(new AddNotification()
+            {
+                CommentId = notification.CommentId,
+                Title = $"New reply",
+                Text = $"{currentUser.DisplayName} added new reply. " + ((notification.Text.Length <= maxLength) ? notification.Text : notification.Text.Substring(0, maxLength)),
+                UserId = firstparentComment.OwnerId,
+                Type = NotificationType.WriteCommentAsAnswer
+            });
         }
     }
 }

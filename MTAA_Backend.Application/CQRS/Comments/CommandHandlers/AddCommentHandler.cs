@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Comments.Commands;
+using MTAA_Backend.Application.CQRS.Comments.Events;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
@@ -11,7 +12,8 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
     public class AddCommentHandler(ILogger<AddCommentHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
-        IUserService _userService) : IRequestHandler<AddComment, Guid>
+        IUserService _userService,
+        IMediator _mediator) : IRequestHandler<AddComment, Guid>
     {
         public async Task<Guid> Handle(AddComment request, CancellationToken cancellationToken)
         {
@@ -25,6 +27,14 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
 
             _dbContext.Comments.Add(comment);
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            await _mediator.Publish(new AddCommentEvent()
+            {
+                ParentCommentId = request.ParentCommentId,
+                CommentId = comment.Id,
+                PostId = request.PostId,
+                Text = request.Text
+            });
 
             return comment.Id;
         }

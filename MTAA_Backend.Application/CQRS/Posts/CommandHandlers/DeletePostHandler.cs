@@ -5,6 +5,7 @@ using MTAA_Backend.Application.CQRS.Posts.Commands;
 using MTAA_Backend.Application.Services;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
+using MTAA_Backend.Domain.Interfaces.Locations;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Infrastructure;
 using System.Net;
@@ -15,13 +16,16 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IUserService _userService,
-        IImageService _imageService) : IRequestHandler<DeletePost>
+        IImageService _imageService,
+        ILocationService _locationService) : IRequestHandler<DeletePost>
     {
         public async Task Handle(DeletePost request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
 
             var post = await _dbContext.Posts.Where(e => e.Id == request.Id)
+                                             .Include(e=>e.Location)
+                                                .ThenInclude(e=>e.Points)
                                              .Include(e => e.Images)
                                                  .ThenInclude(e => e.Images)
                                              .FirstOrDefaultAsync(cancellationToken);
@@ -37,6 +41,13 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
                 await _imageService.RemoveImageGroup(image);
             }
             _dbContext.Posts.Remove(post);
+
+            if (post.Location != null)
+            {
+                await _locationService.DeletePoints(post.Location);
+                _dbContext.Locations.Remove(post.Location);
+            }
+
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }

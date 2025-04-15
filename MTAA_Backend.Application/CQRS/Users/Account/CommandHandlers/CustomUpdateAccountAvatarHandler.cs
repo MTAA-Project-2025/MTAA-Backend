@@ -40,6 +40,14 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
                 _logger.LogError("User not authorized");
                 throw new HttpException(_localizer[ErrorMessagesPatterns.UserNotAuthorized], HttpStatusCode.NotFound);
             }
+
+            double aspectRatio = _imageService.GetImageAspectRatio(request.Avatar);
+            if (Math.Abs(aspectRatio - 1.0) >= 0.0001)
+            {
+                _logger.LogError("Aspect ratio is not 1:1");
+                throw new HttpException(_localizer[ErrorMessagesPatterns.ImageFormatNotAllowed], HttpStatusCode.BadRequest);
+            }
+
             var user = await _dbContext.Users.Include(e => e.Avatar)
                                                 .ThenInclude(e => e.PresetAvatar)
                                              .Include(e => e.Avatar)
