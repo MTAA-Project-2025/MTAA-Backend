@@ -30,21 +30,15 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
             var postLike = await _dbContext.PostLikes.Where(e => e.PostId == request.Id && e.UserId == userId)
                                                      .FirstOrDefaultAsync(cancellationToken);
 
-            if (postLike == null)
+            if (postLike != null) return;
+
+            post.LikesCount++;
+            postLike = new PostLike()
             {
-                post.LikesCount++;
-                postLike = new PostLike()
-                {
-                    PostId = request.Id,
-                    UserId = userId
-                };
-                _dbContext.PostLikes.Add(postLike);
-            }
-            else
-            {
-                post.LikesCount--;
-                _dbContext.PostLikes.Remove(postLike);
-            }
+                PostId = request.Id,
+                UserId = userId
+            };
+            _dbContext.PostLikes.Add(postLike);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
