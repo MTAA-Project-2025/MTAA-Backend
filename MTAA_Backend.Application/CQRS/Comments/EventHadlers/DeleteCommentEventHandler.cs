@@ -9,11 +9,8 @@ namespace MTAA_Backend.Application.CQRS.Comments.EventHadlers
     {
         public async Task Handle(DeleteCommentEvent notification, CancellationToken cancellationToken)
         {
-            var comment = await _dbContext.Comments.FirstOrDefaultAsync(c => c.Id == notification.CommentId, cancellationToken);
-            if (comment == null) return;
-
-            int decreaseBy = comment.ChildCommentsCount + 1;
-            var parentId = comment.ParentCommentId;
+            int decreaseBy = notification.ChildCommentsCount + 1;
+            var parentId = notification.ParentCommentId;
 
             while (parentId != null)
             {

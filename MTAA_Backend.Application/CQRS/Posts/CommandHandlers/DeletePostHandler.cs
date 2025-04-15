@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Posts.Commands;
+using MTAA_Backend.Application.CQRS.Posts.Events;
 using MTAA_Backend.Application.Services;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
@@ -17,15 +18,17 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
         MTAA_BackendDbContext _dbContext,
         IUserService _userService,
         IImageService _imageService,
-        ILocationService _locationService) : IRequestHandler<DeletePost>
+        ILocationService _locationService,
+        IMediator _mediator) : IRequestHandler<DeletePost>
     {
         public async Task Handle(DeletePost request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
 
             var post = await _dbContext.Posts.Where(e => e.Id == request.Id)
-                                             .Include(e=>e.Location)
-                                                .ThenInclude(e=>e.Points)
+                                             .Include(e => e.RecommendationItems)
+                                             .Include(e => e.Location)
+                                                .ThenInclude(e => e.Points)
                                              .Include(e => e.Images)
                                                  .ThenInclude(e => e.Images)
                                              .FirstOrDefaultAsync(cancellationToken);
@@ -47,8 +50,13 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
                 await _locationService.DeletePoints(post.Location);
                 _dbContext.Locations.Remove(post.Location);
             }
-
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+            await _mediator.Publish(new DeletePostEvent()
+            {
+                PostId = post.Id,
+                UserId = userId
+            });
         }
     }
 }

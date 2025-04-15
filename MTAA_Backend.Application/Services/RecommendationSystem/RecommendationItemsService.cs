@@ -50,6 +50,7 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
                 throw new HttpException("Feed not found");
             }
 
+
             foreach (var request in requests)
             {
                 if (user.WatchedPosts.Any(e => e.Id == request.PostId)) continue;
@@ -76,7 +77,6 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             }
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-
         public async Task RemovePostsFromLocalFeed(RecommendationFeedTypes feedType, string userId, ICollection<Guid> postIds, CancellationToken cancellationToken = default)
         {
             var user = await _dbContext.Users.Where(e => e.Id == userId)
@@ -164,7 +164,7 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             feed.RecommendationItems.Clear();
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
-        public async Task RemovePostsFromSharedFeed(RecommendationFeedTypes feedType, string userId, ICollection<Guid> postIds, CancellationToken cancellationToken = default)
+        public async Task RemovePostsFromSharedFeed(RecommendationFeedTypes feedType, ICollection<Guid> postIds, CancellationToken cancellationToken = default)
         {
             var feed = await _dbContext.SharedRecommendationFeeds.Where(e => e.Type == feedType)
                                                                 .Include(e => e.RecommendationItems)

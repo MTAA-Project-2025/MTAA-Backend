@@ -42,7 +42,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts
 
             builder.HasMany(p => p.Notifications)
                     .WithOne(n => n.Post)
-                    .HasForeignKey(n => n.PostId);
+                    .HasForeignKey(n => n.PostId)
+                    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasIndex(e => new { e.GlobalScore, e.CommentsCount, e.LikesCount, e.DataCreationTime, e.IsDeleted });
         }

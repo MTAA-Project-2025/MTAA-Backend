@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Commands;
+using MTAA_Backend.Application.CQRS.Versions.Command;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
+using MTAA_Backend.Domain.Resources.Versioning;
 using MTAA_Backend.Infrastructure;
 using System.Net;
 
@@ -12,7 +14,8 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
 {
     public class UnfollowHandler(IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
-        IUserService _userService) : IRequestHandler<Unfollow>
+        IUserService _userService,
+        IMediator _mediator) : IRequestHandler<Unfollow>
     {
         public async Task Handle(Unfollow request, CancellationToken cancellationToken)
         {
@@ -43,6 +46,31 @@ namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
             if (!relationship.IsUser1Following && !relationship.IsUser2Following)
             {
                 _dbContext.UserRelationships.Remove(relationship);
+
+                await _mediator.Send(new IncreaseVersion()
+                {
+                    UserId = request.TargetUserId,
+                    VersionItemType = VersionItemType.Followers,
+                });
+            }
+            else
+            {
+                await _mediator.Send(new IncreaseVersion()
+                {
+                    UserId = currentUserId,
+                    VersionItemType = VersionItemType.Friends,
+                });
+                await _mediator.Send(new IncreaseVersion()
+                {
+                    UserId = request.TargetUserId,
+                    VersionItemType = VersionItemType.Followers,
+                });
+
+                await _mediator.Send(new IncreaseVersion()
+                {
+                    UserId = request.TargetUserId,
+                    VersionItemType = VersionItemType.Friends,
+                });
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);

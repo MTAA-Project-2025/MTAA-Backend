@@ -1,11 +1,14 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Comments.Commands;
 using MTAA_Backend.Application.CQRS.Comments.Events;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
+using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Infrastructure;
+using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
 {
@@ -17,6 +20,23 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
     {
         public async Task<Guid> Handle(AddComment request, CancellationToken cancellationToken)
         {
+            var post = await _dbContext.Posts.FirstOrDefaultAsync(e => e.Id == request.PostId, cancellationToken);
+            if (post == null)
+            {
+                _logger.LogError($"Post not found {request.PostId}");
+                throw new HttpException(_localizer[ErrorMessagesPatterns.PostNotFound], HttpStatusCode.BadRequest);
+            }
+
+            if (request.ParentCommentId != null)
+            {
+                var parentComment = await _dbContext.Comments.FirstOrDefaultAsync(e=>e.Id==request.ParentCommentId, cancellationToken);
+
+                if (parentComment == null)
+                {
+                    _logger.LogError($"Parent comment not found {request.ParentCommentId}");
+                    throw new HttpException(_localizer[ErrorMessagesPatterns.CommentNotFound], HttpStatusCode.NotFound);
+                }
+            }
             var comment = new Comment()
             {
                 PostId = request.PostId,

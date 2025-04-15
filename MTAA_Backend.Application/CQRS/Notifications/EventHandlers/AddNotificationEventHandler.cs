@@ -3,10 +3,12 @@ using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Application.CQRS.Notifications.Events;
+using MTAA_Backend.Application.CQRS.Versions.Command;
 using MTAA_Backend.Application.Services.Notifications;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Notifications.Responses;
 using MTAA_Backend.Domain.Resources.Images;
+using MTAA_Backend.Domain.Resources.Versioning;
 using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Notifications.EventHandlers
@@ -14,7 +16,8 @@ namespace MTAA_Backend.Application.CQRS.Notifications.EventHandlers
     public class AddNotificationEventHandler(
         MTAA_BackendDbContext _dbContext,
         ISSEClientStorage _clientStorage,
-        IMapper _mapper) : INotificationHandler<AddNotificationEvent>
+        IMapper _mapper,
+        IMediator _mediator) : INotificationHandler<AddNotificationEvent>
     {
         public async Task Handle(AddNotificationEvent notification, CancellationToken cancellationToken)
         {
@@ -38,6 +41,12 @@ namespace MTAA_Backend.Application.CQRS.Notifications.EventHandlers
             }
 
             await _clientStorage.SendNotificationAsync(notification.UserId, notificationResponse);
+
+            await _mediator.Send(new IncreaseVersion()
+            {
+                UserId = dbNotification.UserId,
+                VersionItemType = VersionItemType.Notifications,
+            });
         }
     }
 }
