@@ -103,5 +103,11 @@ namespace MTAA_Backend.Application.Repositories
 
             return userVector;
         }
+
+        public async Task RemovePostVectors(Guid postId)
+        {
+            await _qdrantClient.DeleteAsync(VectorCollections.PostImageEmbeddings, id: postId);
+            await _qdrantClient.DeleteAsync(VectorCollections.PostTextEmbeddings, id: postId);
+        }
     }
 }

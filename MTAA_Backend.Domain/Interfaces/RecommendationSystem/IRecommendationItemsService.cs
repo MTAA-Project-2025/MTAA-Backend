@@ -21,6 +21,6 @@ namespace MTAA_Backend.Domain.Interfaces.RecommendationSystem
 
         public Task AddPostsToSharedFeed(RecommendationFeedTypes feedType, ICollection<SimpleAddRecommendationItemRequest> requests, CancellationToken cancellationToken = default);
         public Task ClearSharedFeed(RecommendationFeedTypes feedType, CancellationToken cancellationToken = default);
-        public Task RemovePostsFromSharedFeed(RecommendationFeedTypes feedType, string userId, ICollection<Guid> postIds, CancellationToken cancellationToken = default);
+        public Task RemovePostsFromSharedFeed(RecommendationFeedTypes feedType, ICollection<Guid> postIds, CancellationToken cancellationToken = default);
     }
 }

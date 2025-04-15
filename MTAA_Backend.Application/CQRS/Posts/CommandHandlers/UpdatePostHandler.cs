@@ -112,6 +112,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
             await _mediator.Publish(new UpdatePostEvent()
             {
                 PostId = post.Id,
+                UserId = post.OwnerId
             }, cancellationToken);
         }
     }

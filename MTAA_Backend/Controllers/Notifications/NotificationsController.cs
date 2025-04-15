@@ -39,7 +39,7 @@ namespace MTAA_Backend.Api.Controllers.Notifications
 
         [HttpPost]
         [Authorize(Roles = UserRoles.User)]
-        [Route("get-notifications/{type}")]
+        [Route("get-notifications/{type?}")]
         [ProducesResponseType(typeof(ICollection<NotificationResponse>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ICollection<NotificationResponse>>> GetRecommendedPosts([FromBody] PageParameters request, [FromRoute] NotificationType? type)
         {

@@ -1,18 +1,19 @@
 ﻿using MediatR;
 using MTAA_Backend.Application.CQRS.Posts.Events;
 using MTAA_Backend.Application.CQRS.Versions.Command;
+using MTAA_Backend.Domain.Interfaces.RecommendationSystem.RecommendationFeedService;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
 using MTAA_Backend.Domain.Resources.Versioning;
+using MTAA_Backend.Domain.Interfaces;
 
 namespace MTAA_Backend.Application.CQRS.Posts.EventHandlers
 {
-    public class UpdatePostEventHandler(IPostsConfigureRecommendationsService _postsConfigureRecommendationsService,
-        IMediator _mediator) : INotificationHandler<UpdatePostEvent>
+    public class DeletePostEventHandler(IVectorDatabaseRepository _vectorDbRepo,
+        IMediator _mediator) : INotificationHandler<DeletePostEvent>
     {
-        public async Task Handle(UpdatePostEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(DeletePostEvent notification, CancellationToken cancellationToken)
         {
-            await _postsConfigureRecommendationsService.InitializeRecommendations(notification.PostId, cancellationToken);
-
+            await _vectorDbRepo.RemovePostVectors(notification.PostId);
             await _mediator.Send(new IncreaseVersion()
             {
                 UserId = notification.UserId,
