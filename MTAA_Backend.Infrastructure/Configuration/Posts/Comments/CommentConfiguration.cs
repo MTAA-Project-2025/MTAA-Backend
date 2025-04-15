@@ -21,7 +21,8 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
 
             builder.HasMany(e => e.ChildComments)
                    .WithOne(e => e.ParentComment)
-                   .HasForeignKey(e => e.ParentCommentId);
+                   .HasForeignKey(e => e.ParentCommentId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(e => e.Owner)
                    .WithMany(e => e.CreatedComments)
@@ -30,11 +31,13 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
 
             builder.HasMany(e => e.CommentInteractions)
                    .WithOne(e => e.Comment)
-                   .HasForeignKey(e => e.CommentId);
+                   .HasForeignKey(e => e.CommentId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(c => c.Notifications)
                     .WithOne(n => n.Comment)
-                    .HasForeignKey(n => n.CommentId);
+                    .HasForeignKey(n => n.CommentId)
+                    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasIndex(e => e.DataCreationTime);
 

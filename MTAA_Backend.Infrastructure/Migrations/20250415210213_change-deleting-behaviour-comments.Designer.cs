@@ -3,6 +3,7 @@ using System;
 using MTAA_Backend.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MTAA_Backend.Infrastructure.Migrations
 {
     [DbContext(typeof(MTAA_BackendDbContext))]
-    partial class MTAA_BackendDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250415210213_change-deleting-behaviour-comments")]
+    partial class changedeletingbehaviourcomments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1464,12 +1467,11 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasOne("MTAA_Backend.Domain.Entities.Posts.Comments.Comment", "Comment")
                         .WithMany("Notifications")
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MTAA_Backend.Domain.Entities.Posts.Post", "Post")
                         .WithMany("Notifications")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("PostId");
 
                     b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User")
                         .WithMany("Notifications")

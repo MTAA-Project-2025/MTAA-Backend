@@ -7,5 +7,6 @@ namespace MTAA_Backend.Application.CQRS.Posts.Events
     public class UpdatePostEvent : INotification
     {
         public Guid PostId { get; set; }
+        public string UserId { get; set; }
     }
 }
