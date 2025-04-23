@@ -18,7 +18,7 @@ namespace MTAA_Backend.Application.CQRS.Locations.CommandHandlers
 
             Location location = new Location();
             location.PostId = request.PostId;
-            location.EventTime = request.EventTime;
+            location.EventTime = request.EventTime.ToUniversalTime();
             _dbContext.Locations.Add(location);
             await _dbContext.SaveChangesAsync(cancellationToken);
 

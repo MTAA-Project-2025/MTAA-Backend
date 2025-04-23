@@ -77,6 +77,8 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                 var newPosts = await _dbContext.RecommendationItems.Where(e => e.FeedId == feed.Item1.Id)
                                                         .OrderByDescending(e => e.LocalScore)
                                                         .Take(feed.Item3)
+                                                        .Include(e=>e.Post)
+                                                            .ThenInclude(e=>e.Location)
                                                         .Include(e => e.Post)
                                                             .ThenInclude(e => e.Owner)
                                                                 .ThenInclude(e => e.Avatar)
@@ -103,6 +105,10 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                     var mapPost = _mapper.Map<FullPostResponse>(post);
                     mapPost.IsLiked = newPosts[i].IsLiked;
 
+                    if (post.Location != null)
+                    {
+                        mapPost.LocationId = post.Location.Id;
+                    }
                     if (post.Owner.Avatar != null)
                     {
                         if (post.Owner.Avatar.CustomAvatar != null)
@@ -127,6 +133,10 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                     var post = posts.ElementAt(i);
                     var mapPost = _mapper.Map<FullPostResponse>(post);
 
+                    if (post.Location != null)
+                    {
+                        mapPost.LocationId = post.Location.Id;
+                    }
                     if (post.Owner.Avatar != null)
                     {
                         if (post.Owner.Avatar.CustomAvatar != null)

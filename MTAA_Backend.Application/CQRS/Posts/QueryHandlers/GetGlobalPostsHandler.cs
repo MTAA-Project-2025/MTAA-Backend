@@ -44,6 +44,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                                               .OrderByDescending(e => e.GlobalScore)
                                               .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
                                               .Take(request.PageParameters.PageSize)
+                                              .Include(e => e.Location)
                                               .Include(e => e.Owner)
                                                   .ThenInclude(e => e.Avatar)
                                                       .ThenInclude(e => e.CustomAvatar)
@@ -68,7 +69,10 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                 var mappedPost = _mapper.Map<FullPostResponse>(post);
                 mappedPost.IsLiked = posts[i].IsLiked;
 
-
+                if (post.Location != null)
+                {
+                    mappedPost.LocationId = post.Location.Id;
+                }
                 if (post.Owner.Avatar != null)
                 {
                     if (post.Owner.Avatar.CustomAvatar != null)

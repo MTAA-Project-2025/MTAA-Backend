@@ -133,6 +133,7 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
             }
 
             return await _dbContext.Posts.Where(e => postIds.Contains(e.Id))
+                                        .Include(e => e.Location)
                                         .Include(e => e.Owner)
                                             .ThenInclude(e => e.Avatar)
                                                 .ThenInclude(e => e.CustomAvatar)

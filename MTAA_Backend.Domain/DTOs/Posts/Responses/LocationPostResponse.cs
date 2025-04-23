@@ -13,5 +13,6 @@ namespace MTAA_Backend.Domain.DTOs.Posts.Responses
         public DateTime EventTime { get; set; }
         public SimpleLocationPointResponse Point { get; set; }
         public string Description { get; set; }
+        public string OwnerDisplayName { get; set; }
     }
 }

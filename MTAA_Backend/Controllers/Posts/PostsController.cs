@@ -70,8 +70,13 @@ namespace MTAA_Backend.Api.Controllers.Posts
 
             if (request.Location != null)
             {
-                var locationCommand = _mapper.Map<UpdatePostLocation>(request.Location);
-                await _mediator.Send(locationCommand);
+                await _mediator.Send(new UpdatePostLocation()
+                {
+                    EventTime = request.Location.EventTime,
+                    Latitude = request.Location.Latitude,
+                    Longitude = request.Location.Longitude,
+                    PostId = request.Id
+                });
             }
 
             return Ok();
