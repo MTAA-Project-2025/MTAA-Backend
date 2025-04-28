@@ -40,8 +40,8 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.QueryHandlers
                                              .Select(user => new
                                              {
                                                  User = user,
-                                                 IsFollowing = user.UserRelationships1.Any(e => e.User2Id == customerId && e.IsUser1Following) ||
-                                                               user.UserRelationships2.Any(e => e.User1Id == customerId && e.IsUser2Following),
+                                                 IsFollowing = user.UserRelationships1.Any(e => e.User2Id == customerId && e.IsUser2Following) ||
+                                                               user.UserRelationships2.Any(e => e.User1Id == customerId && e.IsUser1Following),
                                                  FriendsCount = user.UserRelationships1.Count(e => e.IsUser1Following && e.IsUser2Following) +
                                                                 user.UserRelationships2.Count(e => e.IsUser1Following && e.IsUser2Following),
                                                  FollowersCount = user.UserRelationships1.Count(e=>!e.IsUser1Following && e.IsUser2Following) +

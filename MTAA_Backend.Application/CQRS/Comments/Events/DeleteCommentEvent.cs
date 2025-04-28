@@ -6,5 +6,6 @@ namespace MTAA_Backend.Application.CQRS.Comments.Events
     {
         public int ChildCommentsCount { get; set; }
         public Guid? ParentCommentId { get; set; }
+        public Guid PostId { get; set; }
     }
 }

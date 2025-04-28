@@ -81,8 +81,8 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
 
             foreach (var feedCollection in feeds)
             {
-                if (feedCollection == null || feedCollection.Count != 0) continue;
-                BaseRecommendationFeed feed = feedCollection.First();
+                if (feedCollection == null) continue;
+                BaseRecommendationFeed feed = feedCollection.First(e => e.Type == RecommendationFeedTypes.PostsFromFollowersFeed);
                 feed.RecommendationItemsCount++;
 
                 var RecommendationItem = new RecommendationItem

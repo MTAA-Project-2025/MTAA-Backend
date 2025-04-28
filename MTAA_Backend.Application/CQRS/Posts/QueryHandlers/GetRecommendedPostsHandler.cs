@@ -14,6 +14,8 @@ using MTAA_Backend.Domain.Interfaces.RecommendationSystem.RecommendationFeedServ
 using MTAA_Backend.Domain.Resources.Posts.RecommendationSystem;
 using MTAA_Backend.Infrastructure;
 using System.Collections.Generic;
+using static Betalgo.Ranul.OpenAI.ObjectModels.SharedModels.IOpenAIModels;
+using System.Threading;
 
 namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 {
@@ -124,33 +126,15 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                 }
                 posts.AddRange(newPosts.Select(e => e.Post).ToList());
             }
-            if (totalCount > 0)
+            if (mappedPosts.Count< request.PageParameters.PageSize)
             {
-                var newPosts = await _preferencesRecommendationService.GetRealTimeRecommendations(user.Id, totalCount);
-
-                for (int i = 0; i < posts.Count; i++)
-                {
-                    var post = posts.ElementAt(i);
-                    var mapPost = _mapper.Map<FullPostResponse>(post);
-
-                    if (post.Location != null)
-                    {
-                        mapPost.LocationId = post.Location.Id;
-                    }
-                    if (post.Owner.Avatar != null)
-                    {
-                        if (post.Owner.Avatar.CustomAvatar != null)
-                        {
-                            mapPost.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(post.Owner.Avatar.CustomAvatar);
-                        }
-                        else if (post.Owner.Avatar.PresetAvatar != null)
-                        {
-                            mapPost.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(post.Owner.Avatar.PresetAvatar);
-                        }
-                    }
-                    mappedPosts.Add(mapPost);
-                }
-                posts.AddRange(newPosts);
+                totalCount=request.PageParameters.PageSize - mappedPosts.Count;
+                totalCount =await AddReccomendationPosts(mappedPosts, totalCount, user.Id, isStrict: true, cancellationToken);
+            }
+            if (mappedPosts.Count< request.PageParameters.PageSize)
+            {
+                totalCount = request.PageParameters.PageSize - mappedPosts.Count;
+                totalCount = await AddReccomendationPosts(mappedPosts, totalCount, user.Id, isStrict: false, cancellationToken);
             }
 
             await _mediator.Publish(new GetRecommendedPostsEvent()
@@ -160,6 +144,56 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
             }, cancellationToken);
 
             return mappedPosts;
+        }
+
+        private async Task<int> AddReccomendationPosts(List<FullPostResponse> mappedPosts, int totalCount, string userId, bool isStrict, CancellationToken cancellationToken)
+        {
+            var newPostsIds = await _preferencesRecommendationService.GetRealTimeRecommendations(userId, totalCount, isStrict: isStrict, cancellationToken: cancellationToken);
+
+            var newPosts = await _dbContext.Posts.Where(e => newPostsIds.Contains(e.Id))
+                        .Include(e => e.Location)
+                        .Include(e => e.Owner)
+                            .ThenInclude(e => e.Avatar)
+                                .ThenInclude(e => e.CustomAvatar)
+                                    .ThenInclude(e => e.Images)
+                        .Include(e => e.Owner)
+                            .ThenInclude(e => e.Avatar)
+                                .ThenInclude(e => e.PresetAvatar)
+                                    .ThenInclude(e => e.Images)
+                        .Include(e => e.Images)
+                            .ThenInclude(e => e.Images)
+                        .Select(e => new
+                        {
+                            Post = e,
+                            IsLiked = e.Likes.Any(e => e.UserId == userId)
+                        })
+                        .ToListAsync(cancellationToken);
+
+            for (int i = 0; i < newPosts.Count; i++)
+            {
+                var post = newPosts[i].Post;
+                var mapPost = _mapper.Map<FullPostResponse>(post);
+                mapPost.IsLiked = newPosts[i].IsLiked;
+
+                if (post.Location != null)
+                {
+                    mapPost.LocationId = post.Location.Id;
+                }
+                if (post.Owner.Avatar != null)
+                {
+                    if (post.Owner.Avatar.CustomAvatar != null)
+                    {
+                        mapPost.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(post.Owner.Avatar.CustomAvatar);
+                    }
+                    else if (post.Owner.Avatar.PresetAvatar != null)
+                    {
+                        mapPost.Owner.Avatar = _mapper.Map<MyImageGroupResponse>(post.Owner.Avatar.PresetAvatar);
+                    }
+                }
+                mappedPosts.Add(mapPost);
+            }
+
+            return totalCount - newPostsIds.Count;
         }
     }
 }

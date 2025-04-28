@@ -49,8 +49,8 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.QueryHandlers
                 .Select(user => new
                 {
                     User = user,
-                    IsFollowing = user.UserRelationships1.Any(e => e.User2Id == userId && e.IsUser1Following) ||
-                                  user.UserRelationships2.Any(e => e.User1Id == userId && e.IsUser2Following),
+                    IsFollowing = user.UserRelationships1.Any(e => e.User2Id == userId && e.IsUser2Following) ||
+                                  user.UserRelationships2.Any(e => e.User1Id == userId && e.IsUser1Following),
                 })
                 .ToListAsync(cancellationToken);
 

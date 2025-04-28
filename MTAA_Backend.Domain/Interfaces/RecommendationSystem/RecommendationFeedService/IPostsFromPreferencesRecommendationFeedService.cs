@@ -13,6 +13,6 @@ namespace MTAA_Backend.Domain.Interfaces.RecommendationSystem.RecommendationFeed
         public Task AddFeed(string userId, CancellationToken cancellationToken = default);
         public Task RecomendPostsBackgroundJob(CancellationToken cancellationToken = default);
         public Task RecomendPostsBackgroundJobByFeed(LocalRecommendationFeed feed, CancellationToken cancellationToken = default);
-        public Task<ICollection<Post>> GetRealTimeRecommendations(string userId, int count, CancellationToken cancellationToken = default);
+        public Task<ICollection<Guid>> GetRealTimeRecommendations(string userId, int count, bool isStrict = true, CancellationToken cancellationToken = default);
     }
 }
