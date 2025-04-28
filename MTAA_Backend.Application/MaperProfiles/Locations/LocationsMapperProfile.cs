@@ -11,6 +11,7 @@ namespace MTAA_Backend.Application.MaperProfiles.Locations
         public LocationsMapperProfile()
         {
             CreateMap<GetLocationPointsRequest, GetLocationPoints>();
+            CreateMap<AddLocationRequest, UpdatePostLocation>();
         }
     }
 }

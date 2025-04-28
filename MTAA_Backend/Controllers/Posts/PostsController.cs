@@ -70,8 +70,13 @@ namespace MTAA_Backend.Api.Controllers.Posts
 
             if (request.Location != null)
             {
-                var locationCommand = _mapper.Map<UpdatePostLocation>(request.Location);
-                await _mediator.Send(locationCommand);
+                await _mediator.Send(new UpdatePostLocation()
+                {
+                    EventTime = request.Location.EventTime,
+                    Latitude = request.Location.Latitude,
+                    Longitude = request.Location.Longitude,
+                    PostId = request.Id
+                });
             }
 
             return Ok();
@@ -101,6 +106,19 @@ namespace MTAA_Backend.Api.Controllers.Posts
             return Ok(res);
         }
 
+        [HttpPost]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("get-liked")]
+        [ProducesResponseType(typeof(ICollection<FullPostResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ICollection<FullPostResponse>>> GetLikedPosts([FromBody] PageParameters pageParameters)
+        {
+            var res = await _mediator.Send(new GetLikedPosts()
+            {
+                PageParameters = pageParameters,
+            });
+            return Ok(res);
+        }
+
         [HttpGet]
         [Authorize(Roles = UserRoles.User)]
         [Route("get-by-id/{id}")]
@@ -127,6 +145,7 @@ namespace MTAA_Backend.Api.Controllers.Posts
             });
             return Ok(res);
         }
+
 
         [HttpDelete]
         [Authorize(Roles = UserRoles.User)]

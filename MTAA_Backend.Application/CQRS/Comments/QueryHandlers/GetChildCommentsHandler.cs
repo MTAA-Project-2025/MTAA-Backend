@@ -4,16 +4,19 @@ using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Application.CQRS.Comments.Queries;
 using MTAA_Backend.Domain.DTOs.Comments.Responses;
 using MTAA_Backend.Domain.DTOs.Images.Response;
+using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Comments;
 using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Comments.QueryHandlers
 {
-    public class GetChildCommentsHandler(MTAA_BackendDbContext _dbContext, IMapper _mapper)
+    public class GetChildCommentsHandler(MTAA_BackendDbContext _dbContext, IMapper _mapper,
+        IUserService _userService)
     : IRequestHandler<GetChildComments, ICollection<FullCommentResponse>>
     {
         public async Task<ICollection<FullCommentResponse>> Handle(GetChildComments request, CancellationToken cancellationToken)
         {
+            var userId = _userService.GetCurrentUserId();
             var commentsWithInteraction = await _dbContext.Comments
                 .Where(e => e.ParentCommentId == request.ParentCommentId)
                 .OrderBy(e => e.DataCreationTime)
@@ -31,7 +34,7 @@ namespace MTAA_Backend.Application.CQRS.Comments.QueryHandlers
                 {
                     Comment = c,
                     InteractionType = c.CommentInteractions
-                    .Where(ui => ui.UserId == request.UserId)
+                    .Where(ui => ui.UserId == userId)
                     .Select(ui => (CommentInteractionType?)ui.Type)
                     .FirstOrDefault() ?? CommentInteractionType.None
                 })

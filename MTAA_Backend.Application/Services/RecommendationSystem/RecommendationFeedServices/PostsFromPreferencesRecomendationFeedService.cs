@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using MTAA_Backend.Domain.DTOs.RecommendationSystem.Requests;
 using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
+using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
@@ -109,16 +110,16 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
 
         }
 
-        public async Task<ICollection<Post>> GetRealTimeRecommendations(string userId, int count, CancellationToken cancellationToken = default)
+        public async Task<ICollection<Guid>> GetRealTimeRecommendations(string userId, int count, bool isStrict = true, CancellationToken cancellationToken = default)
         {
-            int textCount = (int)(count * TextWidth);
-            int imagesCount = (int)(count * ImagesWeight);
+            int textCount = (int)(Math.Round(count * TextWidth));
+            int imagesCount = (int)(Math.Round(count * ImagesWeight));
 
             var userTextVectorRes = await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostTextVectors, userId);
             var userImageVectorRes = await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostImageVectors, userId);
 
-            var textsRes = await _vectorDatabaseRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, userTextVectorRes.Vectors.Vector.Data.ToArray(), (ulong)textCount, userId, cancellationToken: cancellationToken);
-            var imagesRes = await _vectorDatabaseRepository.GetPostVectors(VectorCollections.PostImageEmbeddings, userImageVectorRes.Vectors.Vector.Data.ToArray(), (ulong)imagesCount, userId, cancellationToken: cancellationToken);
+            var textsRes = await _vectorDatabaseRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, userTextVectorRes.Vectors.Vector.Data.ToArray(), (ulong)textCount, userId, isStrict: isStrict, cancellationToken: cancellationToken);
+            var imagesRes = await _vectorDatabaseRepository.GetPostVectors(VectorCollections.PostImageEmbeddings, userImageVectorRes.Vectors.Vector.Data.ToArray(), (ulong)imagesCount, userId, isStrict: isStrict, cancellationToken: cancellationToken);
             List<Guid> postIds = new List<Guid>(count);
 
             foreach (var textRes in textsRes)
@@ -131,19 +132,7 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
                 await _vectorDatabaseRepository.UpdatePostWatched(Guid.Parse(imageRes.Id.Uuid), userId, cancellationToken);
                 postIds.Add(Guid.Parse(imageRes.Id.Uuid));
             }
-
-            return await _dbContext.Posts.Where(e => postIds.Contains(e.Id))
-                                        .Include(e => e.Owner)
-                                            .ThenInclude(e => e.Avatar)
-                                                .ThenInclude(e => e.CustomAvatar)
-                                                    .ThenInclude(e => e.Images)
-                                        .Include(e => e.Owner)
-                                            .ThenInclude(e => e.Avatar)
-                                                .ThenInclude(e => e.PresetAvatar)
-                                                    .ThenInclude(e => e.Images)
-                                        .Include(e => e.Images)
-                                            .ThenInclude(e => e.Images)
-                                        .ToListAsync(cancellationToken);
+            return postIds;
         }
     }
 }

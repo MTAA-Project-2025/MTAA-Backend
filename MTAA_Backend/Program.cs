@@ -116,7 +116,7 @@ public class Program
         builder.Services.AddScoped<INormalizeLocationService, NormalizeLocationService>();
         builder.Services.AddScoped<ILocationService, LocationService>();
 
-        builder.Services.AddScoped<ISSEClientStorage, SSEClientStorage>();
+        builder.Services.AddSingleton<ISSEClientStorage, SSEClientStorage>();
 
         builder.Services.AddSingleton<IMLNetService, MLNetService>();
 

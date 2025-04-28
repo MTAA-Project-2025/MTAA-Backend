@@ -16,13 +16,14 @@ namespace MTAA_Backend.Application.Repositories
             _qdrantClient = qdrantClient;
         }
 
-        public async Task<IReadOnlyList<ScoredPoint>> GetPostVectors(string collectionName, float[] userVector, ulong limit, string? userId, ulong offset = 0, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<ScoredPoint>> GetPostVectors(string collectionName, float[] userVector, ulong limit, string? userId, ulong offset = 0, bool isStrict = true, CancellationToken cancellationToken = default)
         {
             Filter filter = null;
-            if (userId != null)
+            if (userId != null && isStrict)
             {
                 filter = new Filter { MustNot = { MatchKeyword("watched[]", userId) } };
             }
+            if (limit <= 0) return new List<ScoredPoint>();
             return await _qdrantClient.SearchAsync(collectionName: collectionName,
                 vector: userVector,
                 limit: limit,
@@ -95,13 +96,26 @@ namespace MTAA_Backend.Application.Repositories
 
         public async Task<ScoredPoint> GetUserPostVector(string collectionName, string userId)
         {
-            var userVector = (await _qdrantClient.QueryAsync(
-                collectionName: collectionName,
-                query: Guid.Parse(userId),
-                vectorsSelector: true
-            )).FirstOrDefault();
+            try
+            {
+                var userVector = (await _qdrantClient.QueryAsync(
+                    collectionName: collectionName,
+                    query: Guid.Parse(userId),
+                    vectorsSelector: true
+                )).FirstOrDefault();
+                return userVector;
+            }
+            catch (Exception ex)
+            {
+                await AddUserPostVector(collectionName, userId);
 
-            return userVector;
+                var userVector = (await _qdrantClient.QueryAsync(
+                    collectionName: collectionName,
+                    query: Guid.Parse(userId),
+                    vectorsSelector: true
+                )).FirstOrDefault();
+                return userVector;
+            }
         }
 
         public async Task RemovePostVectors(Guid postId)

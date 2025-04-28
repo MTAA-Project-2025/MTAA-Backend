@@ -26,6 +26,13 @@ namespace MTAA_Backend.Application.CQRS.Comments.EventHadlers
                 }
             }
 
+            if (notification.PostId == null) return;
+            var post = await _dbContext.Posts.Where(e => e.Id == notification.PostId).FirstOrDefaultAsync(cancellationToken);
+            if (post == null) return;
+            post.CommentsCount -= decreaseBy;
+
+
+
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }

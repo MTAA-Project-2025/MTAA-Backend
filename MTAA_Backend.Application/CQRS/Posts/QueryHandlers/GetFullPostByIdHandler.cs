@@ -26,6 +26,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
             var userId = _userService.GetCurrentUserId();
 
             var post = await _dbContext.Posts.Where(e => e.Id == request.Id)
+                                  .Include(e=>e.Location)
                                   .Include(e => e.Owner)
                                       .ThenInclude(e => e.Avatar)
                                           .ThenInclude(e => e.CustomAvatar)
@@ -50,7 +51,10 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
             var response = _mapper.Map<FullPostResponse>(post);
             response.IsLiked = postLike != null;
 
-
+            if (post.Location != null)
+            {
+                response.LocationId = post.Location.Id;
+            }
             if (post.Owner.Avatar != null)
             {
                 if (post.Owner.Avatar.CustomAvatar != null)

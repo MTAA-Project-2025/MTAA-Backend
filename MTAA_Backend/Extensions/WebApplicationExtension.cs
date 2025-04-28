@@ -160,6 +160,7 @@ namespace MTAA_Backend.Api.Extensions
 
             if (email == null || password == null || username == null) return;
 
+
             if (await _userManager.FindByEmailAsync(email) != null) return;
 
             var newUser = new User

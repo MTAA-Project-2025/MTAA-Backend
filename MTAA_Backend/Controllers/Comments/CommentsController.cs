@@ -14,6 +14,7 @@ using MTAA_Backend.Domain.DTOs.Comments.Requests;
 using MTAA_Backend.Domain.DTOs.Comments.Responses;
 using MTAA_Backend.Domain.DTOs.Shared.Requests;
 using MTAA_Backend.Domain.Entities.Users;
+using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Customers;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
@@ -65,22 +66,23 @@ namespace MTAA_Backend.Api.Controllers.Comments
         [HttpDelete("delete/{id}")]
         [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteComment([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteComment([FromRoute] string id)
         {
-            await Guard.Against.NotCommentOwner(id, _dbContext, _localizer, _userService);
+            Guid parseId = ParseGuid(id);
+            await Guard.Against.NotCommentOwner(parseId, _dbContext, _localizer, _userService);
 
-            await _mediator.Send(new DeleteComment() { CommentId = id });
+            await _mediator.Send(new DeleteComment() { CommentId = parseId });
             return Ok();
         }
 
         [HttpPost("get-from-post/{postId}")]
         [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType(typeof(IEnumerable<FullCommentResponse>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<FullCommentResponse>>> GetPostComments([FromRoute] Guid postId, [FromBody] PageParameters pageParameters)
+        public async Task<ActionResult<IEnumerable<FullCommentResponse>>> GetPostComments([FromRoute] string postId, [FromBody] PageParameters pageParameters)
         {
             var comments = await _mediator.Send(new GetPostComments()
             {
-                PostId = postId,
+                PostId = ParseGuid(postId),
                 PageParameters = pageParameters
             });
             return Ok(comments);
@@ -89,12 +91,24 @@ namespace MTAA_Backend.Api.Controllers.Comments
         [HttpPost("get-from-children/{parentCommentId}")]
         [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType(typeof(IEnumerable<FullCommentResponse>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<FullCommentResponse>>> GetChildComments([FromRoute] Guid parentCommentId, [FromBody] PageParameters pageParameters)
+        public async Task<ActionResult<IEnumerable<FullCommentResponse>>> GetChildComments([FromRoute] string parentCommentId, [FromBody] PageParameters pageParameters)
         {
             var comments = await _mediator.Send(new GetChildComments()
             {
-                ParentCommentId = parentCommentId,
+                ParentCommentId = ParseGuid(parentCommentId),
                 PageParameters = pageParameters
+            });
+            return Ok(comments);
+        }
+
+        [HttpGet("get-by-id/{id}")]
+        [Authorize(Roles = UserRoles.User)]
+        [ProducesResponseType(typeof(FullCommentResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<FullCommentResponse>> GetCommentById([FromRoute] string id)
+        {
+            var comments = await _mediator.Send(new GetCommentById()
+            {
+                Id = ParseGuid(id)
             });
             return Ok(comments);
         }
@@ -102,19 +116,39 @@ namespace MTAA_Backend.Api.Controllers.Comments
         [HttpPost("like/{commentId}")]
         [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> LikeComment([FromRoute] Guid commentId)
+        public async Task<IActionResult> LikeComment([FromRoute] string commentId)
         {
-            await _mediator.Send(new LikeComment() { CommentId = commentId });
+            await _mediator.Send(new LikeComment() { CommentId = ParseGuid(commentId) });
             return Ok();
         }
 
         [HttpPost("dislike/{commentId}")]
         [Authorize(Roles = UserRoles.User)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DislikeComment([FromRoute] Guid commentId)
+        public async Task<IActionResult> DislikeComment([FromRoute] string commentId)
         {
-            await _mediator.Send(new DislikeComment() { CommentId = commentId });
+            await _mediator.Send(new DislikeComment() { CommentId = ParseGuid(commentId) });
             return Ok();
+        }
+
+        [HttpPost("set-interaction-to-none/{commentId}")]
+        [Authorize(Roles = UserRoles.User)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> SetCommentInteractionToNone([FromRoute] string commentId)
+        {
+            await _mediator.Send(new SetCommentInteractionToNone() { CommentId = ParseGuid(commentId) });
+            return Ok();
+        }
+
+        private Guid ParseGuid(string id)
+        {
+            Guid parsedId;
+            var parseRes = Guid.TryParse(id, out parsedId);
+            if (!parseRes)
+            {
+                throw new HttpException("Id is not in the correct format of GUID", HttpStatusCode.BadRequest);
+            }
+            return parsedId;
         }
     }
 }

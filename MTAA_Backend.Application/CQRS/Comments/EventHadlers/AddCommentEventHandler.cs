@@ -17,14 +17,12 @@ namespace MTAA_Backend.Application.CQRS.Comments.EventHadlers
         public async Task Handle(AddCommentEvent notification, CancellationToken cancellationToken)
         {
             var currentUser = await _userService.GetCurrentUser();
+            if (notification.PostId == null) return;
+            var post = await _dbContext.Posts.Where(e => e.Id == notification.PostId).FirstOrDefaultAsync(cancellationToken);
+            if (post == null || currentUser == null) return;
+            post.CommentsCount++;
             if (notification.ParentCommentId == null)
             {
-                if (notification.PostId == null) return;
-                var post = await _dbContext.Posts.Where(e => e.Id == notification.PostId).FirstOrDefaultAsync(cancellationToken);
-                
-                
-                if (post == null || currentUser == null) return;
-
                 await _mediator.Send(new AddNotification()
                 {
                     PostId = post.Id,
