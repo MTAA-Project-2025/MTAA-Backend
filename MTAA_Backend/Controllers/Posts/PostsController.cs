@@ -146,6 +146,19 @@ namespace MTAA_Backend.Api.Controllers.Posts
             return Ok(res);
         }
 
+        [HttpPost]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("get-post-version-items")]
+        [ProducesResponseType(typeof(ICollection<VersionPostItemResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ICollection<VersionPostItemResponse>>> GetPostVersionItems([FromBody] PageParameters pageParameters)
+        {
+            var res = await _mediator.Send(new GetPostVersionItems()
+            {
+                PageParameters = pageParameters
+            });
+            return Ok(res);
+        }
+
 
         [HttpDelete]
         [Authorize(Roles = UserRoles.User)]

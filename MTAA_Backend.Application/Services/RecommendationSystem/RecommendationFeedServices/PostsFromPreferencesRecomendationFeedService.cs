@@ -74,6 +74,7 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
         public async Task RecomendPostsBackgroundJobByFeed(LocalRecommendationFeed feed, CancellationToken cancellationToken = default)
         {
             int loadedCount = MaxFeedCount - feed.RecommendationItems.Count;
+            if (loadedCount <= 0) return;
             int textCount = (int)(loadedCount * TextWidth);
             int imagesCount = (int)(loadedCount * ImagesWeight);
 

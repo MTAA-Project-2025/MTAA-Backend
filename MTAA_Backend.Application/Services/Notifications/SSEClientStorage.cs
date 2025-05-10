@@ -1,4 +1,5 @@
 ﻿using MTAA_Backend.Domain.DTOs.Notifications.Responses;
+using MTAA_Backend.Domain.DTOs.Versioning.Responses;
 using MTAA_Backend.Domain.Interfaces;
 using System.Collections.Concurrent;
 using System.Text;
@@ -41,7 +42,29 @@ namespace MTAA_Backend.Application.Services.Notifications
             if (!_clients.TryGetValue(userId, out var responses)) return;
 
             var json = JsonSerializer.Serialize(notification);
-            var data = $"data: {json}\n\n";
+            var data = $"event: notification\ndata: {json}\n\n";
+            var bytes = Encoding.UTF8.GetBytes(data);
+
+            foreach (var response in responses.ToList())
+            {
+                try
+                {
+                    await response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    await response.Body.FlushAsync();
+                }
+                catch
+                {
+                    responses.Remove(response);
+                }
+            }
+        }
+
+        public async Task ChangeVersionAsync(string userId, VersionItemResponse versionItem)
+        {
+            if (!_clients.TryGetValue(userId, out var responses)) return;
+
+            var json = JsonSerializer.Serialize(versionItem);
+            var data = $"event: version\ndata: {json}\n\n";
             var bytes = Encoding.UTF8.GetBytes(data);
 
             foreach (var response in responses.ToList())

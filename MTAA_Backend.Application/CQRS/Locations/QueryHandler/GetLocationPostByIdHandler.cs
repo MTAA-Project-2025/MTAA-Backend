@@ -34,7 +34,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                     Description = p.Description,
                     LocationPoint = p.Location.Points.First(),
                     Image = p.Images.First(),
-                    OwnerDisplayName = p.Owner.DisplayName
+                    OwnerDisplayName = p.Owner.DisplayName,
+                    Version = p.Version
                 })
                 .FirstOrDefaultAsync(cancellationToken);
 
@@ -45,6 +46,12 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
             }
 
             MyImageResponse img = _mapper.Map<MyImageResponse>(post.Image.Images.Where(e => e.Type == ImageSizeType.Small).First());
+
+
+            if (post.LocationPoint == null)
+            {
+                return null;
+            }
 
             var point = new SimpleLocationPointResponse
             {
@@ -57,6 +64,7 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                 Type = post.LocationPoint.Type,
                 PostId = post.Id,
             };
+            
 
             return new LocationPostResponse
             {
@@ -67,7 +75,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                 Description = post.Description,
                 Point = point,
                 SmallFirstImage = img,
-                OwnerDisplayName = post.OwnerDisplayName
+                OwnerDisplayName = post.OwnerDisplayName,
+                Version = post.Version
             };
         }
     }

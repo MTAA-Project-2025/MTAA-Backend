@@ -76,6 +76,10 @@ namespace MTAA_Backend.Infrastructure.Configuration.Users
                     .WithOne(n => n.User)
                     .HasForeignKey(n => n.UserId);
 
+            builder.HasMany(e => e.VersionItems)
+                   .WithOne(e => e.User)
+                   .HasForeignKey(e => e.UserId);
+
             builder.HasIndex(e => new { e.DataCreationTime, e.IsDeleted, e.DisplayName, e.UserName });
         }
     }

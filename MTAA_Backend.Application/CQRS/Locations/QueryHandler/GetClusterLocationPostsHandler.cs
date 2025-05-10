@@ -29,7 +29,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                     Description = p.Description,
                     LocationPoint = p.Location.Points.First(),
                     Image = p.Images.First(),
-                    OwnerDisplayName = p.Owner.DisplayName
+                    OwnerDisplayName = p.Owner.DisplayName,
+                    Version = p.Version
                 })
                 .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
                 .Take(request.PageParameters.PageSize)
@@ -62,7 +63,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                     Description = post.Description,
                     Point = point,
                     SmallFirstImage = img,
-                    OwnerDisplayName=post.OwnerDisplayName
+                    OwnerDisplayName=post.OwnerDisplayName,
+                    Version = post.Version,
                 });
             }
 

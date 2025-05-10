@@ -16,6 +16,8 @@ namespace MTAA_Backend.Domain.Entities.Locations
 
         public DateTime EventTime { get; set; }
 
+        public int Version { get; set; } = 0;
+
         public ICollection<LocationPoint> Points { get; set; } = new HashSet<LocationPoint>();
     }
 }

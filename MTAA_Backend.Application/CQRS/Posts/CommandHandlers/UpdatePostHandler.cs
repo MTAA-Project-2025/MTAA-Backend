@@ -107,6 +107,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
             }
 
             post.Description = request.Description;
+            post.Version++;
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             await _mediator.Publish(new UpdatePostEvent()

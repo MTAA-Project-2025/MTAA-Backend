@@ -35,6 +35,8 @@ namespace MTAA_Backend.Domain.Entities.Posts
 
         public double GlobalScore { get; set; }
 
+        public int Version { get; set; } = 0;
+
         public ICollection<User> WatchedUsers { get; set; } = new HashSet<User>();
         public ICollection<RecommendationItem> RecommendationItems { get; set; } = new HashSet<RecommendationItem>();
 
