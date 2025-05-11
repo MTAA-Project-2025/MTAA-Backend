@@ -12,12 +12,14 @@ using MTAA_Backend.Domain.Resources.Images;
 using MTAA_Backend.Domain.Resources.Other;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using AutoMapper;
+using MTAA_Backend.Domain.Interfaces;
 
 namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
 {
     public class GetLocationPointsHandler(MTAA_BackendDbContext _dbContext,
         INormalizeLocationService _normalizeLocationService,
-        IMapper _mapper) : IRequestHandler<GetLocationPoints, ICollection<SimpleLocationPointResponse>>
+        IMapper _mapper,
+        IUserService _userService) : IRequestHandler<GetLocationPoints, ICollection<SimpleLocationPointResponse>>
     {
         public async Task<ICollection<SimpleLocationPointResponse>> Handle(GetLocationPoints request, CancellationToken cancellationToken)
         {
@@ -25,6 +27,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
             double longitude = request.Longitude;
             double radius = request.Radius;
             int zoomLevel = request.ZoomLevel;
+
+            string userId = _userService.GetCurrentUserId();
 
             _normalizeLocationService.NormalizeLocation(ref latitude, ref longitude, ref radius, zoomLevel);
 
@@ -41,6 +45,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                                                 Point = e,
                                                 Image = e.Location.Post.Images.Where(p => p.Position == 0).FirstOrDefault(),
                                                 PostId = e.Location == null ? null : e.Location.PostId,
+                                                IsHidden = e.Location == null ? null : (bool?)e.Location.Post.IsHidden,
+                                                OwnerId = e.Location == null ? null : (string?)e.Location.Post.OwnerId,
                                                 ChildCount = e.LocationPoints.Count(p => p.IsVisible)
                                             })
                                             .ToListAsync(cancellationToken);
@@ -49,6 +55,7 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
 
             foreach (var location in locations)
             {
+                if (location.IsHidden != null && ((bool)location.IsHidden && location.OwnerId != userId)) continue;
                 MyImageResponse img = null;
                 if (location.Point.Type == LocationPointType.Point)
                 {

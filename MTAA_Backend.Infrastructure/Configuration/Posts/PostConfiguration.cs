@@ -45,7 +45,7 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts
                     .HasForeignKey(n => n.PostId)
                     .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasIndex(e => new { e.GlobalScore, e.CommentsCount, e.LikesCount, e.DataCreationTime, e.IsDeleted });
+            builder.HasIndex(e => new { e.GlobalScore, e.CommentsCount, e.LikesCount, e.DataCreationTime, e.IsDeleted, e.IsHidden, e.SchedulePublishDate });
         }
     }
 }

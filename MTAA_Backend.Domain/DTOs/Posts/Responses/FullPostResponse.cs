@@ -27,5 +27,7 @@ namespace MTAA_Backend.Domain.DTOs.Posts.Responses
         public Guid? LocationId { get; set; }
 
         public DateTime DataCreationTime { get; set; }
+
+        public bool IsHidden { get; set; }
     }
 }

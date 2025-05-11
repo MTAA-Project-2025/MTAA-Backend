@@ -47,6 +47,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
             for (int i = 0; i < posts.Count; i++)
             {
                 var post = posts[i];
+                if (post.IsHidden && post.OwnerId != userId) continue;
                 var mappedPost = _mapper.Map<FullPostResponse>(post);
                 mappedPost.IsLiked = true;
 

@@ -104,6 +104,32 @@ namespace MTAA_Backend.Api.Controllers.Moderation
 
         [HttpPost]
         [Authorize(Roles = UserRoles.Moderator)]
+        [Route("hide-post/{id}")]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> HidePost(Guid id)
+        {
+            await _mediator.Send(new HidePost()
+            {
+                Id = id
+            });
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.Moderator)]
+        [Route("unhide-post/{id}")]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> UnhidePost(Guid id)
+        {
+            await _mediator.Send(new UnhidePost()
+            {
+                Id = id
+            });
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.Moderator)]
         [HttpPost("notifications/system")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> AddSystemNotification([FromBody] AddSystemNotificationRequest request)

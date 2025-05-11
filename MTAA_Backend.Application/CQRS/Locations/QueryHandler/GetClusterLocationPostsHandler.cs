@@ -17,7 +17,7 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
         public async Task<ICollection<LocationPostResponse>> Handle(GetClusterLocationPosts request, CancellationToken cancellationToken)
         {
             var posts = await _dbContext.Posts
-                .Where(p => p.Location != null && p.Location.Points.Any(lp => lp.ParentId == request.CluserPointId))
+                .Where(p => p.Location != null && p.Location.Points.Any(lp => lp.ParentId == request.CluserPointId) && !p.IsHidden)
                 .Include(e=>e.Images)
                     .ThenInclude(e => e.Images)
                 .Select(p => new

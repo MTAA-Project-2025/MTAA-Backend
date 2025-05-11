@@ -37,6 +37,13 @@ namespace MTAA_Backend.Domain.Entities.Posts
 
         public int Version { get; set; } = 0;
 
+        public bool IsHidden { get; set; }
+        public string? ScheduleJobId { get; set; }
+
+        public DateTime? SchedulePublishDate { get; set; }
+
+        public string? HiddenReason { get; set; }
+
         public ICollection<User> WatchedUsers { get; set; } = new HashSet<User>();
         public ICollection<RecommendationItem> RecommendationItems { get; set; } = new HashSet<RecommendationItem>();
 

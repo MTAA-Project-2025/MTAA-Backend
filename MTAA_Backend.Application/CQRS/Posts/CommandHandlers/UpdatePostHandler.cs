@@ -73,9 +73,6 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
 
 
 
-
-
-
             var newImages = request.Images.Where(e => e.NewImage != null).ToList();
             var addRequests = new List<AddImageRequest>(newImages.Count());
             foreach (var newImage in newImages)

@@ -30,7 +30,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
         public async Task<ICollection<FullPostResponse>> Handle(GetGlobalPosts request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
-            Expression<Func<Post, bool>> filterCondition = e => !e.IsDeleted;
+            Expression<Func<Post, bool>> filterCondition = e => !e.IsDeleted && !e.IsHidden;
 
             int skipCount = 0;
             int takeCount = request.PageParameters.PageSize;

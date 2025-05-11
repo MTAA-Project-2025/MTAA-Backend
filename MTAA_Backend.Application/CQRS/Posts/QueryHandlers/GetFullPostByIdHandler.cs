@@ -39,7 +39,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                                       .ThenInclude(e => e.Images)
                                   .FirstOrDefaultAsync(cancellationToken);
 
-            if (post == null)
+            if (post == null || (post.OwnerId!=userId && post.IsHidden))
             {
                 _logger.LogError($"post not found {request.Id}");
                 throw new HttpException(_localizer[ErrorMessagesPatterns.PostNotFound], HttpStatusCode.NotFound);
