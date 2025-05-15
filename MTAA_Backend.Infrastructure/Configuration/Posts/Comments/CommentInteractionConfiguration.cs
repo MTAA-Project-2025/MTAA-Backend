@@ -22,7 +22,7 @@ namespace MTAA_Backend.Infrastructure.Configuration.Posts.Comments
             builder.HasOne(ci => ci.Comment)
                 .WithMany(e => e.CommentInteractions)
                 .HasForeignKey(ci => ci.CommentId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(ci => ci.Type);
         }

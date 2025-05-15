@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Comments.Commands;
+using MTAA_Backend.Application.CQRS.Comments.Events;
 using MTAA_Backend.Domain.Entities.Posts.Comments;
 using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Exceptions;
@@ -17,7 +18,8 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
         ILogger<LikeCommentHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
-        IUserService _userService) : IRequestHandler<LikeComment>
+        IUserService _userService,
+        IMediator _mediator) : IRequestHandler<LikeComment>
     {
         public async Task Handle(LikeComment request, CancellationToken cancellationToken)
         {
@@ -66,6 +68,10 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
             }
 
             await _dbContext.SaveChangesAsync(cancellationToken);
+            await _mediator.Publish(new LikeCommentEvent()
+            {
+                CommentId = request.CommentId,
+            });
         }
     }
 

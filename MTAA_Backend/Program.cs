@@ -117,6 +117,7 @@ public class Program
         builder.Services.AddScoped<ILocationService, LocationService>();
 
         builder.Services.AddSingleton<ISSEClientStorage, SSEClientStorage>();
+        builder.Services.AddSingleton<IFCMService, FCMService>();
 
         builder.Services.AddSingleton<IMLNetService, MLNetService>();
 
@@ -132,6 +133,10 @@ public class Program
 
         Task.Delay(10000);
         using var scope = app.Services.CreateScope();
+
+        var fcmService = scope.ServiceProvider.GetRequiredService<IFCMService>();
+        fcmService.Initialize("firebase-credentials.json");
+
         var dbcontext = scope.ServiceProvider.GetRequiredService<MTAA_BackendDbContext>();
         //dbcontext.Database.EnsureDeletedAsync().Wait();
         dbcontext.Database.MigrateAsync().Wait();

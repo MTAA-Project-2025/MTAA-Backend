@@ -13,6 +13,7 @@ using MTAA_Backend.Domain.DTOs.Posts.Responses;
 using MTAA_Backend.Domain.DTOs.Shared.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Other;
 using MTAA_Backend.Domain.DTOs.Versioning.Responses;
 using MTAA_Backend.Domain.Entities.Versions;
 using MTAA_Backend.Domain.Resources.Customers;
@@ -75,6 +76,18 @@ namespace MTAA_Backend.Api.Controllers.Users
             return Ok(result);
         }
         #endregion
+
+        [HttpPost("save-firebase-token")]
+        [Authorize(Roles = UserRoles.User)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> SaveFirebaseToken([FromBody] FirebaseTokenRequest request)
+        {
+            await _mediator.Send(new SaveFirebaseToken()
+            {
+                Token = request.Token
+            });
+            return Ok();
+        }
 
         #region update
         [HttpPut]

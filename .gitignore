@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/MTAA_Backend/mtaa-2d73f-firebase-adminsdk-fbsvc-c5dd3daaae.json
+/MTAA_Backend/firebase-credentials.json

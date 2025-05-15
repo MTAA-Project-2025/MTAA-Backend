@@ -1,9 +1,11 @@
-﻿using MTAA_Backend.Domain.Interfaces;
+﻿using MTAA_Backend.Domain.Entities.Users;
+using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using System.Numerics;
+using System.Threading;
 using static Qdrant.Client.Grpc.Conditions;
 
 namespace MTAA_Backend.Application.Repositories
@@ -92,6 +94,43 @@ namespace MTAA_Backend.Application.Repositories
                     }
                 }
             );
+        }
+
+        public async Task<ScoredPoint> GetPostVector(string collectionName, Guid postId)
+        {
+            var textVector = (await _qdrantClient.QueryAsync(
+                collectionName: collectionName,
+                query: postId,
+                payloadSelector: true,
+                vectorsSelector: true
+            )).FirstOrDefault();
+
+            return textVector;
+        }
+
+        public async Task UpdateUserPostVector(string collectionName, string userId, float[] vector)
+        {
+            await _qdrantClient.UpsertAsync(collectionName: collectionName,
+                points: new List<PointStruct>
+                {
+                    new PointStruct()
+                    {
+                        Id = Guid.Parse(userId),
+                        Vectors = vector,
+                    }
+                });
+        }
+        public async Task TaskUpdatePostVector(string collectionName, Guid postId, float[] vector)
+        {
+            await _qdrantClient.UpsertAsync(collectionName: collectionName,
+                points: new List<PointStruct>
+                {
+                    new PointStruct()
+                    {
+                        Id = postId,
+                        Vectors = vector,
+                    }
+                });
         }
 
         public async Task<ScoredPoint> GetUserPostVector(string collectionName, string userId)

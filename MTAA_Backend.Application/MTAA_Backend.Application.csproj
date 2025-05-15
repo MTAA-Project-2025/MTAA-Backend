@@ -10,6 +10,7 @@
     <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.24.0" />
     <PackageReference Include="Betalgo.Ranul.OpenAI" Version="9.0.2" />
+    <PackageReference Include="FirebaseAdmin" Version="3.2.0" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="Hangfire.Core" Version="1.8.18" />
     <PackageReference Include="MailKit" Version="4.11.0" />

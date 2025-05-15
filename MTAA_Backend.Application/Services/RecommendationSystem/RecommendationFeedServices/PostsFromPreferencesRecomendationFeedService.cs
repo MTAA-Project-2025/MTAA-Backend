@@ -15,6 +15,7 @@ using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using MTAA_Backend.Domain.Resources.Posts.RecommendationSystem;
 using MTAA_Backend.Infrastructure;
+using Nest;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using System.Diagnostics.Metrics;
@@ -78,7 +79,7 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
             int textCount = (int)(loadedCount * TextWidth);
             int imagesCount = (int)(loadedCount * ImagesWeight);
 
-            var filter = new Filter { MustNot = { MatchKeyword("watched[]", feed.UserId) } };
+            var filter = new Qdrant.Client.Grpc.Filter { MustNot = { MatchKeyword("watched[]", feed.UserId) } };
 
             var userTextVectorRes = await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostTextVectors, feed.UserId);
             var userImageVectorRes = await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostImageVectors, feed.UserId);
@@ -134,6 +135,30 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
                 postIds.Add(Guid.Parse(imageRes.Id.Uuid));
             }
             return postIds;
+        }
+
+        public async Task ChangeReccommendations(string userId, Guid postId, float k, CancellationToken cancellationToken = default)
+        {
+            var userTextVectorRes = (await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostTextVectors, userId)).Vectors.Vector.Data.ToArray();
+            var userImageVectorRes = (await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostImageVectors, userId)).Vectors.Vector.Data.ToArray();
+
+            var postTextVector = (await _vectorDatabaseRepository.GetPostVector(VectorCollections.PostTextEmbeddings, postId)).Vectors.Vector.Data.ToArray();
+            var postImageVector = (await _vectorDatabaseRepository.GetPostVector(VectorCollections.PostTextEmbeddings, postId)).Vectors.Vector.Data.ToArray();
+
+            float[] textArr = new float[userTextVectorRes.Length];
+            float[] imageArr = new float[userImageVectorRes.Length];
+            for (int i =0; i < userImageVectorRes.Length; i++)
+            {
+                textArr[i] = userTextVectorRes[i] + postTextVector[i] * k;
+            }
+
+            for (int i = 0; i < userImageVectorRes.Length; i++)
+            {
+                imageArr[i] = userImageVectorRes[i] + postImageVector[i] * k;
+            }
+
+            await _vectorDatabaseRepository.UpdateUserPostVector(VectorCollections.UsersPostTextVectors, userId, textArr);
+            await _vectorDatabaseRepository.UpdateUserPostVector(VectorCollections.UsersPostImageVectors, userId, imageArr);
         }
     }
 }

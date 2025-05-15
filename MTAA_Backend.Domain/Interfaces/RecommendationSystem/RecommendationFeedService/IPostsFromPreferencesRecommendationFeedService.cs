@@ -14,5 +14,7 @@ namespace MTAA_Backend.Domain.Interfaces.RecommendationSystem.RecommendationFeed
         public Task RecomendPostsBackgroundJob(CancellationToken cancellationToken = default);
         public Task RecomendPostsBackgroundJobByFeed(LocalRecommendationFeed feed, CancellationToken cancellationToken = default);
         public Task<ICollection<Guid>> GetRealTimeRecommendations(string userId, int count, bool isStrict = true, CancellationToken cancellationToken = default);
+
+        public Task ChangeReccommendations(string userId, Guid postId, float k, CancellationToken cancellationToken = default);
     }
 }

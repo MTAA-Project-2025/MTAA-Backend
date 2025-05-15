@@ -18,6 +18,8 @@ using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Distributed;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Other;
 
 namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 {
