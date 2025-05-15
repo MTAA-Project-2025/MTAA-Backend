@@ -34,7 +34,8 @@ namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
             await _mediator.Publish(new DeleteCommentEvent()
             {
                 ChildCommentsCount = comment.ChildComments.Count,
-                ParentCommentId = comment.ParentCommentId
+                ParentCommentId = comment.ParentCommentId,
+                PostId = comment.PostId
             });
         }
     }

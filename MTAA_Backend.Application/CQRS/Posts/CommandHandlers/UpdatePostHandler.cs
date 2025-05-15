@@ -73,9 +73,6 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
 
 
 
-
-
-
             var newImages = request.Images.Where(e => e.NewImage != null).ToList();
             var addRequests = new List<AddImageRequest>(newImages.Count());
             foreach (var newImage in newImages)
@@ -107,6 +104,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
             }
 
             post.Description = request.Description;
+            post.Version++;
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             await _mediator.Publish(new UpdatePostEvent()

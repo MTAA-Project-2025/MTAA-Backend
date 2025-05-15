@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using MTAA_Backend.Application.CQRS.Posts.Commands;
+using MTAA_Backend.Application.Services.RecommendationSystem.RecommendationFeedServices;
 using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
@@ -33,6 +34,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
             if (postLike == null) return;
 
             post.LikesCount--;
+            post.GlobalScore -= PostsFromGlobalPopularityRecommendationFeedService.LikesScore;
             _dbContext.PostLikes.Remove(postLike);
 
             await _dbContext.SaveChangesAsync(cancellationToken);

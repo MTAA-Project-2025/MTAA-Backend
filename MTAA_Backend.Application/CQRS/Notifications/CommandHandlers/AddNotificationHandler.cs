@@ -2,15 +2,20 @@
 using MTAA_Backend.Application.CQRS.Notifications.Commands;
 using MTAA_Backend.Application.CQRS.Notifications.Events;
 using MTAA_Backend.Domain.Entities.Notifications;
+using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Notifications.CommandHandlers
 {
     public class AddNotificationHandler(MTAA_BackendDbContext _dbContext,
-        IMediator _mediator) : IRequestHandler<AddNotification>
+        IMediator _mediator,
+        IUserService _userService) : IRequestHandler<AddNotification>
     {
         public async Task Handle(AddNotification request, CancellationToken cancellationToken)
         {
+            var userId = _userService.GetCurrentUserId();
+            if (userId == request.UserId) return;
+
             var notification = new Notification
             {
                 Title = request.Title,

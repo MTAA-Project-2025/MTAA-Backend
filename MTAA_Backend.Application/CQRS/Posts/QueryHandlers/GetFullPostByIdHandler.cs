@@ -12,6 +12,8 @@ using MTAA_Backend.Domain.Resources.Localization.Errors;
 using System.Net;
 using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.Entities.Users;
+using Microsoft.Extensions.Caching.Distributed;
+using MTAA_Backend.Application.Extensions;
 
 namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 {
@@ -26,7 +28,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
             var userId = _userService.GetCurrentUserId();
 
             var post = await _dbContext.Posts.Where(e => e.Id == request.Id)
-                                  .Include(e=>e.Location)
+                                  .Include(e => e.Location)
                                   .Include(e => e.Owner)
                                       .ThenInclude(e => e.Avatar)
                                           .ThenInclude(e => e.CustomAvatar)
@@ -39,13 +41,13 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                                       .ThenInclude(e => e.Images)
                                   .FirstOrDefaultAsync(cancellationToken);
 
-            if (post == null)
+            if (post == null || (post.OwnerId != userId && post.IsHidden))
             {
                 _logger.LogError($"post not found {request.Id}");
                 throw new HttpException(_localizer[ErrorMessagesPatterns.PostNotFound], HttpStatusCode.NotFound);
             }
 
-            var postLike = await _dbContext.PostLikes.Where(e => e.UserId == userId && e.PostId==post.Id)
+            var postLike = await _dbContext.PostLikes.Where(e => e.UserId == userId && e.PostId == post.Id)
                                                          .FirstOrDefaultAsync(cancellationToken);
 
             var response = _mapper.Map<FullPostResponse>(post);

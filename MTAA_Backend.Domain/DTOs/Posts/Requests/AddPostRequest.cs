@@ -14,5 +14,7 @@ namespace MTAA_Backend.Domain.DTOs.Posts.Requests
         public ICollection<AddImageRequest> Images { get; set; }
         public string Description { get; set; }
         public AddLocationRequest? Location { get; set; }
+
+        public DateTime? SchedulePublishDate { get; set; }
     }
 }

@@ -8,13 +8,16 @@ using MTAA_Backend.Api.Guards.Posts;
 using MTAA_Backend.Application.CQRS.Locations.Commands;
 using MTAA_Backend.Application.CQRS.Posts.Commands;
 using MTAA_Backend.Application.CQRS.Posts.Queries;
+using MTAA_Backend.Application.CQRS.Posts.QueryHandlers;
 using MTAA_Backend.Domain.DTOs.Posts.Requests;
 using MTAA_Backend.Domain.DTOs.Posts.Responses;
 using MTAA_Backend.Domain.DTOs.Shared.Requests;
+using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Customers;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Infrastructure;
+using Nest;
 using System.Net;
 
 namespace MTAA_Backend.Api.Controllers.Posts
@@ -123,11 +126,18 @@ namespace MTAA_Backend.Api.Controllers.Posts
         [Authorize(Roles = UserRoles.User)]
         [Route("get-by-id/{id}")]
         [ProducesResponseType(typeof(FullPostResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<FullPostResponse>> GetFullPostById([FromRoute] Guid id)
+        public async Task<ActionResult<FullPostResponse>> GetFullPostById([FromRoute] string id)
         {
+            Guid parsedId;
+            var parseRes = Guid.TryParse(id, out parsedId);
+            if (!parseRes)
+            {
+                throw new HttpException("Id is not in the correct format of GUID", HttpStatusCode.BadRequest);
+            }
+
             var res = await _mediator.Send(new GetFullPostById()
             {
-                Id = id
+                Id = parsedId
             });
             return Ok(res);
         }
@@ -141,6 +151,52 @@ namespace MTAA_Backend.Api.Controllers.Posts
             var res = await _mediator.Send(new GetAccountPosts()
             {
                 UserId = userId,
+                PageParameters = pageParameters
+            });
+            return Ok(res);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("get-scheduled-posts")]
+        [ProducesResponseType(typeof(ICollection<SchedulePostResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ICollection<SchedulePostResponse>>> GetSchedulePosts([FromBody] PageParameters pageParameters)
+        {
+            var res = await _mediator.Send(new GetSchedulePosts()
+            {
+                PageParameters = pageParameters
+            });
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("get-scheduled-post/{id}")]
+        [ProducesResponseType(typeof(SchedulePostResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<SchedulePostResponse?>> GetSchedulePosts([FromRoute] string id)
+        {
+            Guid parsedId;
+            var parseRes = Guid.TryParse(id, out parsedId);
+            if (!parseRes)
+            {
+                throw new HttpException("Id is not in the correct format of GUID", HttpStatusCode.BadRequest);
+            }
+
+            var res = await _mediator.Send(new GetSchedulePostById()
+            {
+                Id = parsedId
+            });
+            return Ok(res);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.User)]
+        [Route("get-post-version-items")]
+        [ProducesResponseType(typeof(ICollection<VersionPostItemResponse>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<ICollection<VersionPostItemResponse>>> GetPostVersionItems([FromBody] PageParameters pageParameters)
+        {
+            var res = await _mediator.Send(new GetPostVersionItems()
+            {
                 PageParameters = pageParameters
             });
             return Ok(res);

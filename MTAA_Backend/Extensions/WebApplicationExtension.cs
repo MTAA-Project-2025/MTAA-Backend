@@ -48,11 +48,14 @@ namespace MTAA_Backend.Api.Extensions
 
             var existedCollections = await client.ListCollectionsAsync();
 
+            
             /*foreach(var name in existedCollections)
             {
                 await client.DeleteCollectionAsync(name);
             }
             existedCollections = await client.ListCollectionsAsync();*/
+
+            existedCollections = await client.ListCollectionsAsync();
 
             if (!existedCollections.Contains(VectorCollections.PostTextEmbeddings))
             {

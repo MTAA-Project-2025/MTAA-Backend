@@ -56,6 +56,7 @@ namespace MTAA_Backend.Infrastructure
 
         public DbSet<MyFile> MyFiles { get; set; }
         public DbSet<UserAvatar> UserAvatars { get; set; }
+        public DbSet<FirebaseItem> FirebaseItems { get; set; }
 
         public DbSet<MyImageGroup> ImageGroups { get; set; }
         public DbSet<UserPresetAvatarImage> UserPresetAvatarImages { get; set; }

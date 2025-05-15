@@ -7,6 +7,7 @@ using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.DTOs.Locations.Responses;
 using MTAA_Backend.Domain.DTOs.Posts.Responses;
 using MTAA_Backend.Domain.Exceptions;
+using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Images;
 using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Infrastructure;
@@ -17,10 +18,12 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
     public class GetLocationPostByIdHandler(MTAA_BackendDbContext _dbContext,
         IMapper _mapper,
         ILogger<GetLocationPostByIdHandler> _logger,
-        IStringLocalizer<ErrorMessagesPatterns> _localizer) : IRequestHandler<GetLocationPostById, LocationPostResponse>
+        IStringLocalizer<ErrorMessagesPatterns> _localizer,
+        IUserService _userService) : IRequestHandler<GetLocationPostById, LocationPostResponse>
     {
         public async Task<LocationPostResponse> Handle(GetLocationPostById request, CancellationToken cancellationToken)
         {
+            string userId = _userService.GetCurrentUserId();
             var post = await _dbContext.Posts
                 .Where(p => p.Location!=null && p.Location.Id == request.Id)
                 .Include(e => e.Images)
@@ -34,17 +37,26 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                     Description = p.Description,
                     LocationPoint = p.Location.Points.First(),
                     Image = p.Images.First(),
-                    OwnerDisplayName = p.Owner.DisplayName
+                    OwnerDisplayName = p.Owner.DisplayName,
+                    Version = p.Version,
+                    IsHidden = p.IsHidden,
+                    OwnerId = p.OwnerId
                 })
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (post == null)
+            if (post == null || (post.IsHidden && post.OwnerId != userId))
             {
                 _logger.LogError($"post not found {request.Id}");
                 throw new HttpException(_localizer[ErrorMessagesPatterns.PostNotFound], HttpStatusCode.NotFound);
             }
 
             MyImageResponse img = _mapper.Map<MyImageResponse>(post.Image.Images.Where(e => e.Type == ImageSizeType.Small).First());
+
+
+            if (post.LocationPoint == null)
+            {
+                return null;
+            }
 
             var point = new SimpleLocationPointResponse
             {
@@ -57,6 +69,7 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                 Type = post.LocationPoint.Type,
                 PostId = post.Id,
             };
+            
 
             return new LocationPostResponse
             {
@@ -67,7 +80,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                 Description = post.Description,
                 Point = point,
                 SmallFirstImage = img,
-                OwnerDisplayName = post.OwnerDisplayName
+                OwnerDisplayName = post.OwnerDisplayName,
+                Version = post.Version
             };
         }
     }

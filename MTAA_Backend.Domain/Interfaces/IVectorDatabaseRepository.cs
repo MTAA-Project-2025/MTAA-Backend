@@ -16,6 +16,9 @@ namespace MTAA_Backend.Domain.Interfaces
         public Task AddUserPostVector(string collectionName, string userId);
         public Task<ScoredPoint> GetUserPostVector(string collectionName, string userId);
 
+        public Task<ScoredPoint> GetPostVector(string collectionName, Guid postId);
+        public Task TaskUpdatePostVector(string collectionName, Guid postId, float[] vector);
+        public Task UpdateUserPostVector(string collectionName, string userId, float[] vector);
         public Task RemovePostVectors(Guid postId);
     }
 }

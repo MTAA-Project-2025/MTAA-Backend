@@ -76,7 +76,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
             }
             foreach (var feed in requestFeeds)
             {
-                var newPosts = await _dbContext.RecommendationItems.Where(e => e.FeedId == feed.Item1.Id)
+                var newPosts = await _dbContext.RecommendationItems.Where(e => e.FeedId == feed.Item1.Id && !e.Post.IsHidden)
                                                         .OrderByDescending(e => e.LocalScore)
                                                         .Take(feed.Item3)
                                                         .Include(e=>e.Post)
@@ -150,7 +150,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
         {
             var newPostsIds = await _preferencesRecommendationService.GetRealTimeRecommendations(userId, totalCount, isStrict: isStrict, cancellationToken: cancellationToken);
 
-            var newPosts = await _dbContext.Posts.Where(e => newPostsIds.Contains(e.Id))
+            var newPosts = await _dbContext.Posts.Where(e => newPostsIds.Contains(e.Id) && !e.IsHidden)
                         .Include(e => e.Location)
                         .Include(e => e.Owner)
                             .ThenInclude(e => e.Avatar)

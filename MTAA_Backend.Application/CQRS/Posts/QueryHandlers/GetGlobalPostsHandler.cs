@@ -18,6 +18,8 @@ using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Distributed;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Other;
 
 namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 {
@@ -30,7 +32,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
         public async Task<ICollection<FullPostResponse>> Handle(GetGlobalPosts request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
-            Expression<Func<Post, bool>> filterCondition = e => !e.IsDeleted;
+            Expression<Func<Post, bool>> filterCondition = e => !e.IsDeleted && !e.IsHidden;
 
             int skipCount = 0;
             int takeCount = request.PageParameters.PageSize;
