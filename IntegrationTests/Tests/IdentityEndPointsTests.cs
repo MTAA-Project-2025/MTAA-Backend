@@ -44,6 +44,8 @@ namespace IntegrationTests.Tests
                     A.CallTo(() => emailService.SendSighUpVerificationEmail("test@test.com","123456"));
                     services.AddSingleton(emailService);
 
+                    var blobService = A.Fake<IAzureBlobService>();
+                    services.AddSingleton(blobService);
                 });
             }).CreateClient();
         }

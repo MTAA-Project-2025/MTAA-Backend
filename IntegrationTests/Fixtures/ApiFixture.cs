@@ -1,4 +1,5 @@
 ﻿using Aspire.Hosting;
+using FakeItEasy;
 using FluentAssertions.Common;
 using Google.Protobuf.WellKnownTypes;
 using IntegrationTests.Config;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MTAA_Backend.Domain.Interfaces;
 using Projects;
 using System;
 using System.Collections.Generic;
@@ -45,17 +47,23 @@ namespace IntegrationTests.Fixtures
             };
             var builder = DistributedApplication.CreateBuilder(options);
 
-            _dbServer = builder.AddPostgres("mtaaDb");
+            //_dbServer = builder.AddPostgres("mtaaDb");
 
-            builder.AddProject<MTAA_Backend_MigrationService>("migrations")
-                .WithReference(_dbServer)
-                .WaitFor(_dbServer);
+            _dbServer = builder.AddPostgres("postgres")
+                 .WithImage("postgis/postgis")
+                 .WithPgAdmin()
+                 .WithLifetime(ContainerLifetime.Persistent);
+
+            //builder.AddProject<MTAA_Backend_MigrationService>("migrations")
+            //    .WithReference(_dbServer)
+            //    .WaitFor(_dbServer);
 
             _redis = builder.AddRedis("cache");
 
             _qdrant = builder.AddQdrant("qdrant");
 
             builder.Services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+            builder.Services.AddSingleton<IFCMService, FakeFirebaseFCM>();
             _app = builder.Build();
         }
 
@@ -78,6 +86,8 @@ namespace IntegrationTests.Fixtures
                     { "ConnectionStrings:qdrant", _qdrantConnectionString },
                 });
             });
+
+            builder.UseEnvironment("Testing");
 
             return base.CreateHost(builder);
         }
