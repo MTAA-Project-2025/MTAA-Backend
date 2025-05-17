@@ -27,6 +27,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
         private readonly MTAA_BackendDbContext _dbContext;
         private readonly IStringLocalizer _localizer;
         private readonly IUserService _userService;
+
         public ChannelController(IMediator mediator,
             IMapper mapper,
             MTAA_BackendDbContext dbContext,
