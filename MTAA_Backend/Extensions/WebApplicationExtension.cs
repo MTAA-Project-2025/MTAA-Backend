@@ -193,12 +193,16 @@ namespace MTAA_Backend.Api.Extensions
                 await _userManager.AddToRoleAsync(newUser, UserRoles.Moderator);
             }
 
-            IMediator _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            await _mediator.Publish(new CreateAccountEvent()
+            var env = app.Services.GetRequiredService<IHostEnvironment>();
+            if (!env.IsEnvironment("Testing"))
             {
-                UserId = newUser.Id
-            });
+                IMediator _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+                await _mediator.Publish(new CreateAccountEvent()
+                {
+                    UserId = newUser.Id
+                });
+            }
         }
     }
 }
