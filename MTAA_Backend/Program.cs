@@ -134,8 +134,14 @@ public class Program
         Task.Delay(10000);
         using var scope = app.Services.CreateScope();
 
-        var fcmService = scope.ServiceProvider.GetRequiredService<IFCMService>();
-        fcmService.Initialize("firebase-credentials.json");
+        var env = app.Services.GetRequiredService<IHostEnvironment>();
+        if (!env.IsEnvironment("Testing"))
+        {
+            var fcmService = scope.ServiceProvider.GetRequiredService<IFCMService>();
+            fcmService.Initialize("firebase-credentials.json");
+        }
+
+
 
         var dbcontext = scope.ServiceProvider.GetRequiredService<MTAA_BackendDbContext>();
         //dbcontext.Database.EnsureDeletedAsync().Wait();
