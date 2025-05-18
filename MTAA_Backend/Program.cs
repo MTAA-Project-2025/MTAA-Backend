@@ -120,6 +120,7 @@ public class Program
         builder.Services.AddSingleton<IFCMService, FCMService>();
 
         builder.Services.AddSingleton<IMLNetService, MLNetService>();
+        builder.Services.AddSingleton<IIllegalClassificationService, IllegalClassificationService>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

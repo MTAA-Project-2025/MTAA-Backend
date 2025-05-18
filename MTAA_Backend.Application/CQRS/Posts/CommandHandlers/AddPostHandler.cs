@@ -93,7 +93,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
             {
                 Id = id
             };
-            _mediator.Send(command);
+            await _mediator.Send(command);
         }
     }
 }
