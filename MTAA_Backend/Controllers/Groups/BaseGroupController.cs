@@ -18,6 +18,7 @@ namespace MTAA_Backend.Api.Controllers.Groups
     public class BaseGroupController : ApiController
     {
         private readonly IUserService _userService;
+
         public BaseGroupController(IMediator mediator,
             IMapper mapper,
             IUserService userService) : base(mediator, mapper)
