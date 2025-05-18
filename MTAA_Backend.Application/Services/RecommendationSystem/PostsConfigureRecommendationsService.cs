@@ -1,6 +1,8 @@
 ﻿using Hangfire;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using MTAA_Backend.Application.CQRS.Posts.Commands;
 using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
@@ -24,12 +26,18 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
         private readonly IEmbeddingsService _embeddingsService;
         private readonly QdrantClient _qdrantClient;
         private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly IIllegalClassificationService _illegalClassificationService;
+        private readonly IMediator _mediator;
+
+        const float Threshold = 0.7f;
         public PostsConfigureRecommendationsService(MTAA_BackendDbContext dbContext,
             ILogger<PostsConfigureRecommendationsService> logger,
             IStringLocalizer<ErrorMessages> localizer,
             IEmbeddingsService embeddingsService,
             QdrantClient qdrantClient,
-            IBackgroundJobClient backgroundJobClient)
+            IBackgroundJobClient backgroundJobClient,
+            IIllegalClassificationService illegalClassificationService,
+            IMediator mediator)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -37,6 +45,8 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             _qdrantClient = qdrantClient;
             _backgroundJobClient = backgroundJobClient;
             _embeddingsService = embeddingsService;
+            _illegalClassificationService = illegalClassificationService;
+            _mediator = mediator;
         }
         public async Task InitializeRecommendations(Guid postId, CancellationToken cancellationToken = default)
         {
@@ -92,6 +102,16 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
                     }
                 }
             });
+
+            var res = _illegalClassificationService.Predict(imageEmbedding);
+            if (res >= Threshold)
+            {
+                await _mediator.Send(new HidePost()
+                {
+                    Id = post.Id,
+                    Reason = "Illegal content"
+                });
+            }
         }
     }
 }
