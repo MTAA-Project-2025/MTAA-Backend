@@ -32,7 +32,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.CommandHandlers
                 }, cancellationToken);
                 return;
             }
-            location.Location.EventTime = request.EventTime;
+            location.Location.Version++;
+            location.Location.EventTime = request.EventTime.ToUniversalTime();
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             if (location.Point != null && Math.Abs(location.Point.Coordinates.X - request.Longitude) <= 0.000001 &&

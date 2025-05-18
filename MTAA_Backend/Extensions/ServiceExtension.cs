@@ -9,6 +9,7 @@ using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using System.Collections;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using static Qdrant.Client.Grpc.Qdrant;
 
@@ -20,7 +21,7 @@ namespace MTAA_Backend.Api.Extensions
         {
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Project API", Version = "v1" });
                 option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -44,6 +45,12 @@ namespace MTAA_Backend.Api.Extensions
                         new string[]{}
                     }
                 });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                if (File.Exists(xmlPath))
+                {
+                    option.IncludeXmlComments(xmlPath);
+                }
             });
 
             //services.AddSwaggerGenNewtonsoftSupport();

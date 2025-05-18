@@ -48,11 +48,14 @@ namespace MTAA_Backend.Api.Extensions
 
             var existedCollections = await client.ListCollectionsAsync();
 
+            
             /*foreach(var name in existedCollections)
             {
                 await client.DeleteCollectionAsync(name);
             }
             existedCollections = await client.ListCollectionsAsync();*/
+
+            existedCollections = await client.ListCollectionsAsync();
 
             if (!existedCollections.Contains(VectorCollections.PostTextEmbeddings))
             {
@@ -160,6 +163,7 @@ namespace MTAA_Backend.Api.Extensions
 
             if (email == null || password == null || username == null) return;
 
+
             if (await _userManager.FindByEmailAsync(email) != null) return;
 
             var newUser = new User
@@ -189,12 +193,16 @@ namespace MTAA_Backend.Api.Extensions
                 await _userManager.AddToRoleAsync(newUser, UserRoles.Moderator);
             }
 
-            IMediator _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            await _mediator.Publish(new CreateAccountEvent()
+            var env = app.Services.GetRequiredService<IHostEnvironment>();
+            if (!env.IsEnvironment("Testing"))
             {
-                UserId = newUser.Id
-            });
+                IMediator _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+                await _mediator.Publish(new CreateAccountEvent()
+                {
+                    UserId = newUser.Id
+                });
+            }
         }
     }
 }

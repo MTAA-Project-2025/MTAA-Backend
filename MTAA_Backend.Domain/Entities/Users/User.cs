@@ -58,5 +58,6 @@ namespace MTAA_Backend.Domain.Entities.Users
         public ICollection<VersionItem> VersionItems { get; set; } = new HashSet<VersionItem>();
 
         public ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
+        public ICollection<FirebaseItem> FirebaseItems { get; set; } = new HashSet<FirebaseItem>();
     }
 }

@@ -1,9 +1,11 @@
-﻿using MTAA_Backend.Domain.Interfaces;
+﻿using MTAA_Backend.Domain.Entities.Users;
+using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using System.Numerics;
+using System.Threading;
 using static Qdrant.Client.Grpc.Conditions;
 
 namespace MTAA_Backend.Application.Repositories
@@ -16,13 +18,14 @@ namespace MTAA_Backend.Application.Repositories
             _qdrantClient = qdrantClient;
         }
 
-        public async Task<IReadOnlyList<ScoredPoint>> GetPostVectors(string collectionName, float[] userVector, ulong limit, string? userId, ulong offset = 0, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<ScoredPoint>> GetPostVectors(string collectionName, float[] userVector, ulong limit, string? userId, ulong offset = 0, bool isStrict = true, CancellationToken cancellationToken = default)
         {
             Filter filter = null;
-            if (userId != null)
+            if (userId != null && isStrict)
             {
                 filter = new Filter { MustNot = { MatchKeyword("watched[]", userId) } };
             }
+            if (limit <= 0) return new List<ScoredPoint>();
             return await _qdrantClient.SearchAsync(collectionName: collectionName,
                 vector: userVector,
                 limit: limit,
@@ -93,15 +96,65 @@ namespace MTAA_Backend.Application.Repositories
             );
         }
 
-        public async Task<ScoredPoint> GetUserPostVector(string collectionName, string userId)
+        public async Task<ScoredPoint> GetPostVector(string collectionName, Guid postId)
         {
-            var userVector = (await _qdrantClient.QueryAsync(
+            var textVector = (await _qdrantClient.QueryAsync(
                 collectionName: collectionName,
-                query: Guid.Parse(userId),
+                query: postId,
+                payloadSelector: true,
                 vectorsSelector: true
             )).FirstOrDefault();
 
-            return userVector;
+            return textVector;
+        }
+
+        public async Task UpdateUserPostVector(string collectionName, string userId, float[] vector)
+        {
+            await _qdrantClient.UpsertAsync(collectionName: collectionName,
+                points: new List<PointStruct>
+                {
+                    new PointStruct()
+                    {
+                        Id = Guid.Parse(userId),
+                        Vectors = vector,
+                    }
+                });
+        }
+        public async Task TaskUpdatePostVector(string collectionName, Guid postId, float[] vector)
+        {
+            await _qdrantClient.UpsertAsync(collectionName: collectionName,
+                points: new List<PointStruct>
+                {
+                    new PointStruct()
+                    {
+                        Id = postId,
+                        Vectors = vector,
+                    }
+                });
+        }
+
+        public async Task<ScoredPoint> GetUserPostVector(string collectionName, string userId)
+        {
+            try
+            {
+                var userVector = (await _qdrantClient.QueryAsync(
+                    collectionName: collectionName,
+                    query: Guid.Parse(userId),
+                    vectorsSelector: true
+                )).FirstOrDefault();
+                return userVector;
+            }
+            catch (Exception ex)
+            {
+                await AddUserPostVector(collectionName, userId);
+
+                var userVector = (await _qdrantClient.QueryAsync(
+                    collectionName: collectionName,
+                    query: Guid.Parse(userId),
+                    vectorsSelector: true
+                )).FirstOrDefault();
+                return userVector;
+            }
         }
 
         public async Task RemovePostVectors(Guid postId)

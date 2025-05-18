@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using MTAA_Backend.Domain.DTOs.RecommendationSystem.Requests;
 using MTAA_Backend.Domain.Entities.Posts;
 using MTAA_Backend.Domain.Entities.Posts.RecommendationSystem;
+using MTAA_Backend.Domain.Entities.Users;
 using MTAA_Backend.Domain.Exceptions;
 using MTAA_Backend.Domain.Interfaces;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
@@ -14,6 +15,7 @@ using MTAA_Backend.Domain.Resources.Localization.Errors;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using MTAA_Backend.Domain.Resources.Posts.RecommendationSystem;
 using MTAA_Backend.Infrastructure;
+using Nest;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using System.Diagnostics.Metrics;
@@ -73,10 +75,11 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
         public async Task RecomendPostsBackgroundJobByFeed(LocalRecommendationFeed feed, CancellationToken cancellationToken = default)
         {
             int loadedCount = MaxFeedCount - feed.RecommendationItems.Count;
+            if (loadedCount <= 0) return;
             int textCount = (int)(loadedCount * TextWidth);
             int imagesCount = (int)(loadedCount * ImagesWeight);
 
-            var filter = new Filter { MustNot = { MatchKeyword("watched[]", feed.UserId) } };
+            var filter = new Qdrant.Client.Grpc.Filter { MustNot = { MatchKeyword("watched[]", feed.UserId) } };
 
             var userTextVectorRes = await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostTextVectors, feed.UserId);
             var userImageVectorRes = await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostImageVectors, feed.UserId);
@@ -109,16 +112,16 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
 
         }
 
-        public async Task<ICollection<Post>> GetRealTimeRecommendations(string userId, int count, CancellationToken cancellationToken = default)
+        public async Task<ICollection<Guid>> GetRealTimeRecommendations(string userId, int count, bool isStrict = true, CancellationToken cancellationToken = default)
         {
-            int textCount = (int)(count * TextWidth);
-            int imagesCount = (int)(count * ImagesWeight);
+            int textCount = (int)(Math.Round(count * TextWidth));
+            int imagesCount = (int)(Math.Round(count * ImagesWeight));
 
             var userTextVectorRes = await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostTextVectors, userId);
             var userImageVectorRes = await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostImageVectors, userId);
 
-            var textsRes = await _vectorDatabaseRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, userTextVectorRes.Vectors.Vector.Data.ToArray(), (ulong)textCount, userId, cancellationToken: cancellationToken);
-            var imagesRes = await _vectorDatabaseRepository.GetPostVectors(VectorCollections.PostImageEmbeddings, userImageVectorRes.Vectors.Vector.Data.ToArray(), (ulong)imagesCount, userId, cancellationToken: cancellationToken);
+            var textsRes = await _vectorDatabaseRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, userTextVectorRes.Vectors.Vector.Data.ToArray(), (ulong)textCount, userId, isStrict: isStrict, cancellationToken: cancellationToken);
+            var imagesRes = await _vectorDatabaseRepository.GetPostVectors(VectorCollections.PostImageEmbeddings, userImageVectorRes.Vectors.Vector.Data.ToArray(), (ulong)imagesCount, userId, isStrict: isStrict, cancellationToken: cancellationToken);
             List<Guid> postIds = new List<Guid>(count);
 
             foreach (var textRes in textsRes)
@@ -131,19 +134,31 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
                 await _vectorDatabaseRepository.UpdatePostWatched(Guid.Parse(imageRes.Id.Uuid), userId, cancellationToken);
                 postIds.Add(Guid.Parse(imageRes.Id.Uuid));
             }
+            return postIds;
+        }
 
-            return await _dbContext.Posts.Where(e => postIds.Contains(e.Id))
-                                        .Include(e => e.Owner)
-                                            .ThenInclude(e => e.Avatar)
-                                                .ThenInclude(e => e.CustomAvatar)
-                                                    .ThenInclude(e => e.Images)
-                                        .Include(e => e.Owner)
-                                            .ThenInclude(e => e.Avatar)
-                                                .ThenInclude(e => e.PresetAvatar)
-                                                    .ThenInclude(e => e.Images)
-                                        .Include(e => e.Images)
-                                            .ThenInclude(e => e.Images)
-                                        .ToListAsync(cancellationToken);
+        public async Task ChangeReccommendations(string userId, Guid postId, float k, CancellationToken cancellationToken = default)
+        {
+            var userTextVectorRes = (await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostTextVectors, userId)).Vectors.Vector.Data.ToArray();
+            var userImageVectorRes = (await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostImageVectors, userId)).Vectors.Vector.Data.ToArray();
+
+            var postTextVector = (await _vectorDatabaseRepository.GetPostVector(VectorCollections.PostTextEmbeddings, postId)).Vectors.Vector.Data.ToArray();
+            var postImageVector = (await _vectorDatabaseRepository.GetPostVector(VectorCollections.PostTextEmbeddings, postId)).Vectors.Vector.Data.ToArray();
+
+            float[] textArr = new float[userTextVectorRes.Length];
+            float[] imageArr = new float[userImageVectorRes.Length];
+            for (int i =0; i < userImageVectorRes.Length; i++)
+            {
+                textArr[i] = userTextVectorRes[i] + postTextVector[i] * k;
+            }
+
+            for (int i = 0; i < userImageVectorRes.Length; i++)
+            {
+                imageArr[i] = userImageVectorRes[i] + postImageVector[i] * k;
+            }
+
+            await _vectorDatabaseRepository.UpdateUserPostVector(VectorCollections.UsersPostTextVectors, userId, textArr);
+            await _vectorDatabaseRepository.UpdateUserPostVector(VectorCollections.UsersPostImageVectors, userId, imageArr);
         }
     }
 }

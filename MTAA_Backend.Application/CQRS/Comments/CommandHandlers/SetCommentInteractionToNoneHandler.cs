@@ -13,7 +13,6 @@ using System.Net;
 namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
 {
     public class SetCommentInteractionToNoneHandler(
-        ILogger<SetCommentInteractionToNoneHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IUserService _userService) : IRequestHandler<SetCommentInteractionToNone>

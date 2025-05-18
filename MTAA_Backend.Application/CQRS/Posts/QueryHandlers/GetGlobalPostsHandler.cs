@@ -18,6 +18,8 @@ using MTAA_Backend.Domain.DTOs.Images.Response;
 using MTAA_Backend.Domain.Interfaces.RecommendationSystem;
 using MTAA_Backend.Domain.Resources.Posts.Embeddings;
 using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Distributed;
+using MTAA_Backend.Domain.DTOs.Users.Identity.Other;
 
 namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 {
@@ -30,20 +32,34 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
         public async Task<ICollection<FullPostResponse>> Handle(GetGlobalPosts request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();
-            Expression<Func<Post, bool>> filterCondition = e => !e.IsDeleted;
+            Expression<Func<Post, bool>> filterCondition = e => !e.IsDeleted && !e.IsHidden;
 
+            int skipCount = 0;
+            int takeCount = request.PageParameters.PageSize;
+            Dictionary<Guid, float> filterPosts = new Dictionary<Guid, float>();
             if (request.FilterStr != null && request.FilterStr != "")
             {
                 var vector = (await _embeddingsService.GetTextEmbeddings(request.FilterStr)).Select(x => (float)x).ToArray();
-                var postIds = (await _vectorDbRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, vector, (ulong)request.PageParameters.PageSize, null, (ulong)(request.PageParameters.PageNumber * request.PageParameters.PageSize), cancellationToken)).Select(e => Guid.Parse(e.Id.Uuid)).ToList();
+                var postPoints = (await _vectorDbRepository.GetPostVectors(VectorCollections.PostTextEmbeddings, vector, (ulong)request.PageParameters.PageSize, null, (ulong)(request.PageParameters.PageNumber * request.PageParameters.PageSize), cancellationToken: cancellationToken)).ToList();
 
-                filterCondition = filterCondition.And(e => postIds.Any(id => id == e.Id));
+                foreach (var postPoint in postPoints)
+                {
+                    filterPosts.Add(Guid.Parse(postPoint.Id.Uuid), postPoint.Score);
+                }
+
+                filterCondition = filterCondition.And(e => filterPosts.Keys.Any(id => id == e.Id));
+                skipCount = 0;
+            }
+            else
+            {
+                skipCount = request.PageParameters.PageNumber * request.PageParameters.PageSize;
             }
 
             var posts = await _dbContext.Posts.Where(filterCondition)
                                               .OrderByDescending(e => e.GlobalScore)
-                                              .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
-                                              .Take(request.PageParameters.PageSize)
+                                              .Skip(skipCount)
+                                              .Take(takeCount)
+                                              .Include(e => e.Location)
                                               .Include(e => e.Owner)
                                                   .ThenInclude(e => e.Avatar)
                                                       .ThenInclude(e => e.CustomAvatar)
@@ -68,7 +84,10 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                 var mappedPost = _mapper.Map<FullPostResponse>(post);
                 mappedPost.IsLiked = posts[i].IsLiked;
 
-
+                if (post.Location != null)
+                {
+                    mappedPost.LocationId = post.Location.Id;
+                }
                 if (post.Owner.Avatar != null)
                 {
                     if (post.Owner.Avatar.CustomAvatar != null)
@@ -81,6 +100,11 @@ namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
                     }
                 }
                 mappedPosts.Add(mappedPost);
+            }
+
+            if (filterPosts.Count != 0)
+            {
+                mappedPosts = mappedPosts.OrderBy(e => filterPosts[e.Id]).ToList();
             }
 
             return mappedPosts;

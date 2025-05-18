@@ -17,7 +17,7 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
         public async Task<ICollection<LocationPostResponse>> Handle(GetClusterLocationPosts request, CancellationToken cancellationToken)
         {
             var posts = await _dbContext.Posts
-                .Where(p => p.Location != null && p.Location.Points.Any(lp => lp.ParentId == request.CluserPointId))
+                .Where(p => p.Location != null && p.Location.Points.Any(lp => lp.ParentId == request.CluserPointId) && !p.IsHidden)
                 .Include(e=>e.Images)
                     .ThenInclude(e => e.Images)
                 .Select(p => new
@@ -28,7 +28,9 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                     LocationId = p.Location.Id,
                     Description = p.Description,
                     LocationPoint = p.Location.Points.First(),
-                    Image = p.Images.First()
+                    Image = p.Images.First(),
+                    OwnerDisplayName = p.Owner.DisplayName,
+                    Version = p.Version
                 })
                 .Skip(request.PageParameters.PageNumber * request.PageParameters.PageSize)
                 .Take(request.PageParameters.PageSize)
@@ -61,6 +63,8 @@ namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
                     Description = post.Description,
                     Point = point,
                     SmallFirstImage = img,
+                    OwnerDisplayName=post.OwnerDisplayName,
+                    Version = post.Version,
                 });
             }
 

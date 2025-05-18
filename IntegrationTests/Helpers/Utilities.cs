@@ -37,5 +37,23 @@ namespace IntegrationTests.Helpers
             }
             await context.SaveChangesAsync();
         }
+
+        public static async Task CreateAdditionalTestUser(MTAA_BackendDbContext db, UserManager<User> userManager)
+        {
+            var user = new User
+            {
+                Id = UserSettings.SecondUserId,
+                UserName = "target",
+                Email = UserSettings.SecondEmail,
+            };
+
+            var result = await userManager.CreateAsync(user, UserSettings.Password);
+            if (!result.Succeeded)
+            {
+                throw new Exception("Failed to create test target user.");
+            }
+
+            await db.SaveChangesAsync();
+        }
     }
 }

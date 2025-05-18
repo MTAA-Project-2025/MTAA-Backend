@@ -112,15 +112,6 @@ namespace MTAA_Backend.Application.Services
                 int? sizeHeight = size.Height;
                 int cropWidth = 0;
 
-                if (sizeWidth != null && (int)sizeWidth > image.Width)
-                {
-                    sizeWidth = image.Width;
-                }
-                if (sizeHeight != null && (int)sizeHeight > image.Height)
-                {
-                    sizeHeight = image.Height;
-                }
-
                 if (sizeWidth != null && sizeHeight != null)
                 {
                     if (aspectRatio > 1)
@@ -141,6 +132,7 @@ namespace MTAA_Backend.Application.Services
                     {
                         width = (int)sizeWidth;
                         height = (int)sizeHeight;
+                        cropWidth = height;
                     }
                 }
                 else if (sizeWidth != null)
@@ -155,13 +147,13 @@ namespace MTAA_Backend.Application.Services
                 }
 
                 Image copy = image.Clone(x => x.Resize(width, height));
-                if (x != 0 || y != 0)
+                if (x != 0 || y != 0 || cropWidth != 0)
                 {
                     copy.Mutate(e => e.Crop(new Rectangle(x, y, cropWidth, cropWidth)));
                 }
 
                 var newFileName = uniqueString + "_" + size.Type + "." + ImagesFileTypes.Jpg;
-                var file = image.ConvertToIFormFile(newFileName, new JpegEncoder()
+                var file = copy.ConvertToIFormFile(newFileName, new JpegEncoder()
                 {
                     Quality = QUALITY
                 });

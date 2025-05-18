@@ -38,12 +38,14 @@ namespace MTAA_Backend.Application.Services.Locations
                 {
                     oldPoint = await _dbContext.LocationPoints
                             .Where(e => e.ZoomLevel == i && !e.IsSubPoint && e.IsVisible && e.Coordinates.Intersects(bbox))
+                            .Include(e=>e.Parent)
                             .FirstOrDefaultAsync(cancellationToken);
                 }
                 else
                 {
                     oldPoint = await _dbContext.LocationPoints
                             .Where(e => e.ZoomLevel == i && !e.IsSubPoint && e.IsVisible)
+                            .Include(e => e.Parent)
                             .FirstOrDefaultAsync(cancellationToken);
                 }
 
@@ -67,8 +69,8 @@ namespace MTAA_Backend.Application.Services.Locations
                 }
                 else
                 {
-                    double centerX = envelope.MinX + (envelope.MaxX - envelope.MinX) / 2.0;
-                    double centerY = envelope.MinY + (envelope.MaxY - envelope.MinY) / 2.0;
+                    double centerX = (oldPoint.Coordinates.X + point.Coordinates.X) / 2.0;
+                    double centerY = (oldPoint.Coordinates.Y + point.Coordinates.Y) / 2.0;
 
                     point.IsSubPoint = true;
                     oldPoint.IsSubPoint = true;
@@ -79,6 +81,7 @@ namespace MTAA_Backend.Application.Services.Locations
                         ZoomLevel = i,
                         Type = LocationPointType.Cluster,
                     };
+                    _dbContext.LocationPoints.Add(point);
                     _dbContext.LocationPoints.Add(cluster);
                     point.Parent = cluster;
                     oldPoint.Parent = cluster;

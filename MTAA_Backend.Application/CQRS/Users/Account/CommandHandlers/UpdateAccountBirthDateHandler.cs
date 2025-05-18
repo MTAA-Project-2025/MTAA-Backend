@@ -24,7 +24,7 @@ namespace MTAA_Backend.Application.CQRS.Users.Account.CommandHandlers
         public async Task Handle(UpdateAccountBirthDate request, CancellationToken cancellationToken)
         {
             var user = await _userService.GetCurrentUser();
-            user.BirthDate = request.BirthDate;
+            user.BirthDate = request.BirthDate.ToUniversalTime();
             user.IsEdited = true;
             user.DataLastEditTime = DateTime.UtcNow;
 

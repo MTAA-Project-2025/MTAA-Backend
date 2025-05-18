@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MTAA_Backend.Application.CQRS.Comments.Events;
+using MTAA_Backend.Application.Services.RecommendationSystem.RecommendationFeedServices;
 using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Comments.EventHadlers
@@ -25,6 +26,14 @@ namespace MTAA_Backend.Application.CQRS.Comments.EventHadlers
                     parentId = null;
                 }
             }
+
+            if (notification.PostId == null) return;
+            var post = await _dbContext.Posts.Where(e => e.Id == notification.PostId).FirstOrDefaultAsync(cancellationToken);
+            if (post == null) return;
+            post.CommentsCount -= decreaseBy;
+            post.GlobalScore -= PostsFromGlobalPopularityRecommendationFeedService.CommentsScore * decreaseBy;
+
+
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

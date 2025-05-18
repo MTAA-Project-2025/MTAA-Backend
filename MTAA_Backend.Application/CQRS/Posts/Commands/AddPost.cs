@@ -7,5 +7,7 @@ namespace MTAA_Backend.Application.CQRS.Posts.Commands
     {
         public ICollection<AddImageRequest> Images { get; set; }
         public string Description { get; set; }
+
+        public DateTime? SchedulePublishDate { get; set; }
     }
 }

@@ -116,9 +116,11 @@ public class Program
         builder.Services.AddScoped<INormalizeLocationService, NormalizeLocationService>();
         builder.Services.AddScoped<ILocationService, LocationService>();
 
-        builder.Services.AddScoped<ISSEClientStorage, SSEClientStorage>();
+        builder.Services.AddSingleton<ISSEClientStorage, SSEClientStorage>();
+        builder.Services.AddSingleton<IFCMService, FCMService>();
 
         builder.Services.AddSingleton<IMLNetService, MLNetService>();
+        builder.Services.AddSingleton<IIllegalClassificationService, IllegalClassificationService>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -132,6 +134,16 @@ public class Program
 
         Task.Delay(10000);
         using var scope = app.Services.CreateScope();
+
+        var env = app.Services.GetRequiredService<IHostEnvironment>();
+        if (!env.IsEnvironment("Testing"))
+        {
+            var fcmService = scope.ServiceProvider.GetRequiredService<IFCMService>();
+            fcmService.Initialize("firebase-credentials.json");
+        }
+
+
+
         var dbcontext = scope.ServiceProvider.GetRequiredService<MTAA_BackendDbContext>();
         //dbcontext.Database.EnsureDeletedAsync().Wait();
         dbcontext.Database.MigrateAsync().Wait();

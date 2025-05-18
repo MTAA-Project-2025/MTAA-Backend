@@ -439,6 +439,9 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Property<Guid?>("PostId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EventTime");
@@ -717,10 +720,16 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Property<double>("GlobalScore")
                         .HasColumnType("double precision");
 
+                    b.Property<string>("HiddenReason")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsEdited")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsHidden")
                         .HasColumnType("boolean");
 
                     b.Property<int>("LikesCount")
@@ -730,11 +739,20 @@ namespace MTAA_Backend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ScheduleJobId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("SchedulePublishDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("GlobalScore", "CommentsCount", "LikesCount", "DataCreationTime", "IsDeleted");
+                    b.HasIndex("GlobalScore", "CommentsCount", "LikesCount", "DataCreationTime", "IsDeleted", "IsHidden", "SchedulePublishDate");
 
                     b.ToTable("Posts");
                 });
@@ -818,6 +836,42 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("RecommendationItems");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.FirebaseItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DataCreationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataLastDeleteTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataLastEditTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsEdited")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FirebaseItems");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
@@ -1515,7 +1569,7 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.HasOne("MTAA_Backend.Domain.Entities.Posts.Comments.Comment", "Comment")
                         .WithMany("CommentInteractions")
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User")
@@ -1576,6 +1630,17 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("Feed");
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.FirebaseItem", b =>
+                {
+                    b.HasOne("MTAA_Backend.Domain.Entities.Users.User", "User")
+                        .WithMany("FirebaseItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MTAA_Backend.Domain.Entities.Users.User", b =>
@@ -1842,6 +1907,8 @@ namespace MTAA_Backend.Infrastructure.Migrations
                     b.Navigation("CreatedComments");
 
                     b.Navigation("CreatedPosts");
+
+                    b.Navigation("FirebaseItems");
 
                     b.Navigation("LikedPosts");
 
