@@ -73,7 +73,7 @@ namespace IntegrationTests.Tests
             var request = new Follow { TargetUserId = UserSettings.UserId };
             var response = await _client.PostAsJsonAsync("/api/v1/Users/follow", request);
 
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
