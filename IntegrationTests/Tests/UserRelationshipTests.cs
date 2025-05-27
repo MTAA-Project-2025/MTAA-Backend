@@ -2,6 +2,7 @@
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Identity;
 using MTAA_Backend.Application.CQRS.Users.Relationships.Commands;
+using MTAA_Backend.Domain.DTOs.Users.Account.Responses;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Requests;
 using MTAA_Backend.Domain.DTOs.Users.Identity.Responses;
 using MTAA_Backend.Domain.Entities.Users;
@@ -111,5 +112,133 @@ namespace IntegrationTests.Tests
             Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
         }
         #endregion
+
+        #region unfollow
+        [Fact]
+        public async Task Unfollow_ValidTargetUser()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var followRequest = new Follow { TargetUserId = UserSettings.SecondUserId };
+            await _client.PostAsJsonAsync("/api/v1/Users/follow", followRequest);
+
+            var unfollowRequest = new Unfollow { TargetUserId = UserSettings.SecondUserId };
+            var response = await _client.PostAsJsonAsync("/api/v1/Users/unfollow", unfollowRequest);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Unfollow_NotFollowingUser()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var unfollowRequest = new Unfollow { TargetUserId = UserSettings.SecondUserId };
+            var response = await _client.PostAsJsonAsync("/api/v1/Users/unfollow", unfollowRequest);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Unfollow_NonExistentUser()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var unfollowRequest = new Unfollow { TargetUserId = "nonexistent-user-id" };
+            var response = await _client.PostAsJsonAsync("/api/v1/Users/unfollow", unfollowRequest);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Unfollow_WithoutToken()
+        {
+            var unfollowRequest = new Unfollow { TargetUserId = UserSettings.SecondUserId };
+            var response = await _client.PostAsJsonAsync("/api/v1/Users/unfollow", unfollowRequest);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Unfollow_TwiceInARow()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var followRequest = new Follow { TargetUserId = UserSettings.SecondUserId };
+            await _client.PostAsJsonAsync("/api/v1/Users/follow", followRequest);
+
+            var unfollowRequest = new Unfollow { TargetUserId = UserSettings.SecondUserId };
+            var firstUnfollow = await _client.PostAsJsonAsync("/api/v1/Users/unfollow", unfollowRequest);
+            Assert.Equal(HttpStatusCode.OK, firstUnfollow.StatusCode);
+
+            var secondUnfollow = await _client.PostAsJsonAsync("/api/v1/Users/unfollow", unfollowRequest);
+            Assert.Equal(HttpStatusCode.BadRequest, secondUnfollow.StatusCode);
+        }
+        #endregion
+
+        #region public full account
+
+        [Fact]
+        public async Task PublicGetFullAccount_WithoutToken()
+        {
+            var response = await _client.GetAsync($"/api/v1/Users/public-full-account/{UserSettings.SecondUserId}");
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task PublicGetFullAccount_ValidUser()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _client.GetAsync($"/api/v1/Users/public-full-account/{UserSettings.SecondUserId}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var dto = await response.Content.ReadFromJsonAsync<PublicFullAccountResponse>();
+            Assert.NotNull(dto);
+            Assert.Equal(UserSettings.SecondUserId, dto.Id);
+            Assert.False(dto.IsFollowing, "Newly created user should not be followed by default");
+            Assert.Equal(0, dto.FriendsCount);
+            Assert.Equal(0, dto.FollowersCount);
+            Assert.True(dto.DataCreationTime <= DateTime.UtcNow);
+        }
+
+        [Fact]
+        public async Task PublicGetFullAccount_AfterFollow()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var followReq = new Follow { TargetUserId = UserSettings.SecondUserId };
+            var followRes = await _client.PostAsJsonAsync("/api/v1/Users/follow", followReq);
+            Assert.Equal(HttpStatusCode.OK, followRes.StatusCode);
+
+            var response = await _client.GetAsync($"/api/v1/Users/public-full-account/{UserSettings.SecondUserId}");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var dto = await response.Content.ReadFromJsonAsync<PublicFullAccountResponse>();
+            Assert.True(dto.IsFollowing, "After following, IsFollowing should be true");
+            Assert.Equal(0, dto.FriendsCount);
+            Assert.Equal(1, dto.FollowersCount);
+        }
+
+        [Fact]
+        public async Task PublicGetFullAccount_NonExistentUser()
+        {
+            var token = await GetValidTokenForTestUser();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var fakeId = "nonexistent-user-id";
+            var response = await _client.GetAsync($"/api/v1/Users/public-full-account/{fakeId}");
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        #endregion
+
+
     }
 }
