@@ -40,6 +40,9 @@ namespace IntegrationTests.Helpers
 
         public static async Task CreateAdditionalTestUser(MTAA_BackendDbContext db, UserManager<User> userManager)
         {
+            var existing = await userManager.FindByEmailAsync(UserSettings.SecondEmail);
+            if (existing != null) return;
+
             var user = new User
             {
                 Id = UserSettings.SecondUserId,
