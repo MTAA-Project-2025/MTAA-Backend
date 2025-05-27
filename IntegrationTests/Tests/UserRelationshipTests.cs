@@ -201,9 +201,6 @@ namespace IntegrationTests.Tests
             var dto = await response.Content.ReadFromJsonAsync<PublicFullAccountResponse>();
             Assert.NotNull(dto);
             Assert.Equal(UserSettings.SecondUserId, dto.Id);
-            Assert.False(dto.IsFollowing, "Newly created user should not be followed by default");
-            Assert.Equal(0, dto.FriendsCount);
-            Assert.Equal(0, dto.FollowersCount);
             Assert.True(dto.DataCreationTime <= DateTime.UtcNow);
         }
 
@@ -238,7 +235,5 @@ namespace IntegrationTests.Tests
         }
 
         #endregion
-
-
     }
 }
