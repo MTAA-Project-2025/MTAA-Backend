@@ -8,10 +8,21 @@ using System.CodeDom;
 
 namespace MTAA_Backend.Application.Services.Locations
 {
+    /// <summary>
+    /// Provides services for normalizing geographic location coordinates and related parameters.
+    /// </summary>
     public class NormalizeLocationService : INormalizeLocationService
     {
+        /// <summary>
+        /// The maximum allowed number of tiles for radius normalization.
+        /// </summary>
         public const double MAX_ALLOWED_TILES_COUNT = 20;
 
+        /// <summary>
+        /// Normalizes latitude and longitude to ensure they are within valid ranges.
+        /// </summary>
+        /// <param name="latitude">The latitude to normalize, modified in place.</param>
+        /// <param name="longitude">The longitude to normalize, modified in place.</param>
         public void NormalizeLocation(ref double latitude, ref double longitude)
         {
             if (latitude < LocationConstants.MIN_LATITUDE || latitude > LocationConstants.MAX_LATITUDE)
@@ -23,6 +34,14 @@ namespace MTAA_Backend.Application.Services.Locations
                 longitude = longitude % LocationConstants.MAX_LONGITUDE;
             }
         }
+
+        /// <summary>
+        /// Normalizes latitude, longitude, radius, and zoom level for location-based queries.
+        /// </summary>
+        /// <param name="latitude">The latitude to normalize, modified in place.</param>
+        /// <param name="longitude">The longitude to normalize, modified in place.</param>
+        /// <param name="radius">The radius to normalize, modified in place.</param>
+        /// <param name="zoomLevel">The zoom level to normalize.</param>
         public void NormalizeLocation(ref double latitude, ref double longitude, ref double radius, int zoomLevel)
         {
             NormalizeLocation(ref latitude, ref longitude);
@@ -43,6 +62,14 @@ namespace MTAA_Backend.Application.Services.Locations
         }
 
         //Taken from https://stackoverflow.com/questions/6366408/calculating-distance-between-two-latitude-and-longitude-geocoordinates
+        /// <summary>
+        /// Calculates the distance between two geographic points using the Haversine formula.
+        /// </summary>
+        /// <param name="lat1Deg">The latitude of the first point in degrees.</param>
+        /// <param name="lon1Deg">The longitude of the first point in degrees.</param>
+        /// <param name="lat2Deg">The latitude of the second point in degrees.</param>
+        /// <param name="lon2Deg">The longitude of the second point in degrees.</param>
+        /// <returns>The distance between the points in meters.</returns>
         public static double DistanceBetweenPoints(double lat1Deg, double lon1Deg, double lat2Deg, double lon2Deg)
         {
             const double EarthRadius = 6371000;
@@ -65,6 +92,11 @@ namespace MTAA_Backend.Application.Services.Locations
             return distance;
         }
 
+        /// <summary>
+        /// Converts degrees to radians.
+        /// </summary>
+        /// <param name="deg">The angle in degrees.</param>
+        /// <returns>The angle in radians.</returns>
         private static double DegreesToRadians(double deg)
         {
             return deg * Math.PI / 180.0;

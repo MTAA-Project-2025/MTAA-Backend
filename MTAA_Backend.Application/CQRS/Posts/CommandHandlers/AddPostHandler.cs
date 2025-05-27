@@ -21,6 +21,9 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="AddPost"/> command to create a new post, including image processing and scheduling for future publication if required.
+    /// </summary>
     public class AddPostHandler(ILogger<AddPostHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
@@ -28,6 +31,13 @@ namespace MTAA_Backend.Application.CQRS.Posts.CommandHandlers
         IImageService _imageService,
         IMediator _mediator) : IRequestHandler<AddPost, Guid>
     {
+        /// <summary>
+        /// Handles the <see cref="AddPost"/> command.
+        /// </summary>
+        /// <param name="request">The <see cref="AddPost"/> command request.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The ID of the newly created post.</returns>
+        /// <exception cref="HttpException">Thrown if image aspect ratios are not allowed.</exception>
         public async Task<Guid> Handle(AddPost request, CancellationToken cancellationToken)
         {
             var post = new Post()

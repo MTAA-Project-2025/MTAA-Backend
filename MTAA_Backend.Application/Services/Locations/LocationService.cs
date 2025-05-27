@@ -11,16 +11,34 @@ using NetTopologySuite.Geometries;
 
 namespace MTAA_Backend.Application.Services.Locations
 {
+    /// <summary>
+    /// Provides services for managing location points, including adding, deleting, and correcting location data.
+    /// </summary>
     public class LocationService : ILocationService
     {
         private readonly MTAA_BackendDbContext _dbContext;
         private readonly INormalizeLocationService _normalizeLocationService;
+
+        /// <summary>
+        /// Initializes a new instance of the LocationService class.
+        /// </summary>
+        /// <param name="dbContext">The database context for data operations.</param>
+        /// <param name="normalizeLocationService">The service for normalizing location coordinates.</param>
         public LocationService(MTAA_BackendDbContext dbContext,
             INormalizeLocationService normalizeLocationService)
         {
             _dbContext = dbContext;
             _normalizeLocationService = normalizeLocationService;
         }
+
+        /// <summary>
+        /// Adds location points for a specified location ID across zoom levels.
+        /// </summary>
+        /// <param name="longitude">The longitude of the location.</param>
+        /// <param name="latitude">The latitude of the location.</param>
+        /// <param name="locationId">The ID of the location.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task AddPoints(double longitude, double latitude, Guid locationId, CancellationToken cancellationToken = default)
         {
             _normalizeLocationService.NormalizeLocation(ref latitude, ref longitude);
@@ -89,6 +107,13 @@ namespace MTAA_Backend.Application.Services.Locations
             }
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Deletes location points associated with a specified location.
+        /// </summary>
+        /// <param name="location">The location whose points are to be deleted.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task DeletePoints(Domain.Entities.Locations.Location location, CancellationToken cancellationToken = default)
         {
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: LocationConstants.SRID);
@@ -127,6 +152,10 @@ namespace MTAA_Backend.Application.Services.Locations
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Corrects location points by removing outdated points and adjusting clusters.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task CorrectLocationsBackgroundJob()
         {
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: LocationConstants.SRID);
@@ -180,6 +209,13 @@ namespace MTAA_Backend.Application.Services.Locations
         }
 
         //Taken from GPT and modified
+        /// <summary>
+        /// Converts latitude and longitude to tile coordinates for a specified zoom level.
+        /// </summary>
+        /// <param name="longitude">The longitude of the location.</param>
+        /// <param name="latitude">The latitude of the location.</param>
+        /// <param name="zoomLevel">The zoom level for the tile calculation.</param>
+        /// <returns>A tuple containing the x and y tile coordinates.</returns>
         public (int x, int y) LatLonToTile(double longitude, double latitude, int zoomLevel)
         {
             double rLat = Math.PI * latitude / (LocationConstants.MAX_LATITUDE * 2.0);
@@ -189,6 +225,13 @@ namespace MTAA_Backend.Application.Services.Locations
         }
 
         //Taken from GPT and modified
+        /// <summary>
+        /// Converts tile coordinates to a bounding box for a specified zoom level.
+        /// </summary>
+        /// <param name="x">The x tile coordinate.</param>
+        /// <param name="y">The y tile coordinate.</param>
+        /// <param name="zoom">The zoom level for the tile.</param>
+        /// <returns>An envelope representing the bounding box of the tile.</returns>
         public NetTopologySuite.Geometries.Envelope TileToBoundingBox(int x, int y, int zoom)
         {
             double n = Math.Pow(2, zoom);

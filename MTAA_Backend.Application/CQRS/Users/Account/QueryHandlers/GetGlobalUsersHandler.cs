@@ -19,12 +19,22 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Account.QueryHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="GetGlobalUsers"/> query to retrieve a paginated and optionally filtered list of global users.
+    /// It also determines if the current user is following each retrieved user.
+    /// </summary>
     public class GetGlobalUsersHandler(ILogger<GetGlobalUsersHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IMapper _mapper,
         IUserService _userService) : IRequestHandler<GetGlobalUsers, ICollection<PublicBaseAccountResponse>>
     {
+        /// <summary>
+        /// Handles the <see cref="GetGlobalUsers"/> query.
+        /// </summary>
+        /// <param name="request">The <see cref="GetGlobalUsers"/> query request, including optional filter string and pagination parameters.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A collection of <see cref="PublicBaseAccountResponse"/> containing public account details for users.</returns>
         public async Task<ICollection<PublicBaseAccountResponse>> Handle(GetGlobalUsers request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();

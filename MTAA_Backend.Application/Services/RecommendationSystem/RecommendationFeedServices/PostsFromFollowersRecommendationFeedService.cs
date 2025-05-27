@@ -15,14 +15,28 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationFeedServices
 {
+    /// <summary>
+    /// Provides services for managing recommendation feeds based on posts from followed users.
+    /// </summary>
     public class PostsFromFollowersRecommendationFeedService : IPostsFromFollowersRecommendationFeedService
     {
         private readonly MTAA_BackendDbContext _dbContext;
         private readonly ILogger _logger;
         private readonly IStringLocalizer<ErrorMessages> _localizer;
         private readonly IBackgroundJobClient _backgroundJobClient;
+
+        /// <summary>
+        /// The weight assigned to the posts from followers feed.
+        /// </summary>
         public const double Weight = 0.3;
 
+        /// <summary>
+        /// Initializes a new instance of the PostsFromFollowersRecommendationFeedService class.
+        /// </summary>
+        /// <param name="dbContext">The database context for data operations.</param>
+        /// <param name="logger">The logger for recording errors.</param>
+        /// <param name="localizer">The localizer for error messages.</param>
+        /// <param name="backgroundJobClient">The client for scheduling background jobs.</param>
         public PostsFromFollowersRecommendationFeedService(MTAA_BackendDbContext dbContext,
             ILogger<PostsFromFollowersRecommendationFeedService> logger,
             IStringLocalizer<ErrorMessages> localizer,
@@ -33,6 +47,13 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
             _localizer = localizer;
             _backgroundJobClient = backgroundJobClient;
         }
+
+        /// <summary>
+        /// Adds a posts-from-followers recommendation feed for a user if it does not exist.
+        /// </summary>
+        /// <param name="userId">The ID of the user to add the feed for.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task AddFeed(string userId, CancellationToken cancellationToken = default)
         {
             var feed = await _dbContext.LocalRecommendationFeeds.Where(e => e.UserId == userId && e.Type == RecommendationFeedTypes.PostsFromFollowersFeed)
@@ -49,6 +70,15 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
             _dbContext.LocalRecommendationFeeds.Add(feed);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Recommends a post to a user's followers by scheduling a background job.
+        /// </summary>
+        /// <param name="postId">The ID of the post to recommend.</param>
+        /// <param name="userId">The ID of the user whose followers will receive the recommendation.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">Thrown if the post or user is not found.</exception>
         public async Task RecomendPost(Guid postId, string userId, CancellationToken cancellationToken = default)
         {
             var post = await _dbContext.Posts.FindAsync(postId, cancellationToken);
@@ -68,6 +98,13 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
             _backgroundJobClient.Enqueue(() => RecomendPostBackgroundJob(postId, userId, cancellationToken));
         }
 
+        /// <summary>
+        /// Background job to add a post recommendation to the feeds of a user's followers.
+        /// </summary>
+        /// <param name="postId">The ID of the post to recommend.</param>
+        /// <param name="userId">The ID of the user whose followers will receive the recommendation.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task RecomendPostBackgroundJob(Guid postId, string userId, CancellationToken cancellationToken = default)
         {
             var feeds = await _dbContext.UserRelationships.Where(e => (e.User2Id == userId && e.IsUser1Following) ||

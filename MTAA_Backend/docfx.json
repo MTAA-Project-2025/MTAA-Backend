@@ -7,6 +7,18 @@
             "**.csproj"
           ],
           "src": "C:\\Users\\user\\Documents\\University\\Semester_2\\MTAA\\Project\\MTAA-Backend\\MTAA_Backend"
+        },
+        {
+          "files": [
+            "**.csproj"
+          ],
+          "src": "C:\\Users\\user\\Documents\\University\\Semester_2\\MTAA\\Project\\MTAA-Backend\\MTAA_Backend.Application"
+        },
+        {
+          "files": [
+            "**.csproj"
+          ],
+          "src": "C:\\Users\\user\\Documents\\University\\Semester_2\\MTAA\\Project\\MTAA-Backend\\MTAA_Backend.Domain"
         }
       ],
       "dest": "api",

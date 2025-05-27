@@ -14,10 +14,19 @@ using System.Linq.Expressions;
 
 namespace MTAA_Backend.Application.CQRS.Notifications.QueryHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="GetNotifications"/> query to retrieve a paginated and optionally filtered list of notifications for the current user.
+    /// </summary>
     public class GetNotificationsHandler(MTAA_BackendDbContext _dbContext,
         IUserService _userService,
         IMapper _mapper) : IRequestHandler<GetNotifications, ICollection<NotificationResponse>>
     {
+        /// <summary>
+        /// Handles the <see cref="GetNotifications"/> query.
+        /// </summary>
+        /// <param name="request">The <see cref="GetNotifications"/> query request, including pagination and optional type filter.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A collection of <see cref="NotificationResponse"/> for the current user.</returns>
         public async Task<ICollection<NotificationResponse>> Handle(GetNotifications request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();

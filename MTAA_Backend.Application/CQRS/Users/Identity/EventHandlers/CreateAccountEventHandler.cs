@@ -13,6 +13,11 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Identity.EventHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="CreateAccountEvent"/> to perform post-account creation setup tasks.
+    /// This includes assigning a default avatar, initializing recommendation feeds,
+    /// setting up user vectors for recommendations, and initializing user versioning.
+    /// </summary>
     public class CreateAccountEventHandler(IAccountService _accountService,
         MTAA_BackendDbContext _dbContext,
         ILogger<CreateAccountEventHandler> _logger,
@@ -23,6 +28,13 @@ namespace MTAA_Backend.Application.CQRS.Users.Identity.EventHandlers
         IVectorDatabaseRepository _vectorDatabaseRepository,
         IVersionItemService _versionItemService) : INotificationHandler<CreateAccountEvent>
     {
+        /// <summary>
+        /// Handles the <see cref="CreateAccountEvent"/> asynchronously.
+        /// </summary>
+        /// <param name="notification">The <see cref="CreateAccountEvent"/> notification containing the new user's ID.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">Thrown if the user is not found.</exception>
         public async Task Handle(CreateAccountEvent notification, CancellationToken cancellationToken)
         {
             var imageGroup = await _dbContext.UserPresetAvatarImages.Where(e => e.Id == PresetAvatarImages.Image1Id)

@@ -27,6 +27,10 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="SignUpByEmail"/> command to register a new user account using email and password.
+    /// It verifies email verification status and assigns the 'User' role upon successful registration.
+    /// </summary>
     public class SignUpByEmailHandler(IDistributedCache _distributedCache,
         ILogger<SignUpByEmailHandler> _logger,
         UserManager<User> _userManager,
@@ -35,6 +39,13 @@ namespace MTAA_Backend.Application.CQRS.Users.Identity.CommandHandlers
         IMediator _mediator,
         MTAA_BackendDbContext _dbContext) : IRequestHandler<SignUpByEmail, TokenDTO>
     {
+        /// <summary>
+        /// Handles the <see cref="SignUpByEmail"/> command.
+        /// </summary>
+        /// <param name="request">The <see cref="SignUpByEmail"/> command request, containing email, username, and password.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="TokenDTO"/> containing authentication tokens upon successful registration and login.</returns>
+        /// <exception cref="HttpException">Thrown if the email already exists, the signup session has expired, the email is not verified, or user creation fails.</exception>
         public async Task<TokenDTO> Handle(SignUpByEmail request, CancellationToken cancellationToken)
         {
             var oldUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);

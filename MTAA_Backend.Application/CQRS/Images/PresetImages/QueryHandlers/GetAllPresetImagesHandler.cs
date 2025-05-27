@@ -15,10 +15,19 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Images.PresetImages.QueryHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="GetAllPresetImages"/> query to retrieve a collection of all available preset avatar images.
+    /// </summary>
     public class GetAllPresetImagesHandler(IDistributedCache _distributedCache,
         IMapper _mapper,
         MTAA_BackendDbContext _dbContext) : IRequestHandler<GetAllPresetImages, ICollection<MyImageGroupResponse>>
     {
+        /// <summary>
+        /// Handles the <see cref="GetAllPresetImages"/> query.
+        /// </summary>
+        /// <param name="request">The <see cref="GetAllPresetImages"/> query request.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A collection of <see cref="MyImageGroupResponse"/> representing the preset avatar images.</returns>
         public async Task<ICollection<MyImageGroupResponse>> Handle(GetAllPresetImages request, CancellationToken cancellationToken)
         {
             var recordId = "PresetAvatarImages";

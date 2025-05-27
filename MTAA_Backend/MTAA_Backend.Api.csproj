@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<DocumentationFile>bin\Debug\net9.0\MTAA_Backend.xml</DocumentationFile>
 	<NoWarn>$(NoWarn);1591</NoWarn>
     <UserSecretsId>81503895-a32d-45cf-b4e9-ef9067be098d</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>

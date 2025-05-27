@@ -13,12 +13,23 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Notifications.EventHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="AddNotificationEvent"/> to process newly added notifications.
+    /// This includes mapping the notification to a response DTO, attaching relevant image data,
+    /// sending the notification to the client via SignalR, and updating the user's notification version.
+    /// </summary>
     public class AddNotificationEventHandler(
         MTAA_BackendDbContext _dbContext,
         ISSEClientStorage _clientStorage,
         IMapper _mapper,
         IMediator _mediator) : INotificationHandler<AddNotificationEvent>
     {
+        /// <summary>
+        /// Handles the <see cref="AddNotificationEvent"/> asynchronous.
+        /// </summary>
+        /// <param name="notification">The <see cref="AddNotificationEvent"/> notification.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task Handle(AddNotificationEvent notification, CancellationToken cancellationToken)
         {
             var dbNotification = await _dbContext.Notifications

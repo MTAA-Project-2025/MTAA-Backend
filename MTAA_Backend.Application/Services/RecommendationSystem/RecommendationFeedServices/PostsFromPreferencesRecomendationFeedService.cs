@@ -27,16 +27,41 @@ using static Qdrant.Client.Grpc.Conditions;
 
 namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationFeedServices
 {
+    /// <summary>
+    /// Provides services for managing recommendation feeds based on user preferences using vector-based similarity.
+    /// </summary>
     public class PostsFromPreferencesRecommendationFeedService : IPostsFromPreferencesRecommendationFeedService
     {
         private readonly MTAA_BackendDbContext _dbContext;
         private readonly IRecommendationItemsService _recommendationItemsService;
         private readonly IVectorDatabaseRepository _vectorDatabaseRepository;
 
+        /// <summary>
+        /// The maximum number of posts to include in the feed.
+        /// </summary>
         public const int MaxFeedCount = 200;
+
+        /// <summary>
+        /// The weight for text-based recommendations.
+        /// </summary>
         public const double TextWidth = 0.3;
+
+        /// <summary>
+        /// The weight for image-based recommendations.
+        /// </summary>
         public const double ImagesWeight = 0.7;
+
+        /// <summary>
+        /// The weight assigned to the preferences-based feed.
+        /// </summary>
         public const double Weight = 0.6;
+
+        /// <summary>
+        /// Initializes a new instance of the PostsFromPreferencesRecommendationFeedService class.
+        /// </summary>
+        /// <param name="dbContext">The database context for data operations.</param>
+        /// <param name="recommendationItemsService">The service for managing recommendation items.</param>
+        /// <param name="vectorDatabaseRepository">The repository for vector database operations.</param>
         public PostsFromPreferencesRecommendationFeedService(MTAA_BackendDbContext dbContext,
             IRecommendationItemsService recommendationItemsService,
             IVectorDatabaseRepository vectorDatabaseRepository)
@@ -45,6 +70,13 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
             _recommendationItemsService = recommendationItemsService;
             _vectorDatabaseRepository = vectorDatabaseRepository;
         }
+
+        /// <summary>
+        /// Adds a preferences-based recommendation feed for a user if it does not exist.
+        /// </summary>
+        /// <param name="userId">The ID of the user to add the feed for.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task AddFeed(string userId, CancellationToken cancellationToken = default)
         {
             var feed = await _dbContext.LocalRecommendationFeeds.Where(e => e.UserId == userId && e.Type == RecommendationFeedTypes.PostsFromPreferencesFeed)
@@ -61,6 +93,12 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
             _dbContext.LocalRecommendationFeeds.Add(feed);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Background job to recommend posts for all active preferences-based feeds.
+        /// </summary>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task RecomendPostsBackgroundJob(CancellationToken cancellationToken = default)
         {
             var feeds = await _dbContext.LocalRecommendationFeeds.Where(e => e.Type == RecommendationFeedTypes.PostsFromPreferencesFeed && e.IsActive)
@@ -72,6 +110,13 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
                 await RecomendPostsBackgroundJobByFeed(feed, cancellationToken);
             }
         }
+
+        /// <summary>
+        /// Background job to recommend posts for a specific preferences-based feed.
+        /// </summary>
+        /// <param name="feed">The recommendation feed to process.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task RecomendPostsBackgroundJobByFeed(LocalRecommendationFeed feed, CancellationToken cancellationToken = default)
         {
             int loadedCount = MaxFeedCount - feed.RecommendationItems.Count;
@@ -112,6 +157,14 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
 
         }
 
+        /// <summary>
+        /// Retrieves real-time post recommendations based on user preferences.
+        /// </summary>
+        /// <param name="userId">The ID of the user to get recommendations for.</param>
+        /// <param name="count">The number of recommendations to retrieve.</param>
+        /// <param name="isStrict">Whether to apply strict filtering.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation, returning a collection of post IDs.</returns>
         public async Task<ICollection<Guid>> GetRealTimeRecommendations(string userId, int count, bool isStrict = true, CancellationToken cancellationToken = default)
         {
             int textCount = (int)(Math.Round(count * TextWidth));
@@ -137,6 +190,14 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem.RecommendationF
             return postIds;
         }
 
+        /// <summary>
+        /// Updates user preferences based on interaction with a post.
+        /// </summary>
+        /// <param name="userId">The ID of the user whose preferences are updated.</param>
+        /// <param name="postId">The ID of the post interacted with.</param>
+        /// <param name="k">The scaling factor for the update.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task ChangeReccommendations(string userId, Guid postId, float k, CancellationToken cancellationToken = default)
         {
             var userTextVectorRes = (await _vectorDatabaseRepository.GetUserPostVector(VectorCollections.UsersPostTextVectors, userId)).Vectors.Vector.Data.ToArray();

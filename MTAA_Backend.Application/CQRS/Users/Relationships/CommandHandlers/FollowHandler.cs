@@ -13,11 +13,25 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.CommandHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="Follow"/> command, enabling a user to follow another user.
+    /// It manages the creation or update of <see cref="UserRelationship"/> entities and triggers version updates.
+    /// </summary>
     public class FollowHandler(IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IUserService _userService,
         IMediator _mediator) : IRequestHandler<Follow>
     {
+        /// <summary>
+        /// Handles the <see cref="Follow"/> command.
+        /// </summary>
+        /// <param name="request">The <see cref="Follow"/> command request, containing the ID of the user to follow.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">
+        /// Thrown if the current user is not authorized, tries to follow themselves,
+        /// or the target user is not found.
+        /// </exception>
         public async Task Handle(Follow request, CancellationToken cancellationToken)
         {
             var currentUserId = _userService.GetCurrentUserId();

@@ -16,11 +16,21 @@ using System.Linq.Expressions;
 
 namespace MTAA_Backend.Application.CQRS.Posts.QueryHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="GetAccountPosts"/> query to retrieve a paginated list of posts for a specific user account.
+    /// It first attempts to retrieve the posts from a distributed cache for the first page, otherwise fetches them from the database.
+    /// </summary>
     public class GetAccountPostsHandler(MTAA_BackendDbContext _dbContext,
         IUserService _userService,
         IMapper _mapper,
         IDistributedCache _distributedCache) : IRequestHandler<GetAccountPosts, ICollection<SimplePostResponse>>
     {
+        /// <summary>
+        /// Handles the <see cref="GetAccountPosts"/> query.
+        /// </summary>
+        /// <param name="request">The <see cref="GetAccountPosts"/> query request, including the user ID and pagination parameters.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A collection of <see cref="SimplePostResponse"/> representing the user's posts.</returns>
         public async Task<ICollection<SimplePostResponse>> Handle(GetAccountPosts request, CancellationToken cancellationToken)
         {
             if (request.PageParameters.PageNumber == 0)

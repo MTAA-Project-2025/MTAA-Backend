@@ -19,12 +19,23 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Users.Relationships.QueryHandler
 {
+    /// <summary>
+    /// Handles the <see cref="GetFollowers"/> query to retrieve a paginated and optionally filtered list of users who are following the current user.
+    /// It also populates avatar information for each follower.
+    /// </summary>
     public class GetFollowersHandler(ILogger<GetFollowersHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IMapper _mapper,
         IUserService _userService) : IRequestHandler<GetFollowers, ICollection<PublicBaseAccountResponse>>
     {
+        /// <summary>
+        /// Handles the <see cref="GetFollowers"/> query.
+        /// </summary>
+        /// <param name="request">The <see cref="GetFollowers"/> query request, including pagination and an optional filter string.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A collection of <see cref="PublicBaseAccountResponse"/> representing the followers of the current user.</returns>
+        /// <exception cref="HttpException">Thrown if the current user is not authorized.</exception>
         public async Task<ICollection<PublicBaseAccountResponse>> Handle(GetFollowers request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();

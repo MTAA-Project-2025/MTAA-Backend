@@ -22,12 +22,23 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.CQRS.Users.Identity.QueryHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="LogIn"/> query to authenticate a user by email/phone number and password,
+    /// and generate a JWT token upon successful authentication.
+    /// </summary>
     public class LogInHandler(IStringLocalizer<ErrorMessages> _localizer,
             UserManager<User> _userManager,
             IConfiguration _configuration,
             MTAA_BackendDbContext _dbContext,
             ILogger<LogInHandler> _logger) : IRequestHandler<LogIn, TokenDTO>
     {
+        /// <summary>
+        /// Handles the <see cref="LogIn"/> query.
+        /// </summary>
+        /// <param name="request">The <see cref="LogIn"/> query request, containing either email or phone number, and password.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="TokenDTO"/> containing the generated JWT token.</returns>
+        /// <exception cref="HttpException">Thrown if both email and phone number are null, the user is not found, or the password is incorrect.</exception>
         public async Task<TokenDTO> Handle(LogIn request, CancellationToken cancellationToken)
         {
             if (request.PhoneNumber == null && request.Email == null)

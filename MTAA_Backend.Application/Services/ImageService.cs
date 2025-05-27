@@ -22,6 +22,9 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.Services
 {
+    /// <summary>
+    /// Provides services for processing and managing images, including uploading, resizing, and removing images in Azure Blob Storage.
+    /// </summary>
     public class ImageService : IImageService
     {
         private readonly IAzureBlobService _azureBlobService;
@@ -29,6 +32,13 @@ namespace MTAA_Backend.Application.Services
         private const int QUALITY = 50;
         private readonly string url;
 
+        /// <summary>
+        /// Initializes a new instance of the ImageService class with required dependencies.
+        /// </summary>
+        /// <param name="azureBlobService">The Azure Blob Storage service for image operations.</param>
+        /// <param name="localizer">The localizer for error messages.</param>
+        /// <param name="configuration">The configuration containing Azure Storage settings.</param>
+        /// <exception cref="Exception">Thrown if Azure Storage configuration is missing.</exception>
         public ImageService(IAzureBlobService azureBlobService,
                             IStringLocalizer<ErrorMessages> localizer,
                             IConfiguration configuration)
@@ -48,16 +58,39 @@ namespace MTAA_Backend.Application.Services
             _azureBlobService.Initialize(connectionString, containerName);
         }
 
+        /// <summary>
+        /// Saves a single image with specified sizes and position.
+        /// </summary>
+        /// <param name="file">The image file to save.</param>
+        /// <param name="position">The position of the image in a group.</param>
+        /// <param name="type">The type of image saving configuration.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation, returning the saved image group.</returns>
+        /// <exception cref="HttpException">Thrown if the image format is not allowed.</exception>
         public async Task<MyImageGroup> SaveImage(IFormFile file, int position, ImageSavingTypes type, CancellationToken cancellationToken = default)
         {
             return await SaveImage(file, ImagesSizes.Sizes[type], position, cancellationToken);
         }
+
+        /// <summary>
+        /// Saves multiple images with specified sizes and positions.
+        /// </summary>
+        /// <param name="requests">The collection of image requests containing files and positions.</param>
+        /// <param name="type">The type of image saving configuration.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation, returning a collection of saved image groups.</returns>
         public async Task<ICollection<MyImageGroup>> SaveImages(ICollection<AddImageRequest> requests, ImageSavingTypes type, CancellationToken cancellationToken = default)
         {
             return await SaveImages(requests, ImagesSizes.Sizes[type], cancellationToken);
         }
 
-
+        /// <summary>
+        /// Saves multiple images with specified sizes.
+        /// </summary>
+        /// <param name="requests">The collection of image requests containing files and positions.</param>
+        /// <param name="sizes">The collection of image sizes to apply.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation, returning a collection of saved image groups.</returns>
         private async Task<ICollection<MyImageGroup>> SaveImages(ICollection<AddImageRequest> requests, ICollection<ImagesSize> sizes, CancellationToken cancellationToken = default)
         {
             ICollection<MyImageGroup> images = new List<MyImageGroup>(requests.Count());
@@ -68,6 +101,15 @@ namespace MTAA_Backend.Application.Services
             return images;
         }
 
+        /// <summary>
+        /// Saves a single image with specified sizes and position.
+        /// </summary>
+        /// <param name="file">The image file to save.</param>
+        /// <param name="sizes">The collection of image sizes to apply.</param>
+        /// <param name="position">The position of the image in a group.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation, returning the saved image group.</returns>
+        /// <exception cref="HttpException">Thrown if the image format is not allowed.</exception>
         private async Task<MyImageGroup> SaveImage(IFormFile file, ICollection<ImagesSize> sizes, int position, CancellationToken cancellationToken = default)
         {
             var ext = Path.GetExtension(file.FileName);
@@ -96,6 +138,14 @@ namespace MTAA_Backend.Application.Services
             return myImageGroup;
         }
 
+        /// <summary>
+        /// Saves an image in multiple sizes and uploads to Azure Blob Storage.
+        /// </summary>
+        /// <param name="image">The image to process.</param>
+        /// <param name="sizes">The collection of image sizes to apply.</param>
+        /// <param name="uniqueString">The unique identifier for the image.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation, returning a collection of saved images.</returns>
         private async Task<ICollection<MyImage>> SaveImageWithSizes(Image image, ICollection<ImagesSize> sizes, string uniqueString, CancellationToken cancellationToken = default)
         {
             int origWidth = image.Width;
@@ -174,6 +224,12 @@ namespace MTAA_Backend.Application.Services
             return images;
         }
 
+        /// <summary>
+        /// Removes an image group and its associated images from Azure Blob Storage.
+        /// </summary>
+        /// <param name="myImageGroup">The image group to remove.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task RemoveImageGroup(MyImageGroup myImageGroup, CancellationToken cancellationToken = default)
         {
             if (myImageGroup == null) return;
@@ -185,6 +241,12 @@ namespace MTAA_Backend.Application.Services
             }
         }
 
+        /// <summary>
+        /// Checks if all images in a collection have the same aspect ratio.
+        /// </summary>
+        /// <param name="files">The collection of image files to check.</param>
+        /// <returns>True if all images have the same aspect ratio; otherwise, false.</returns>
+        /// <exception cref="HttpException">Thrown if an image format is not allowed.</exception>
         public bool IsImagesHaveSameAspectRatio(ICollection<IFormFile> files)
         {
             double standardAspectRatio = -1;
@@ -204,6 +266,12 @@ namespace MTAA_Backend.Application.Services
             }
             return true;
         }
+
+        /// <summary>
+        /// Calculates the aspect ratio of an image.
+        /// </summary>
+        /// <param name="file">The image file to analyze.</param>
+        /// <returns>The aspect ratio of the image, or -1 if the image format is invalid.</returns>
         public double GetImageAspectRatio(IFormFile file)
         {
             try

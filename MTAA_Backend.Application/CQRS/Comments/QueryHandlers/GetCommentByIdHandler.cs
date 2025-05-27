@@ -14,11 +14,21 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Comments.QueryHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="GetCommentById"/> query to retrieve a full comment response by its ID.
+    /// </summary>
     public class GetCommentByIdHandler(MTAA_BackendDbContext _dbContext, IMapper _mapper,
         IUserService _userService,
         IStringLocalizer<ErrorMessages> _localizer)
     : IRequestHandler<GetCommentById, FullCommentResponse>
     {
+        /// <summary>
+        /// Handles the <see cref="GetCommentById"/> query.
+        /// </summary>
+        /// <param name="request">The <see cref="GetCommentById"/> query request.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="FullCommentResponse"/> containing the details of the comment.</returns>
+        /// <exception cref="HttpException">Thrown if the comment is not found.</exception>
         public async Task<FullCommentResponse> Handle(GetCommentById request, CancellationToken cancellationToken)
         {
             var userId = _userService.GetCurrentUserId();

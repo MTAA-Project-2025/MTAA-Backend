@@ -11,12 +11,26 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Comments.EventHadlers
 {
+    /// <summary>
+    /// Handles the <see cref="AddCommentEvent"/> to update post and comment statistics,
+    /// trigger recommendation system updates, and send notifications.
+    /// </summary>
     public class AddCommentEventHandler(MTAA_BackendDbContext _dbContext,
         IMediator _mediator,
         IUserService _userService,
         IPostsFromPreferencesRecommendationFeedService _recService) : INotificationHandler<AddCommentEvent>
     {
+        /// <summary>
+        /// The maximum length for displaying comment text in notifications.
+        /// </summary>
         readonly int maxLength = 200;
+
+        /// <summary>
+        /// Handles the <see cref="AddCommentEvent"/> asynchronous.
+        /// </summary>
+        /// <param name="notification">The <see cref="AddCommentEvent"/> notification.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task Handle(AddCommentEvent notification, CancellationToken cancellationToken)
         {
             var currentUser = await _userService.GetCurrentUser();

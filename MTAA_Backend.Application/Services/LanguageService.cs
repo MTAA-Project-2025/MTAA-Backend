@@ -9,13 +9,26 @@ using System.Threading.Tasks;
 
 namespace MTAA_Backend.Application.Services
 {
+    /// <summary>
+    /// Provides services for managing language preferences based on HTTP context.
+    /// </summary>
     public class LanguageService : ILanguageService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+
+        /// <summary>
+        /// Initializes a new instance of the LanguageService class.
+        /// </summary>
+        /// <param name="httpContextAccessor">The accessor for HTTP context information.</param>
         public LanguageService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
+
+        /// <summary>
+        /// Retrieves the current language code from the HTTP request's Accept-Language header.
+        /// </summary>
+        /// <returns>The language code, or the default English code if the header is invalid or missing.</returns>
         public string GetCurrentLanguageCode()
         {
             try

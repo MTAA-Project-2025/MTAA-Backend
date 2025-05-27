@@ -8,9 +8,18 @@ using MTAA_Backend.Infrastructure;
 
 namespace MTAA_Backend.Application.CQRS.Locations.CommandHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="AddPostLocation"/> command to add a new location associated with a post.
+    /// </summary>
     public class AddPostLocationHandler(MTAA_BackendDbContext _dbContext,
         ILocationService _locationService) : IRequestHandler<AddPostLocation>
     {
+        /// <summary>
+        /// Handles the <see cref="AddPostLocation"/> command.
+        /// </summary>
+        /// <param name="request">The <see cref="AddPostLocation"/> command request.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task Handle(AddPostLocation request, CancellationToken cancellationToken)
         {
             double latitude = request.Latitude;

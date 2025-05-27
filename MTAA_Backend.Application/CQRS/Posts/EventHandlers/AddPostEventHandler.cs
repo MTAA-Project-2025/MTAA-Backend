@@ -8,10 +8,19 @@ using MTAA_Backend.Domain.Resources.Versioning;
 
 namespace MTAA_Backend.Application.CQRS.Posts.EventHandlers
 {
+    /// <summary>
+    /// Handles the <see cref="AddPostEvent"/> to trigger post recommendations and update user versioning.
+    /// </summary>
     public class AddPostEventHandler(IPostsFromFollowersRecommendationFeedService _recommendationService,
         IPostsConfigureRecommendationsService _postsConfigureRecommendationsService,
         IMediator _mediator) : INotificationHandler<AddPostEvent>
     {
+        /// <summary>
+        /// Handles the <see cref="AddPostEvent"/> asynchronous.
+        /// </summary>
+        /// <param name="notification">The <see cref="AddPostEvent"/> notification.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task Handle(AddPostEvent notification, CancellationToken cancellationToken)
         {
             await _recommendationService.RecomendPost(notification.PostId, notification.UserId, cancellationToken);

@@ -12,12 +12,22 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Comments.CommandHandlers
 {
+    /// <summary>
+    /// Handles the AddComment command, creating a new comment or a reply to an existing comment.
+    /// </summary>
     public class AddCommentHandler(ILogger<AddCommentHandler> _logger,
         IStringLocalizer<ErrorMessages> _localizer,
         MTAA_BackendDbContext _dbContext,
         IUserService _userService,
         IMediator _mediator) : IRequestHandler<AddComment, Guid>
     {
+        /// <summary>
+        /// Handles the AddComment command.
+        /// </summary>
+        /// <param name="request">The AddComment command request.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The ID of the newly created comment.</returns>
+        /// <exception cref="HttpException">Thrown if the post or parent comment is not found.</exception>
         public async Task<Guid> Handle(AddComment request, CancellationToken cancellationToken)
         {
             var post = await _dbContext.Posts.FirstOrDefaultAsync(e => e.Id == request.PostId, cancellationToken);

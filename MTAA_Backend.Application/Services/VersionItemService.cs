@@ -14,12 +14,21 @@ using System.Net;
 
 namespace MTAA_Backend.Application.Services
 {
+    /// <summary>
+    /// Provides services for managing version items associated with users.
+    /// </summary>
     public class VersionItemService : IVersionItemService
     {
         private readonly MTAA_BackendDbContext _dbContext;
         private readonly ILogger _logger;
         private readonly IStringLocalizer _localizer;
 
+        /// <summary>
+        /// Initializes a new instance of the VersionItemService class.
+        /// </summary>
+        /// <param name="dbContext">The database context for data operations.</param>
+        /// <param name="logger">The logger for recording errors.</param>
+        /// <param name="localizer">The localizer for error messages.</param>
         public VersionItemService(MTAA_BackendDbContext dbContext,
             ILogger<VersionItemService> logger,
             IStringLocalizer<ErrorMessages> localizer)
@@ -29,6 +38,13 @@ namespace MTAA_Backend.Application.Services
             _localizer = localizer;
         }
 
+        /// <summary>
+        /// Initializes version items for a user, creating entries for each version item type if they do not exist.
+        /// </summary>
+        /// <param name="userId">The ID of the user to initialize version items for.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">Thrown if the user is not found.</exception>
         public async Task InitializationForUserAsync(string userId, CancellationToken cancellationToken = default)
         {
             var user = await _dbContext.Users.Where(e => e.Id == userId).Include(e => e.VersionItems).FirstOrDefaultAsync(cancellationToken);

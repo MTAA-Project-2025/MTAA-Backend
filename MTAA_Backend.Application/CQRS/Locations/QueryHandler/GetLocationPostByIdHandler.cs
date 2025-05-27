@@ -15,12 +15,22 @@ using System.Net;
 
 namespace MTAA_Backend.Application.CQRS.Locations.QueryHandler
 {
+    /// <summary>
+    /// Handles the <see cref="GetLocationPostById"/> query to retrieve a specific post associated with a location.
+    /// </summary>
     public class GetLocationPostByIdHandler(MTAA_BackendDbContext _dbContext,
         IMapper _mapper,
         ILogger<GetLocationPostByIdHandler> _logger,
         IStringLocalizer<ErrorMessagesPatterns> _localizer,
         IUserService _userService) : IRequestHandler<GetLocationPostById, LocationPostResponse>
     {
+        /// <summary>
+        /// Handles the <see cref="GetLocationPostById"/> query.
+        /// </summary>
+        /// <param name="request">The <see cref="GetLocationPostById"/> query request.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A <see cref="LocationPostResponse"/> containing the details of the post and its associated location data.</returns>
+        /// <exception cref="HttpException">Thrown if the post is not found or is hidden and the user is not the owner.</exception>
         public async Task<LocationPostResponse> Handle(GetLocationPostById request, CancellationToken cancellationToken)
         {
             string userId = _userService.GetCurrentUserId();

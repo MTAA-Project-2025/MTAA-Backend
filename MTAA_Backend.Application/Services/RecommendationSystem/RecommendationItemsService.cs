@@ -12,12 +12,21 @@ using System.Threading;
 
 namespace MTAA_Backend.Application.Services.RecommendationSystem
 {
+    /// <summary>
+    /// Provides services for managing recommendation items in local and shared feeds.
+    /// </summary>
     public class RecommendationItemsService : IRecommendationItemsService
     {
         private readonly MTAA_BackendDbContext _dbContext;
         private readonly IStringLocalizer<ErrorMessages> _localizer;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the RecommendationItemsService class.
+        /// </summary>
+        /// <param name="dbContext">The database context for data operations.</param>
+        /// <param name="localizer">The localizer for error messages.</param>
+        /// <param name="logger">The logger for recording errors.</param>
         public RecommendationItemsService(MTAA_BackendDbContext dbContext,
             IStringLocalizer<ErrorMessages> localizer,
             ILogger<RecommendationItemsService> logger)
@@ -27,6 +36,15 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             _logger = logger;
         }
 
+        /// <summary>
+        /// Adds posts to a user's local recommendation feed.
+        /// </summary>
+        /// <param name="feedType">The type of recommendation feed.</param>
+        /// <param name="userId">The ID of the user to add posts for.</param>
+        /// <param name="requests">The collection of recommendation item requests.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">Thrown if the user or feed is not found.</exception>
         public async Task AddPostsToLocalFeed(RecommendationFeedTypes feedType, string userId, ICollection<SimpleAddRecommendationItemRequest> requests, CancellationToken cancellationToken = default)
         {
             var user = await _dbContext.Users.Where(e => e.Id == userId)
@@ -77,6 +95,16 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             }
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Removes posts from a user's local recommendation feed.
+        /// </summary>
+        /// <param name="feedType">The type of recommendation feed.</param>
+        /// <param name="userId">The ID of the user to remove posts for.</param>
+        /// <param name="postIds">The collection of post IDs to remove.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">Thrown if the user or feed is not found.</exception>
         public async Task RemovePostsFromLocalFeed(RecommendationFeedTypes feedType, string userId, ICollection<Guid> postIds, CancellationToken cancellationToken = default)
         {
             var user = await _dbContext.Users.Where(e => e.Id == userId)
@@ -110,6 +138,14 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Adds posts to a shared recommendation feed.
+        /// </summary>
+        /// <param name="feedType">The type of recommendation feed.</param>
+        /// <param name="requests">The collection of recommendation item requests.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">Thrown if the feed is not found.</exception>
         public async Task AddPostsToSharedFeed(RecommendationFeedTypes feedType, ICollection<SimpleAddRecommendationItemRequest> requests, CancellationToken cancellationToken = default)
         {
             if (requests.Count == 0) return;
@@ -145,6 +181,14 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
         }
+
+        /// <summary>
+        /// Clears all posts from a shared recommendation feed.
+        /// </summary>
+        /// <param name="feedType">The type of recommendation feed.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">Thrown if the feed is not found.</exception>
         public async Task ClearSharedFeed(RecommendationFeedTypes feedType, CancellationToken cancellationToken = default)
         {
             var feed = await _dbContext.SharedRecommendationFeeds.Where(e => e.Type == feedType)
@@ -164,6 +208,15 @@ namespace MTAA_Backend.Application.Services.RecommendationSystem
             feed.RecommendationItems.Clear();
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Removes specific posts from a shared recommendation feed.
+        /// </summary>
+        /// <param name="feedType">The type of recommendation feed.</param>
+        /// <param name="postIds">The collection of post IDs to remove.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="HttpException">Thrown if the feed is not found.</exception>
         public async Task RemovePostsFromSharedFeed(RecommendationFeedTypes feedType, ICollection<Guid> postIds, CancellationToken cancellationToken = default)
         {
             var feed = await _dbContext.SharedRecommendationFeeds.Where(e => e.Type == feedType)
